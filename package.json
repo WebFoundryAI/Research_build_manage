@@ -1,0 +1,19 @@
+{
+  "name": "super-seo-tool",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Unified SEO and content platform skeleton",
+  "license": "MIT",
+  "scripts": {
+    "dev": "pnpm --filter ./apps/frontend dev",
+    "build": "pnpm --filter ./apps/frontend build",
+    "lint": "echo 'TODO: add linting scripts'"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
