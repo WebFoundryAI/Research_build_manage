@@ -1,3 +1,25 @@
-/* base */
-:root{color-scheme:light dark}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 47.4% 11.2%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 222.2 47.4% 6.5%;
+    --foreground: 210 40% 98%;
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}

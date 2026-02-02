@@ -1,60 +1,36 @@
-import { useState } from 'react';
-import { supabase } from '@common/supabaseClient';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../lib/auth';
 
-/**
- * AuthPage provides a simple interface for users to sign in with Google
- * using Supabase auth.  When the user is not logged in, a button will
- * trigger the OAuth flow.  If the user is logged in, their email and a
- * sign‑out button are shown.  You must configure Google OAuth in your
- * Supabase project and provide the environment variables VITE_SUPABASE_URL
- * and VITE_SUPABASE_ANON_KEY in your Cloudflare Pages project settings.
- */
 export default function AuthPage() {
-  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const { user, loading, signInWithGoogle } = useAuth();
+  const nav = useNavigate();
 
-  async function signInWithGoogle() {
-    const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
-    if (error) {
-      alert('Error signing in: ' + error.message);
-    }
-  }
-
-  async function signOut() {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      alert('Error signing out: ' + error.message);
-    } else {
-      setUserEmail(null);
-    }
-  }
-
-  // Listen for auth changes.  When mounted, subscribe to changes in auth state
-  supabase.auth.onAuthStateChange((_event, session) => {
-    const email = session?.user?.email ?? null;
-    setUserEmail(email);
-  });
+  useEffect(() => {
+    if (!loading && user) nav('/dashboard', { replace: true });
+  }, [loading, user, nav]);
 
   return (
-    <div className="p-8 flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-3xl font-bold mb-4">Welcome to Super SEO Tool</h1>
-      {userEmail ? (
-        <div className="text-center">
-          <p className="mb-2">Signed in as {userEmail}</p>
-          <button
-            onClick={signOut}
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-          >
-            Sign Out
-          </button>
+    <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
+      <div className="w-full max-w-md rounded-2xl bg-slate-900/60 border border-slate-800 shadow-soft p-6">
+        <div className="text-xl font-semibold">Research • Build • Manage</div>
+        <div className="text-sm text-slate-300 mt-1">
+          Sign in with Google to access the unified SEO & automation workspace.
         </div>
-      ) : (
-        <button
-          onClick={signInWithGoogle}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-        >
-          Sign in with Google
-        </button>
-      )}
+
+        <div className="mt-6">
+          <button
+            onClick={() => signInWithGoogle()}
+            className="w-full px-4 py-3 rounded-2xl bg-white text-slate-900 font-medium hover:opacity-95"
+            disabled={loading}
+          >
+            Continue with Google
+          </button>
+          <div className="text-xs text-slate-400 mt-3">
+            Google-only login (no email/password). Admin controls live under /admin.
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
