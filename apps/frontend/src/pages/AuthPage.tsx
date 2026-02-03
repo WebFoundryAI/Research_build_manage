@@ -37,5 +37,6 @@ export default function AuthPage() {
         {mode === "demo" ? "Enter Demo" : "Continue with Google"}
       </button>
 
-      <div className="text-xs opacity-60">
+    </div>
+  );
 }
