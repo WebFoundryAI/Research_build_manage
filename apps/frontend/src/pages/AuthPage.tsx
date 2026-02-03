@@ -106,7 +106,7 @@ export default function AuthPage() {
 
   if (loading) {
     return (
-      <div style={page} data-ui-rev="auth-ui-1770134932">
+      <div style={page} >
         <div style={card}>
           <div style={{ ...brand, marginBottom: 0 }}>
             <span style={dot} />
@@ -120,7 +120,7 @@ export default function AuthPage() {
 
   if (user) {
     return (
-      <div style={page} data-ui-rev="auth-ui-1770134932">
+      <div style={page} >
         <div style={card}>
           <div style={brand}>
             <span style={dot} />
@@ -137,7 +137,7 @@ export default function AuthPage() {
   }
 
   return (
-    <div style={page} data-ui-rev="auth-ui-1770134932">
+    <div style={page} >
       <div style={card}>
         <div style={brand}>
           <span style={dot} />
