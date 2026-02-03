@@ -14,7 +14,9 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.0",
     "shadcn-ui": "^0.1.0",
-    "zustand": "^4.4.2"
+    "zustand": "^4.4.2",
+    "lucide-react": "^0.465.0",
+    "recharts": "^2.12.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.20",
