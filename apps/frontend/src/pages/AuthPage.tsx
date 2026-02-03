@@ -38,9 +38,4 @@ export default function AuthPage() {
       </button>
 
       <div className="text-xs opacity-60">
-        To enable real auth: set VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY in Cloudflare Pages env vars,
-        then redeploy.
-      </div>
-    </div>
-  );
 }
