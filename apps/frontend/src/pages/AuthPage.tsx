@@ -32,7 +32,7 @@ export default function AuthPage() {
 
       <button
         onClick={() => signInWithGoogle()}
-        className="rounded-xl bg-slate-800 px-4 py-3 text-sm font-semibold hover:bg-slate-700"
+        className="inline-flex items-center justify-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50"
       >
         {mode === "demo" ? "Enter Demo" : "Continue with Google"}
       </button>
