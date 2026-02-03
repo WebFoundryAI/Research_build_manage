@@ -1,56 +1,59 @@
-import { Suspense, lazy } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { Layout } from './components/Layout';
-import { ProtectedRoute, AdminRoute } from './components/ProtectedRoute';
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./lib/auth";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Layout from "./components/Layout";
 
-// Lazy loaded pages.  Each module would get its own page component.
-const Dashboard = lazy(() => import('./pages/Dashboard'));
-const AuthPage = lazy(() => import('./pages/AuthPage'));
-const PlannerPage = lazy(() => import('./pages/PlannerPage'));
-const WebsitesPage = lazy(() => import('./pages/WebsitesPage'));
-const ResearchPage = lazy(() => import('./pages/ResearchPage'));
-const SettingsPage = lazy(() => import('./pages/SettingsPage'));
-const AdminPage = lazy(() => import('./pages/AdminPage'));
+import Dashboard from "./pages/Dashboard";
+import AuthPage from "./pages/AuthPage";
+import WebsitesPage from "./pages/WebsitesPage";
+import ResearchPage from "./pages/ResearchPage";
+import PlannerPage from "./pages/PlannerPage";
+import AdminPage from "./pages/AdminPage";
+import SettingsPage from "./pages/SettingsPage";
 
-// Simple loader component
-const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <span>Loading…</span>
-  </div>
-);
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { err: any }> {
+  state = { err: null };
+  static getDerivedStateFromError(err: any) { return { err }; }
+  render() {
+    if (!this.state.err) return this.props.children;
+    return (
+      <div style={{ padding: 24, fontFamily: "system-ui" }}>
+        <h1 style={{ fontSize: 20, margin: 0 }}>App crashed</h1>
+        <pre style={{ marginTop: 12, whiteSpace: "pre-wrap" }}>{String(this.state.err?.stack || this.state.err)}</pre>
+      </div>
+    );
+  }
+}
 
 export default function App() {
   return (
-    <Suspense fallback={<PageLoader />}>
-      <Routes>
-        {/* Auth route (Google OAuth only) */}
-        <Route path="/auth" element={<AuthPage />} />
+    <ErrorBoundary>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/auth" element={<AuthPage />} />
 
-        <Route
-          element={
-            <ProtectedRoute>
-              <Layout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/planner" element={<PlannerPage />} />
-          <Route path="/websites" element={<WebsitesPage />} />
-          <Route path="/research" element={<ResearchPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route
-            path="/admin"
-            element={
-              <AdminRoute>
-                <AdminPage />
-              </AdminRoute>
-            }
-          />
-        </Route>
+            <Route
+              element={
+                <ProtectedRoute>
+                  <Layout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/websites" element={<WebsitesPage />} />
+              <Route path="/research" element={<ResearchPage />} />
+              <Route path="/planner" element={<PlannerPage />} />
+              <Route path="/admin" element={<AdminPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+            </Route>
 
-        {/* Default redirect to dashboard */}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
-      </Routes>
-    </Suspense>
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

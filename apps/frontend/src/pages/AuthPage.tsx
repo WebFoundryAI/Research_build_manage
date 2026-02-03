@@ -1,35 +1,45 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../lib/auth';
+import React from "react";
+import { useAuth } from "../lib/auth";
 
 export default function AuthPage() {
-  const { user, loading, signInWithGoogle } = useAuth();
-  const nav = useNavigate();
+  const { mode, loading, user, error, signInWithGoogle } = useAuth();
 
-  useEffect(() => {
-    if (!loading && user) nav('/dashboard', { replace: true });
-  }, [loading, user, nav]);
+  if (loading) return <div className="text-sm opacity-70">Loading…</div>;
+  if (user) {
+    return (
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
+        <div className="text-sm font-semibold">Already signed in</div>
+        <div className="mt-1 text-xs opacity-70">{user.email ?? user.id}</div>
+        <div className="mt-3 text-xs opacity-60">Use the sidebar to navigate.</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
-      <div className="w-full max-w-md rounded-2xl bg-slate-900/60 border border-slate-800 shadow-soft p-6">
-        <div className="text-xl font-semibold">Research • Build • Manage</div>
-        <div className="text-sm text-slate-300 mt-1">
-          Sign in with Google to access the unified SEO & automation workspace.
-        </div>
+    <div className="max-w-lg space-y-4">
+      <h1 className="text-3xl font-semibold">Sign in</h1>
+      <p className="text-sm opacity-70">
+        {mode === "demo"
+          ? "Supabase env vars are not configured, so the app is running in Demo Mode."
+          : "Sign in with Google via Supabase OAuth."}
+      </p>
 
-        <div className="mt-6">
-          <button
-            onClick={() => signInWithGoogle()}
-            className="w-full px-4 py-3 rounded-2xl bg-white text-slate-900 font-medium hover:opacity-95"
-            disabled={loading}
-          >
-            Continue with Google
-          </button>
-          <div className="text-xs text-slate-400 mt-3">
-            Google-only login (no email/password). Admin controls live under /admin.
-          </div>
+      {error ? (
+        <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-200">
+          {error}
         </div>
+      ) : null}
+
+      <button
+        onClick={() => signInWithGoogle()}
+        className="rounded-xl bg-slate-800 px-4 py-3 text-sm font-semibold hover:bg-slate-700"
+      >
+        {mode === "demo" ? "Enter Demo" : "Continue with Google"}
+      </button>
+
+      <div className="text-xs opacity-60">
+        To enable real auth: set VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY in Cloudflare Pages env vars,
+        then redeploy.
       </div>
     </div>
   );

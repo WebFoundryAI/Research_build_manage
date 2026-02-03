@@ -1,30 +1,22 @@
-import type { ReactElement } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../lib/auth';
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../lib/auth";
 
-export function ProtectedRoute({ children }: { children: ReactElement }) {
-  const { user, loading } = useAuth();
+export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { loading, user } = useAuth();
+  const loc = useLocation();
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-sm opacity-80">Loading…</div>
+      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center" }}>
+        <div>
+          <div style={{ fontSize: 18, fontWeight: 700 }}>Loading…</div>
+          <div style={{ opacity: 0.7, marginTop: 6 }}>Auth initialising</div>
+        </div>
       </div>
     );
   }
-  if (!user) return <Navigate to="/auth" replace />;
-  return children;
-}
 
-export function AdminRoute({ children }: { children: ReactElement }) {
-  const { user, profile, loading } = useAuth();
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-sm opacity-80">Loading…</div>
-      </div>
-    );
-  }
-  if (!user) return <Navigate to="/auth" replace />;
-  if (profile?.role !== 'admin') return <Navigate to="/dashboard" replace />;
-  return children;
+  if (!user) return <Navigate to="/auth" replace state={{ from: loc.pathname }} />;
+  return <>{children}</>;
 }

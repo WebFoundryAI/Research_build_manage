@@ -1,35 +1,34 @@
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from 'recharts';
+import React from "react";
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar } from "recharts";
 
-const trend = [
-  { day: 'Mon', audits: 12, up: 98.9 },
-  { day: 'Tue', audits: 18, up: 99.1 },
-  { day: 'Wed', audits: 21, up: 99.4 },
-  { day: 'Thu', audits: 16, up: 99.3 },
-  { day: 'Fri', audits: 25, up: 99.7 },
-  { day: 'Sat', audits: 14, up: 99.2 },
-  { day: 'Sun', audits: 19, up: 99.5 },
+const lineData = [
+  { day: "Mon", impressions: 1200, clicks: 34 },
+  { day: "Tue", impressions: 1800, clicks: 41 },
+  { day: "Wed", impressions: 1400, clicks: 38 },
+  { day: "Thu", impressions: 2200, clicks: 55 },
+  { day: "Fri", impressions: 2600, clicks: 63 },
+  { day: "Sat", impressions: 1900, clicks: 46 },
+  { day: "Sun", impressions: 2400, clicks: 59 },
 ];
 
-const recent = [
-  { ts: '2026-02-02 12:55', type: 'SEO Audit', target: 'manchesterblockeddrain.co.uk', status: 'ok' },
-  { ts: '2026-02-02 12:41', type: 'Asset Check', target: 'swindonblockeddrains.co.uk', status: 'warn' },
-  { ts: '2026-02-02 11:20', type: 'GEO Content', target: 'blocked-drains-manchester', status: 'ok' },
+const barData = [
+  { name: "Live", value: 18 },
+  { name: "Staging", value: 6 },
+  { name: "Broken", value: 3 },
 ];
 
-function Card({ title, value, note }: { title: string; value: string; note: string }) {
+const sites = [
+  { domain: "manchesterblockeddrain.co.uk", live: true, gsc: "connected", ga: "pending", lastCheck: "2h ago" },
+  { domain: "bristolemergencyplumber.co.uk", live: true, gsc: "pending", ga: "pending", lastCheck: "6h ago" },
+  { domain: "swindonblockeddrains.co.uk", live: false, gsc: "pending", ga: "pending", lastCheck: "—" },
+];
+
+function Card({ title, value, sub }: { title: string; value: string; sub: string }) {
   return (
-    <div className="rounded-2xl border bg-white p-4 shadow-soft">
-      <div className="text-sm text-slate-500">{title}</div>
-      <div className="text-2xl font-semibold mt-1">{value}</div>
-      <div className="text-xs text-slate-500 mt-2">{note}</div>
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
+      <div className="text-xs opacity-70">{title}</div>
+      <div className="mt-2 text-2xl font-semibold">{value}</div>
+      <div className="mt-1 text-xs opacity-60">{sub}</div>
     </div>
   );
 }
@@ -38,85 +37,77 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
-        <p className="text-sm text-slate-600 mt-1">
-          Portfolio health, research throughput, and automation activity.
+        <h1 className="text-3xl font-semibold">Dashboard</h1>
+        <p className="mt-2 text-sm opacity-70">
+          Unified monitoring for sites, SEO signals, research, and planned work.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card title="Tracked sites" value="12" note="monitored in last 24h" />
-        <Card title="Uptime" value="99.5%" note="7-day rolling average" />
-        <Card title="Audits" value="125" note="completed this week" />
-        <Card title="Credits" value="1,420" note="cost model stub (admin)" />
+      <div className="grid gap-3 md:grid-cols-4">
+        <Card title="Total sites" value="27" sub="tracked in registry" />
+        <Card title="Live" value="18" sub="passing uptime checks" />
+        <Card title="Impressions (7d)" value="13.5k" sub="sample data (wire GSC next)" />
+        <Card title="Clicks (7d)" value="336" sub="sample data (wire GSC next)" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="rounded-2xl border bg-white p-4 shadow-soft">
-          <div className="text-sm font-medium">Audit volume</div>
-          <div className="h-64 mt-4">
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
+          <div className="text-sm font-semibold">Search trend (7d)</div>
+          <div className="mt-3 h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={trend} margin={{ left: 0, right: 16, top: 10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" />
+              <LineChart data={lineData}>
+                <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
                 <XAxis dataKey="day" />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="audits" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="impressions" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="clicks" strokeWidth={2} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="rounded-2xl border bg-white p-4 shadow-soft">
-          <div className="text-sm font-medium">Uptime trend</div>
-          <div className="h-64 mt-4">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
+          <div className="text-sm font-semibold">Fleet status</div>
+          <div className="mt-3 h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={trend} margin={{ left: 0, right: 16, top: 10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" />
-                <YAxis domain={[98, 100]} />
+              <BarChart data={barData}>
+                <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+                <XAxis dataKey="name" />
+                <YAxis allowDecimals={false} />
                 <Tooltip />
-                <Line type="monotone" dataKey="up" strokeWidth={2} dot={false} />
-              </LineChart>
+                <Bar dataKey="value" />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      <div className="rounded-2xl border bg-white p-4 shadow-soft">
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
         <div className="flex items-center justify-between">
-          <div>
-            <div className="text-sm font-medium">Recent activity</div>
-            <div className="text-xs text-slate-500">Latest automation runs (stub)</div>
-          </div>
+          <div className="text-sm font-semibold">Websites</div>
+          <div className="text-xs opacity-60">Next: wire Functions → registry → checks</div>
         </div>
-        <div className="mt-4 overflow-x-auto">
+
+        <div className="mt-3 overflow-x-auto">
           <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-slate-500">
-                <th className="py-2">Time</th>
-                <th>Type</th>
-                <th>Target</th>
-                <th>Status</th>
+            <thead className="text-left opacity-70">
+              <tr>
+                <th className="py-2 pr-4">Domain</th>
+                <th className="py-2 pr-4">Live</th>
+                <th className="py-2 pr-4">GSC</th>
+                <th className="py-2 pr-4">GA4</th>
+                <th className="py-2 pr-4">Last check</th>
               </tr>
             </thead>
             <tbody>
-              {recent.map((r) => (
-                <tr key={r.ts} className="border-t">
-                  <td className="py-2">{r.ts}</td>
-                  <td>{r.type}</td>
-                  <td className="font-medium">{r.target}</td>
-                  <td>
-                    <span
-                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs border ${
-                        r.status === 'ok'
-                          ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
-                          : 'bg-amber-50 border-amber-200 text-amber-700'
-                      }`}
-                    >
-                      {r.status}
-                    </span>
-                  </td>
+              {sites.map((s) => (
+                <tr key={s.domain} className="border-t border-slate-800/60">
+                  <td className="py-2 pr-4 font-medium">{s.domain}</td>
+                  <td className="py-2 pr-4">{s.live ? "Yes" : "No"}</td>
+                  <td className="py-2 pr-4">{s.gsc}</td>
+                  <td className="py-2 pr-4">{s.ga}</td>
+                  <td className="py-2 pr-4">{s.lastCheck}</td>
                 </tr>
               ))}
             </tbody>

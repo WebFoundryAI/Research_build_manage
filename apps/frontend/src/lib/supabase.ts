@@ -1,13 +1,28 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const anon = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+let client: SupabaseClient | null = null;
+let initError: Error | null = null;
 
-if (!url || !anon) {
-  // Intentionally throw during runtime so misconfiguration is obvious.
-  // Cloudflare Pages: set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.
-  // (These are safe to expose to the browser; do NOT put service role keys here.)
-  console.warn('Supabase env vars missing: VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY');
+export function getSupabase(): SupabaseClient | null {
+  if (client || initError) return client;
+
+  const url = (import.meta as any).env?.VITE_SUPABASE_URL as string | undefined;
+  const anon = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY as string | undefined;
+
+  if (!url || !anon) {
+    initError = new Error("Supabase env vars missing: set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY");
+    return null;
+  }
+
+  try {
+    client = createClient(url, anon);
+    return client;
+  } catch (e: any) {
+    initError = e instanceof Error ? e : new Error(String(e));
+    return null;
+  }
 }
 
-export const supabase = createClient(url ?? '', anon ?? '');
+export function getSupabaseInitError(): Error | null {
+  return initError;
+}
