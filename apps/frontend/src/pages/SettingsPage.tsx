@@ -10,6 +10,12 @@ type DiagnosticsState = {
   edgeMessage?: string;
 };
 
+type EdgeTestState = {
+  status: "idle" | "running" | "success" | "error";
+  output: Record<string, unknown> | null;
+  timestamp: string | null;
+};
+
 type SecretState = {
   value: string;
   masked: string | null;
@@ -82,6 +88,21 @@ function createId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function truncateBody(body: unknown, maxLength = 500) {
+  if (!body) return "";
+  const text = typeof body === "string" ? body : JSON.stringify(body);
+  return text.length > maxLength ? `${text.slice(0, maxLength)}…` : text;
+}
+
+function formatFunctionError(functionName: string, error: unknown) {
+  const errorContext = (error as any)?.context ?? {};
+  const status = errorContext?.status ?? "unknown";
+  const bodyText = truncateBody(errorContext?.body);
+  const message = (error as any)?.message ? ` ${String((error as any).message)}` : "";
+  const bodyMessage = bodyText ? ` Body: ${bodyText}` : "";
+  return `${functionName} failed. Status: ${status}.${message}${bodyMessage}`;
+}
+
 function normalizeCustomKeys(input: unknown): CustomKey[] {
   if (!Array.isArray(input)) return [];
   return input
@@ -104,6 +125,11 @@ export default function SettingsPage() {
     userId: user?.id ?? "",
     userEmail: user?.email ?? "",
     edgeStatus: "idle",
+  });
+  const [edgeTest, setEdgeTest] = useState<EdgeTestState>({
+    status: "idle",
+    output: null,
+    timestamp: null,
   });
 
   const [apiKeys, setApiKeys] = useState<Record<string, SecretState>>(() =>
@@ -204,8 +230,32 @@ export default function SettingsPage() {
     setDiagnostics((prev) => ({
       ...prev,
       edgeStatus: error ? "error" : "ok",
-      edgeMessage: error ? error.message : "secrets-list reachable",
+      edgeMessage: error ? formatFunctionError("secrets-list", error) : "secrets-list reachable",
     }));
+  }
+
+  async function runEdgeTest() {
+    if (!supabase) return;
+    setEdgeTest({ status: "running", output: null, timestamp: new Date().toISOString() });
+    const { data, error } = await supabase.functions.invoke("secrets-list", { body: {} });
+    if (error) {
+      setEdgeTest({
+        status: "error",
+        output: {
+          error: formatFunctionError("secrets-list", error),
+        },
+        timestamp: new Date().toISOString(),
+      });
+      return;
+    }
+    setEdgeTest({
+      status: "success",
+      output: {
+        status: "ok",
+        keys: Array.isArray((data as any)?.keys) ? (data as any).keys : data,
+      },
+      timestamp: new Date().toISOString(),
+    });
   }
 
   async function loadSecret(key: string) {
@@ -226,7 +276,7 @@ export default function SettingsPage() {
     if (error) {
       setApiKeys((prev) => ({
         ...prev,
-        [key]: { ...prev[key], status: "idle", error: error.message },
+        [key]: { ...prev[key], status: "idle", error: formatFunctionError("secrets-get", error) },
       }));
       return;
     }
@@ -260,7 +310,7 @@ export default function SettingsPage() {
     if (error) {
       setApiKeys((prev) => ({
         ...prev,
-        [key]: { ...prev[key], status: "idle", error: error.message },
+        [key]: { ...prev[key], status: "idle", error: formatFunctionError("secrets-get", error) },
       }));
       return;
     }
@@ -301,7 +351,7 @@ export default function SettingsPage() {
     if (error) {
       setApiKeys((prev) => ({
         ...prev,
-        [key]: { ...prev[key], status: "idle", error: error.message },
+        [key]: { ...prev[key], status: "idle", error: formatFunctionError("secrets-set", error) },
       }));
       return;
     }
@@ -431,7 +481,7 @@ export default function SettingsPage() {
           });
           if (error) {
             setMcpStatus("error");
-            setMcpMessage(error.message);
+            setMcpMessage(formatFunctionError("secrets-set", error));
             return;
           }
         }
@@ -1024,6 +1074,34 @@ export default function SettingsPage() {
               {diagnostics.edgeMessage && (
                 <div className="text-xs text-slate-500">{diagnostics.edgeMessage}</div>
               )}
+            </div>
+
+            <div className="rounded-xl border p-4 space-y-3 md:col-span-2">
+              <div className="flex items-center justify-between">
+                <div className="font-medium">Edge Function test</div>
+                <button
+                  onClick={runEdgeTest}
+                  className="rounded-lg border px-3 py-1.5 text-xs hover:bg-slate-50"
+                  disabled={edgeTest.status === "running"}
+                >
+                  {edgeTest.status === "running" ? "Testing…" : "Test Edge Functions"}
+                </button>
+              </div>
+              <div className="text-xs text-slate-500">
+                Calls <span className="font-medium">secrets-list</span> and returns the response for
+                in-app diagnostics.
+              </div>
+              <div className="rounded-lg bg-slate-50 p-3 text-xs text-slate-700 whitespace-pre-wrap">
+                {JSON.stringify(
+                  {
+                    status: edgeTest.status,
+                    output: edgeTest.output,
+                    timestamp: edgeTest.timestamp,
+                  },
+                  null,
+                  2
+                )}
+              </div>
             </div>
           </div>
         </div>
