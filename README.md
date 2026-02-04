@@ -62,3 +62,5 @@ supabase functions deploy secrets-set
 supabase functions deploy secrets-get
 supabase functions deploy secrets-list
 ```
+
+The Settings page in the frontend requires an authenticated Supabase session. API keys are stored and retrieved exclusively via these Edge Functions, so users must be signed in for “Save” and “Reveal” to work in both local dev and production. No service-role keys or secrets are stored in the browser.

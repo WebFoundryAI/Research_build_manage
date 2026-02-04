@@ -1,9 +1,24 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-export const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+const allowedOrigins = new Set([
+  "https://research-build-manage.pages.dev",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+]);
+
+export function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("Origin") ?? "";
+  const allowOrigin = allowedOrigins.has(origin)
+    ? origin
+    : "https://research-build-manage.pages.dev";
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Credentials": "true",
+    Vary: "Origin",
+  };
+}
 
 const encoder = new TextEncoder();
 
@@ -15,37 +30,65 @@ function requireEnv(name: string) {
   return value;
 }
 
-export function jsonResponse(data: unknown, status = 200) {
+export function jsonResponse(req: Request, data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "Content-Type": "application/json", ...corsHeaders },
+    headers: { "Content-Type": "application/json", ...getCorsHeaders(req) },
   });
 }
 
-export function errorResponse(message: string, status = 400) {
-  return jsonResponse({ error: message }, status);
+export function errorResponse(req: Request, message: string, status = 400, details?: unknown) {
+  const payload = details ? { error: message, details } : { error: message };
+  return jsonResponse(req, payload, status);
 }
 
-export function getSupabaseClient() {
+class RequestError extends Error {
+  status: number;
+  details?: unknown;
+
+  constructor(message: string, status = 400, details?: unknown) {
+    super(message);
+    this.status = status;
+    this.details = details;
+  }
+}
+
+export function getSupabaseClient(req: Request) {
   const url = requireEnv("SUPABASE_URL");
-  const serviceKey = requireEnv("SUPABASE_SERVICE_ROLE_KEY");
-  return createClient(url, serviceKey, {
+  const anonKey = requireEnv("SUPABASE_ANON_KEY");
+  const authHeader = req.headers.get("Authorization") ?? "";
+  const apiKey = req.headers.get("apikey") ?? anonKey;
+
+  return createClient(url, anonKey, {
     auth: { persistSession: false },
+    global: {
+      headers: {
+        Authorization: authHeader,
+        apikey: apiKey,
+      },
+    },
   });
 }
 
 export async function requireUser(req: Request) {
-  const supabase = getSupabaseClient();
+  const supabase = getSupabaseClient(req);
   const authHeader = req.headers.get("Authorization");
   if (!authHeader) {
-    throw new Error("Missing Authorization header");
+    throw new RequestError("Missing Authorization header", 401);
   }
-  const token = authHeader.replace("Bearer ", "");
-  const { data, error } = await supabase.auth.getUser(token);
+  const { data, error } = await supabase.auth.getUser();
   if (error || !data.user) {
-    throw new Error(error?.message ?? "Invalid user token");
+    throw new RequestError("Unauthorized", 401, error?.message ?? "Invalid user token");
   }
-  return data.user;
+  return { supabase, user: data.user };
+}
+
+export function resolveError(err: unknown) {
+  if (err instanceof RequestError) {
+    return { message: err.message, status: err.status, details: err.details };
+  }
+  const message = err instanceof Error ? err.message : String(err);
+  return { message, status: 500 };
 }
 
 async function getAesKey() {

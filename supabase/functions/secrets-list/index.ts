@@ -1,13 +1,12 @@
-import { corsHeaders, errorResponse, getSupabaseClient, jsonResponse, requireUser } from "../_shared/secrets.ts";
+import { errorResponse, getCorsHeaders, jsonResponse, requireUser, resolveError } from "../_shared/secrets.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", { status: 204, headers: getCorsHeaders(req) });
   }
 
   try {
-    const supabase = getSupabaseClient();
-    const user = await requireUser(req);
+    const { supabase, user } = await requireUser(req);
 
     const { data, error } = await supabase
       .from("user_secrets")
@@ -15,11 +14,12 @@ Deno.serve(async (req) => {
       .eq("user_id", user.id);
 
     if (error) {
-      return errorResponse(error.message, 500);
+      return errorResponse(req, error.message, 500);
     }
 
-    return jsonResponse({ keys: data?.map((row) => row.key) ?? [] });
+    return jsonResponse(req, { keys: data?.map((row) => row.key) ?? [] });
   } catch (error) {
-    return errorResponse(error instanceof Error ? error.message : String(error), 401);
+    const resolved = resolveError(error);
+    return errorResponse(req, resolved.message, resolved.status, resolved.details);
   }
 });

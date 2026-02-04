@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../lib/auth";
+import { invokeEdgeFunction } from "../lib/edgeFunctions";
 import { getSupabase, getSupabaseInitError } from "../lib/supabase";
 
 type DiagnosticsState = {
@@ -8,6 +9,12 @@ type DiagnosticsState = {
   userEmail: string;
   edgeStatus: "idle" | "checking" | "ok" | "error";
   edgeMessage?: string;
+};
+
+type EdgeTestState = {
+  status: "idle" | "running" | "success" | "error";
+  output: Record<string, unknown> | null;
+  timestamp: string | null;
 };
 
 type SecretState = {
@@ -82,6 +89,24 @@ function createId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function truncateBody(body: unknown, maxLength = 500) {
+  if (!body) return "";
+  const text = typeof body === "string" ? body : JSON.stringify(body);
+  return text.length > maxLength ? `${text.slice(0, maxLength)}…` : text;
+}
+
+function formatFunctionError(
+  functionName: string,
+  error: { message: string; status?: number; body?: string } | null
+) {
+  if (!error) return `${functionName} failed.`;
+  const status = error.status ?? "unknown";
+  const bodyText = truncateBody(error.body);
+  const message = error.message ? ` ${error.message}` : "";
+  const bodyMessage = bodyText ? ` Body: ${bodyText}` : "";
+  return `${functionName} failed. Status: ${status}.${message}${bodyMessage}`;
+}
+
 function normalizeCustomKeys(input: unknown): CustomKey[] {
   if (!Array.isArray(input)) return [];
   return input
@@ -104,6 +129,11 @@ export default function SettingsPage() {
     userId: user?.id ?? "",
     userEmail: user?.email ?? "",
     edgeStatus: "idle",
+  });
+  const [edgeTest, setEdgeTest] = useState<EdgeTestState>({
+    status: "idle",
+    output: null,
+    timestamp: null,
   });
 
   const [apiKeys, setApiKeys] = useState<Record<string, SecretState>>(() =>
@@ -198,14 +228,43 @@ export default function SettingsPage() {
         : "none",
     }));
 
-    const { error } = await supabase.functions.invoke("secrets-list", {
-      body: {},
-    });
+    const { error } = await invokeEdgeFunction<{ keys: string[] }>("secrets-list", {});
     setDiagnostics((prev) => ({
       ...prev,
       edgeStatus: error ? "error" : "ok",
-      edgeMessage: error ? error.message : "secrets-list reachable",
+      edgeMessage: error ? formatFunctionError("secrets-list", error) : "secrets-list reachable",
     }));
+  }
+
+  async function runEdgeTest() {
+    if (!supabase) return;
+    setEdgeTest({ status: "running", output: null, timestamp: new Date().toISOString() });
+    const { data, error, status, bodyText } = await invokeEdgeFunction<{ keys: string[] }>(
+      "secrets-list",
+      {}
+    );
+    if (error) {
+      setEdgeTest({
+        status: "error",
+        output: {
+          error: formatFunctionError("secrets-list", error),
+          status: error.status ?? status,
+          body: truncateBody(error.body ?? bodyText),
+        },
+        timestamp: new Date().toISOString(),
+      });
+      return;
+    }
+    setEdgeTest({
+      status: "success",
+      output: {
+        status: "ok",
+        keys: Array.isArray((data as any)?.keys) ? (data as any).keys : data,
+        httpStatus: status,
+        body: truncateBody(bodyText),
+      },
+      timestamp: new Date().toISOString(),
+    });
   }
 
   async function loadSecret(key: string) {
@@ -220,13 +279,11 @@ export default function SettingsPage() {
         error: null,
       },
     }));
-    const { data, error } = await supabase.functions.invoke("secrets-get", {
-      body: { key },
-    });
+    const { data, error } = await invokeEdgeFunction<{ masked?: string }>("secrets-get", { key });
     if (error) {
       setApiKeys((prev) => ({
         ...prev,
-        [key]: { ...prev[key], status: "idle", error: error.message },
+        [key]: { ...prev[key], status: "idle", error: formatFunctionError("secrets-get", error) },
       }));
       return;
     }
@@ -254,13 +311,14 @@ export default function SettingsPage() {
         error: null,
       },
     }));
-    const { data, error } = await supabase.functions.invoke("secrets-get", {
-      body: { key, reveal: true },
+    const { data, error } = await invokeEdgeFunction<{ value?: string }>("secrets-get", {
+      key,
+      reveal: true,
     });
     if (error) {
       setApiKeys((prev) => ({
         ...prev,
-        [key]: { ...prev[key], status: "idle", error: error.message },
+        [key]: { ...prev[key], status: "idle", error: formatFunctionError("secrets-get", error) },
       }));
       return;
     }
@@ -295,13 +353,11 @@ export default function SettingsPage() {
         error: null,
       },
     }));
-    const { error } = await supabase.functions.invoke("secrets-set", {
-      body: { key, value: current.value },
-    });
+    const { error } = await invokeEdgeFunction("secrets-set", { key, value: current.value });
     if (error) {
       setApiKeys((prev) => ({
         ...prev,
-        [key]: { ...prev[key], status: "idle", error: error.message },
+        [key]: { ...prev[key], status: "idle", error: formatFunctionError("secrets-set", error) },
       }));
       return;
     }
@@ -426,12 +482,13 @@ export default function SettingsPage() {
     for (const server of mcpServers) {
       for (const header of server.headers) {
         if (header.isSecret && header.value && header.secretValue) {
-          const { error } = await supabase.functions.invoke("secrets-set", {
-            body: { key: header.value, value: header.secretValue },
+          const { error } = await invokeEdgeFunction("secrets-set", {
+            key: header.value,
+            value: header.secretValue,
           });
           if (error) {
             setMcpStatus("error");
-            setMcpMessage(error.message);
+            setMcpMessage(formatFunctionError("secrets-set", error));
             return;
           }
         }
@@ -571,8 +628,10 @@ export default function SettingsPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as typeof activeTab)}
-            className={`rounded-full border px-4 py-2 text-sm ${
-              activeTab === tab.id ? "bg-slate-900 text-white" : "bg-white hover:bg-slate-50"
+            className={`rounded-full border px-4 py-2 text-sm transition focus:outline-none focus:ring-2 focus:ring-slate-500/70 focus:ring-offset-2 focus:ring-offset-slate-900 ${
+              activeTab === tab.id
+                ? "bg-slate-800 text-slate-100 border-slate-700"
+                : "bg-slate-900/40 text-slate-200 border-slate-800 hover:bg-slate-900/70"
             }`}
           >
             {tab.label}
@@ -1024,6 +1083,34 @@ export default function SettingsPage() {
               {diagnostics.edgeMessage && (
                 <div className="text-xs text-slate-500">{diagnostics.edgeMessage}</div>
               )}
+            </div>
+
+            <div className="rounded-xl border p-4 space-y-3 md:col-span-2">
+              <div className="flex items-center justify-between">
+                <div className="font-medium">Edge Function test</div>
+                <button
+                  onClick={runEdgeTest}
+                  className="rounded-lg border px-3 py-1.5 text-xs hover:bg-slate-50"
+                  disabled={edgeTest.status === "running"}
+                >
+                  {edgeTest.status === "running" ? "Testing…" : "Test Edge Functions"}
+                </button>
+              </div>
+              <div className="text-xs text-slate-500">
+                Calls <span className="font-medium">secrets-list</span> and returns the response for
+                in-app diagnostics.
+              </div>
+              <div className="rounded-lg bg-slate-50 p-3 text-xs text-slate-700 whitespace-pre-wrap">
+                {JSON.stringify(
+                  {
+                    status: edgeTest.status,
+                    output: edgeTest.output,
+                    timestamp: edgeTest.timestamp,
+                  },
+                  null,
+                  2
+                )}
+              </div>
             </div>
           </div>
         </div>
