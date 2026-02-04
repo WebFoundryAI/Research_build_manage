@@ -62,3 +62,5 @@ supabase functions deploy secrets-set
 supabase functions deploy secrets-get
 supabase functions deploy secrets-list
 ```
+
+Settings secrets require an authenticated session, and values are stored server-side via Supabase Edge Functions so they are never exposed client-side.

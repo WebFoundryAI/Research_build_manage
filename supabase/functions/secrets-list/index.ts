@@ -1,8 +1,8 @@
-import { corsHeaders, errorResponse, getSupabaseClient, jsonResponse, requireUser } from "../_shared/secrets.ts";
+import { corsErrorResponse, corsOptionsResponse, corsResponse, getSupabaseClient, requireUser } from "../_shared/secrets.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return corsOptionsResponse(req);
   }
 
   try {
@@ -15,11 +15,11 @@ Deno.serve(async (req) => {
       .eq("user_id", user.id);
 
     if (error) {
-      return errorResponse(error.message, 500);
+      return corsErrorResponse(req, error.message, 500);
     }
 
-    return jsonResponse({ keys: data?.map((row) => row.key) ?? [] });
+    return corsResponse(req, { keys: data?.map((row) => row.key) ?? [], count: data?.length ?? 0 });
   } catch (error) {
-    return errorResponse(error instanceof Error ? error.message : String(error), 401);
+    return corsErrorResponse(req, error instanceof Error ? error.message : String(error), 401);
   }
 });
