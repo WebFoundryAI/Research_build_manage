@@ -39,3 +39,14 @@ This skeleton is intended to be deployed on **Cloudflare Pages** as a full‑sta
 4. Cloudflare Pages will detect functions in `apps/edge-functions/functions`.  To emulate functions locally, install [wrangler](https://developers.cloudflare.com/workers/wrangler/) and run `wrangler pages dev ./apps/frontend --functions ./apps/edge-functions/functions`.
 
 Refer to the planning documents for detailed instructions on how to extend each module and integrate Supabase, DataForSEO and OpenAI services.
+
+## Local Dev
+
+Run the commands below to configure Supabase env vars locally and start the Vite dev server:
+
+```
+cd ~/Downloads/Research_build_manage/super-seo-tool
+./scripts/set_supabase_env.sh
+./scripts/check_supabase_env.sh
+npm --prefix apps/frontend run dev -- --host --port 5173
+```
