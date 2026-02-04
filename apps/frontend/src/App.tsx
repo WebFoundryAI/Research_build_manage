@@ -11,6 +11,7 @@ import ResearchPage from "./pages/ResearchPage";
 import PlannerPage from "./pages/PlannerPage";
 import AdminPage from "./pages/AdminPage";
 import SettingsPage from "./pages/SettingsPage";
+import ProfilePage from "./pages/ProfilePage";
 
 class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { err: any }> {
   state = { err: null };
@@ -47,6 +48,7 @@ export default function App() {
               <Route path="/research" element={<ResearchPage />} />
               <Route path="/planner" element={<PlannerPage />} />
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route path="/settings" element={<SettingsPage />} />
             </Route>
 

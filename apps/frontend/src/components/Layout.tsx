@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../lib/auth";
-import { BarChart3, Globe, Search, Settings, Shield, CalendarClock } from "lucide-react";
+import { BarChart3, Globe, Search, Settings, Shield, CalendarClock, User } from "lucide-react";
 
 const nav = [
   { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
@@ -9,6 +9,7 @@ const nav = [
   { to: "/research", label: "Research", icon: Search },
   { to: "/planner", label: "Planner", icon: CalendarClock },
   { to: "/admin", label: "Admin", icon: Shield },
+  { to: "/profile", label: "Profile", icon: User },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
