@@ -1,8 +1,8 @@
-import { corsHeaders, decryptValue, errorResponse, getSupabaseClient, jsonResponse, maskValue, requireUser } from "../_shared/secrets.ts";
+import { corsErrorResponse, corsOptionsResponse, corsResponse, decryptValue, getSupabaseClient, maskValue, requireUser } from "../_shared/secrets.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return corsOptionsResponse(req);
   }
 
   try {
@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
     const { key, reveal } = await req.json();
 
     if (!key) {
-      return errorResponse("key is required", 400);
+      return corsErrorResponse(req, "key is required", 400);
     }
 
     const { data, error } = await supabase
@@ -22,21 +22,21 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (error) {
-      return errorResponse(error.message, 500);
+      return corsErrorResponse(req, error.message, 500);
     }
 
     if (!data?.value_encrypted) {
-      return jsonResponse({ found: false });
+      return corsResponse(req, { found: false });
     }
 
     if (reveal) {
       const value = await decryptValue(data.value_encrypted);
-      return jsonResponse({ found: true, value });
+      return corsResponse(req, { found: true, value });
     }
 
     const value = await decryptValue(data.value_encrypted);
-    return jsonResponse({ found: true, masked: maskValue(value) });
+    return corsResponse(req, { found: true, masked: maskValue(value) });
   } catch (error) {
-    return errorResponse(error instanceof Error ? error.message : String(error), 401);
+    return corsErrorResponse(req, error instanceof Error ? error.message : String(error), 401);
   }
 });

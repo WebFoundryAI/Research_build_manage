@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../lib/auth";
+import { callEdgeFunction, type EdgeFunctionResult } from "../lib/edgeFunctions";
 import { getSupabase, getSupabaseInitError } from "../lib/supabase";
 
 type DiagnosticsState = {
@@ -12,7 +13,7 @@ type DiagnosticsState = {
 
 type EdgeTestState = {
   status: "idle" | "running" | "success" | "error";
-  output: Record<string, unknown> | null;
+  output: EdgeFunctionResult | null;
   timestamp: string | null;
 };
 
@@ -94,13 +95,9 @@ function truncateBody(body: unknown, maxLength = 500) {
   return text.length > maxLength ? `${text.slice(0, maxLength)}…` : text;
 }
 
-function formatFunctionError(functionName: string, error: unknown) {
-  const errorContext = (error as any)?.context ?? {};
-  const status = errorContext?.status ?? "unknown";
-  const bodyText = truncateBody(errorContext?.body);
-  const message = (error as any)?.message ? ` ${String((error as any).message)}` : "";
-  const bodyMessage = bodyText ? ` Body: ${bodyText}` : "";
-  return `${functionName} failed. Status: ${status}.${message}${bodyMessage}`;
+function formatEdgeFunctionError(functionName: string, result: EdgeFunctionResult) {
+  const bodyText = truncateBody(result.bodyText || "No response body");
+  return `${functionName} failed. Status: ${result.status}. Body: ${bodyText}`;
 }
 
 function normalizeCustomKeys(input: unknown): CustomKey[] {
@@ -224,42 +221,35 @@ export default function SettingsPage() {
         : "none",
     }));
 
-    const { error } = await supabase.functions.invoke("secrets-list", {
-      body: {},
-    });
+    const result = await callEdgeFunction("secrets-list", {});
     setDiagnostics((prev) => ({
       ...prev,
-      edgeStatus: error ? "error" : "ok",
-      edgeMessage: error ? formatFunctionError("secrets-list", error) : "secrets-list reachable",
+      edgeStatus: result.ok ? "ok" : "error",
+      edgeMessage: result.ok
+        ? `secrets-list reachable. Status: ${result.status}`
+        : formatEdgeFunctionError("secrets-list", result),
     }));
   }
 
   async function runEdgeTest() {
-    if (!supabase) return;
     setEdgeTest({ status: "running", output: null, timestamp: new Date().toISOString() });
-    const { data, error } = await supabase.functions.invoke("secrets-list", { body: {} });
-    if (error) {
+    const result = await callEdgeFunction("secrets-list", {});
+    if (!result.ok) {
       setEdgeTest({
         status: "error",
-        output: {
-          error: formatFunctionError("secrets-list", error),
-        },
+        output: result,
         timestamp: new Date().toISOString(),
       });
       return;
     }
     setEdgeTest({
       status: "success",
-      output: {
-        status: "ok",
-        keys: Array.isArray((data as any)?.keys) ? (data as any).keys : data,
-      },
+      output: result,
       timestamp: new Date().toISOString(),
     });
   }
 
   async function loadSecret(key: string) {
-    if (!supabase) return;
     setApiKeys((prev) => ({
       ...prev,
       [key]: {
@@ -270,21 +260,20 @@ export default function SettingsPage() {
         error: null,
       },
     }));
-    const { data, error } = await supabase.functions.invoke("secrets-get", {
-      body: { key },
-    });
-    if (error) {
+    const result = await callEdgeFunction("secrets-get", { key });
+    if (!result.ok) {
       setApiKeys((prev) => ({
         ...prev,
-        [key]: { ...prev[key], status: "idle", error: formatFunctionError("secrets-get", error) },
+        [key]: { ...prev[key], status: "idle", error: formatEdgeFunctionError("secrets-get", result) },
       }));
       return;
     }
+    const payload = (result.json ?? {}) as { masked?: string | null };
     setApiKeys((prev) => ({
       ...prev,
       [key]: {
         ...prev[key],
-        masked: data?.masked ?? null,
+        masked: payload?.masked ?? null,
         revealed: null,
         status: "idle",
         error: null,
@@ -293,7 +282,6 @@ export default function SettingsPage() {
   }
 
   async function revealSecret(key: string) {
-    if (!supabase) return;
     setApiKeys((prev) => ({
       ...prev,
       [key]: {
@@ -304,21 +292,20 @@ export default function SettingsPage() {
         error: null,
       },
     }));
-    const { data, error } = await supabase.functions.invoke("secrets-get", {
-      body: { key, reveal: true },
-    });
-    if (error) {
+    const result = await callEdgeFunction("secrets-get", { key, reveal: true });
+    if (!result.ok) {
       setApiKeys((prev) => ({
         ...prev,
-        [key]: { ...prev[key], status: "idle", error: formatFunctionError("secrets-get", error) },
+        [key]: { ...prev[key], status: "idle", error: formatEdgeFunctionError("secrets-get", result) },
       }));
       return;
     }
+    const payload = (result.json ?? {}) as { value?: string };
     setApiKeys((prev) => ({
       ...prev,
       [key]: {
         ...prev[key],
-        revealed: data?.value ?? "",
+        revealed: payload?.value ?? "",
         status: "idle",
         error: null,
       },
@@ -326,7 +313,6 @@ export default function SettingsPage() {
   }
 
   async function saveSecret(key: string) {
-    if (!supabase) return;
     const current = apiKeys[key] ?? {
       value: "",
       masked: null,
@@ -345,13 +331,11 @@ export default function SettingsPage() {
         error: null,
       },
     }));
-    const { error } = await supabase.functions.invoke("secrets-set", {
-      body: { key, value: current.value },
-    });
-    if (error) {
+    const result = await callEdgeFunction("secrets-set", { key, value: current.value });
+    if (!result.ok) {
       setApiKeys((prev) => ({
         ...prev,
-        [key]: { ...prev[key], status: "idle", error: formatFunctionError("secrets-set", error) },
+        [key]: { ...prev[key], status: "idle", error: formatEdgeFunctionError("secrets-set", result) },
       }));
       return;
     }
@@ -476,12 +460,13 @@ export default function SettingsPage() {
     for (const server of mcpServers) {
       for (const header of server.headers) {
         if (header.isSecret && header.value && header.secretValue) {
-          const { error } = await supabase.functions.invoke("secrets-set", {
-            body: { key: header.value, value: header.secretValue },
+          const result = await callEdgeFunction("secrets-set", {
+            key: header.value,
+            value: header.secretValue,
           });
-          if (error) {
+          if (!result.ok) {
             setMcpStatus("error");
-            setMcpMessage(formatFunctionError("secrets-set", error));
+            setMcpMessage(formatEdgeFunctionError("secrets-set", result));
             return;
           }
         }
@@ -1097,7 +1082,14 @@ export default function SettingsPage() {
                 {JSON.stringify(
                   {
                     status: edgeTest.status,
-                    output: edgeTest.output,
+                    output: edgeTest.output
+                      ? {
+                          ok: edgeTest.output.ok,
+                          status: edgeTest.output.status,
+                          bodyText: edgeTest.output.bodyText,
+                          json: edgeTest.output.json ?? null,
+                        }
+                      : null,
                     timestamp: edgeTest.timestamp,
                   },
                   null,

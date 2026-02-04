@@ -1,9 +1,9 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-export const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+const ALLOWED_ORIGINS = new Set([
+  "https://research-build-manage.pages.dev",
+  "http://localhost:5173",
+]);
 
 const encoder = new TextEncoder();
 
@@ -18,12 +18,12 @@ function requireEnv(name: string) {
 export function jsonResponse(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "Content-Type": "application/json", ...corsHeaders },
+    headers: { "Content-Type": "application/json" },
   });
 }
 
 export function errorResponse(message: string, status = 400) {
-  return jsonResponse({ error: message }, status);
+  return jsonResponse({ error: message, status }, status);
 }
 
 export function getSupabaseClient() {
@@ -36,11 +36,11 @@ export function getSupabaseClient() {
 
 export async function requireUser(req: Request) {
   const supabase = getSupabaseClient();
-  const authHeader = req.headers.get("Authorization");
-  if (!authHeader) {
-    throw new Error("Missing Authorization header");
+  const authHeader = req.headers.get("Authorization") ?? "";
+  const token = authHeader.startsWith("Bearer ") ? authHeader.slice("Bearer ".length) : "";
+  if (!token) {
+    throw new Error("Missing Bearer token");
   }
-  const token = authHeader.replace("Bearer ", "");
   const { data, error } = await supabase.auth.getUser(token);
   if (error || !data.user) {
     throw new Error(error?.message ?? "Invalid user token");
@@ -85,4 +85,33 @@ export function maskValue(value: string) {
   if (!value) return "••••";
   const last = value.slice(-4);
   return `••••${last}`;
+}
+
+export function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("Origin") ?? "";
+  const allowOrigin = ALLOWED_ORIGINS.has(origin) ? origin : "null";
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
+}
+
+export function withCors(req: Request, response: Response) {
+  const headers = new Headers(response.headers);
+  const corsHeaders = getCorsHeaders(req);
+  Object.entries(corsHeaders).forEach(([key, value]) => headers.set(key, value));
+  return new Response(response.body, { status: response.status, headers });
+}
+
+export function corsResponse(req: Request, data: unknown, status = 200) {
+  return withCors(req, jsonResponse(data, status));
+}
+
+export function corsErrorResponse(req: Request, message: string, status = 400) {
+  return corsResponse(req, { error: message, status }, status);
+}
+
+export function corsOptionsResponse(req: Request) {
+  return new Response(null, { status: 204, headers: getCorsHeaders(req) });
 }
