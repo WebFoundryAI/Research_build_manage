@@ -40,13 +40,25 @@ This skeleton is intended to be deployed on **Cloudflare Pages** as a full‑sta
 
 Refer to the planning documents for detailed instructions on how to extend each module and integrate Supabase, DataForSEO and OpenAI services.
 
-## Local Dev
+## Local Setup
 
 Run the commands below to configure Supabase env vars locally and start the Vite dev server:
 
 ```
-cd ~/Downloads/Research_build_manage/super-seo-tool
-./scripts/set_supabase_env.sh
-./scripts/check_supabase_env.sh
+./super-seo-tool/scripts/set_supabase_env.sh
+npm --prefix apps/frontend install
 npm --prefix apps/frontend run dev -- --host --port 5173
+```
+
+The `set_supabase_env.sh` script writes `apps/frontend/.env.local` (do not commit it).
+
+## Supabase Edge Functions
+
+Deploy the secrets functions and configure the encryption key using the Supabase CLI:
+
+```
+supabase secrets set SUPABASE_FUNCTIONS_SECRET="your-strong-key"
+supabase functions deploy secrets-set
+supabase functions deploy secrets-get
+supabase functions deploy secrets-list
 ```
