@@ -621,8 +621,10 @@ export default function SettingsPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as typeof activeTab)}
-            className={`rounded-full border px-4 py-2 text-sm ${
-              activeTab === tab.id ? "bg-slate-900 text-white" : "bg-white hover:bg-slate-50"
+            className={`rounded-full border px-4 py-2 text-sm transition focus:outline-none focus:ring-2 focus:ring-slate-500/70 focus:ring-offset-2 focus:ring-offset-slate-900 ${
+              activeTab === tab.id
+                ? "bg-slate-800 text-slate-100 border-slate-700"
+                : "bg-slate-900/40 text-slate-200 border-slate-800 hover:bg-slate-900/70"
             }`}
           >
             {tab.label}
