@@ -17,6 +17,7 @@ import {
   LogOut,
   ChevronRight,
   Sparkles,
+  Zap,
 } from "lucide-react";
 
 const navSections = [
@@ -43,6 +44,12 @@ const navSections = [
     ],
   },
   {
+    title: "MCP Tools",
+    items: [
+      { to: "/mcp-spark", label: "MCP Spark", icon: Zap, desc: "27 SEO & scraping tools" },
+    ],
+  },
+  {
     title: "Settings",
     items: [
       { to: "/admin", label: "Admin", icon: Shield, desc: "System configuration" },
@@ -59,7 +66,12 @@ export default function Layout() {
 
   const currentPage = navSections
     .flatMap((s) => s.items)
-    .find((item) => location.pathname.startsWith(item.to));
+    .find((item) => {
+      if (item.to === "/mcp-spark") {
+        return location.pathname.startsWith("/mcp-spark");
+      }
+      return location.pathname === item.to || (item.to !== "/" && location.pathname.startsWith(item.to + "/"));
+    });
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
