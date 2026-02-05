@@ -58,6 +58,19 @@ import DailyRankings from "./pages/daily-checks/Rankings";
 import DailyContentChanges from "./pages/daily-checks/ContentChanges";
 import DailySettings from "./pages/daily-checks/DailySettings";
 
+// Asset Tracker Pages
+import AssetTrackerLayout from "./pages/asset-tracker/AssetTrackerLayout";
+import AssetTrackerIndex from "./pages/asset-tracker/Index";
+import AssetProjects from "./pages/asset-tracker/Projects";
+import AssetBoard from "./pages/asset-tracker/Board";
+import AssetTasks from "./pages/asset-tracker/Tasks";
+import AssetHealth from "./pages/asset-tracker/Health";
+import AssetReports from "./pages/asset-tracker/Reports";
+import AssetOpsReview from "./pages/asset-tracker/OpsReview";
+import AssetAlerts from "./pages/asset-tracker/Alerts";
+import AssetTrash from "./pages/asset-tracker/Trash";
+import AssetSettings from "./pages/asset-tracker/AssetSettings";
+
 class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { err: any }> {
   state = { err: null };
   static getDerivedStateFromError(err: any) { return { err }; }
@@ -147,6 +160,20 @@ export default function App() {
                 <Route path="rankings" element={<DailyRankings />} />
                 <Route path="content-changes" element={<DailyContentChanges />} />
                 <Route path="settings" element={<DailySettings />} />
+              </Route>
+
+              {/* Asset Tracker Section */}
+              <Route path="/asset-tracker" element={<AssetTrackerLayout />}>
+                <Route index element={<AssetTrackerIndex />} />
+                <Route path="projects" element={<AssetProjects />} />
+                <Route path="board" element={<AssetBoard />} />
+                <Route path="tasks" element={<AssetTasks />} />
+                <Route path="health" element={<AssetHealth />} />
+                <Route path="reports" element={<AssetReports />} />
+                <Route path="ops-review" element={<AssetOpsReview />} />
+                <Route path="alerts" element={<AssetAlerts />} />
+                <Route path="trash" element={<AssetTrash />} />
+                <Route path="settings" element={<AssetSettings />} />
               </Route>
             </Route>
 
