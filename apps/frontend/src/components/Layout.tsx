@@ -2,13 +2,15 @@ import React from "react";
 import { getTheme, setTheme, type Theme } from "../lib/theme";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../lib/auth";
-import { BarChart3, Globe, Search, Settings, Shield, CalendarClock, User } from "lucide-react";
+import { BarChart3, Globe, Search, Settings, Shield, CalendarClock, User, Briefcase, Activity, FileText, CheckSquare } from "lucide-react";
 
 const nav = [
   { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
-  { to: "/websites", label: "Websites", icon: Globe },
-  { to: "/research", label: "Research", icon: Search },
-  { to: "/planner", label: "Planner", icon: CalendarClock },
+  { to: "/websites", label: "Monitor", icon: Activity, desc: "Website health & SEO" },
+  { to: "/projects", label: "Portfolio", icon: Briefcase, desc: "Asset management" },
+  { to: "/tasks", label: "Tasks", icon: CheckSquare, desc: "All project tasks" },
+  { to: "/research", label: "Research", icon: Search, desc: "SEO & content tools" },
+  { to: "/planner", label: "Content", icon: FileText, desc: "Copy generation" },
   { to: "/admin", label: "Admin", icon: Shield },
   { to: "/profile", label: "Profile", icon: User },
   { to: "/settings", label: "Settings", icon: Settings },
