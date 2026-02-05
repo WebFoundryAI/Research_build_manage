@@ -1,15 +1,16 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../lib/auth";
-import { BarChart3, Globe, Search, Settings, Shield, CalendarClock, User, Briefcase, Activity, FileText, CheckSquare } from "lucide-react";
+import { BarChart3, Globe, Search, Settings, Shield, CalendarClock, User, Briefcase, Activity, FileText, CheckSquare, TrendingUp } from "lucide-react";
 
 const nav = [
   { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
   { to: "/websites", label: "Monitor", icon: Activity, desc: "Website health & SEO" },
   { to: "/projects", label: "Portfolio", icon: Briefcase, desc: "Asset management" },
   { to: "/tasks", label: "Tasks", icon: CheckSquare, desc: "All project tasks" },
-  { to: "/research", label: "Research", icon: Search, desc: "SEO & content tools" },
-  { to: "/planner", label: "Content", icon: FileText, desc: "Copy generation" },
+  { to: "/seo-research", label: "SEO Research", icon: TrendingUp, desc: "Keywords & SERP" },
+  { to: "/research", label: "GEO Tools", icon: Search, desc: "GEO audit & content" },
+  { to: "/planner", label: "Content", icon: FileText, desc: "AI copy generation" },
   { to: "/admin", label: "Admin", icon: Shield },
   { to: "/profile", label: "Profile", icon: User },
   { to: "/settings", label: "Settings", icon: Settings },
