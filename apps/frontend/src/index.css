@@ -7,26 +7,66 @@ body {
   height: 100%;
 }
 
+/* Light mode (default) */
 body {
   margin: 0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: #f8fafc;
+  color: #0f172a;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode */
+.theme-dark body {
   background: rgb(2 6 23);
   color: rgb(241 245 249);
 }
 
-html[data-theme="light"] body {
-  background: #f8fafc;
-  color: #0f172a;
-}
-
-html[data-theme="light"] input,
-html[data-theme="light"] textarea,
-html[data-theme="light"] select {
+/* Light mode form elements */
+input,
+textarea,
+select {
   background-color: #ffffff;
   color: #0f172a;
-  border-color: #cbd5e1;
+  border-color: #e2e8f0;
 }
 
-html[data-theme="light"] button {
-  color: inherit;
+/* Dark mode form elements */
+.theme-dark input,
+.theme-dark textarea,
+.theme-dark select {
+  background-color: rgb(15 23 42);
+  color: rgb(241 245 249);
+  border-color: rgb(51 65 85);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.theme-dark ::-webkit-scrollbar-track {
+  background: rgb(15 23 42);
+}
+
+.theme-dark ::-webkit-scrollbar-thumb {
+  background: rgb(51 65 85);
+}
+
+.theme-dark ::-webkit-scrollbar-thumb:hover {
+  background: rgb(71 85 105);
 }

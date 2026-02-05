@@ -17,7 +17,8 @@ export function getTheme(): Theme {
   const stored = localStorage.getItem(THEME_STORAGE_KEY);
   if (isTheme(stored)) return stored;
 
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  // Default to light mode
+  return "light";
 }
 
 export function setTheme(theme: Theme) {
