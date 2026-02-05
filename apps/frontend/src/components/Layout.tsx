@@ -32,6 +32,16 @@ const navSections = [
     ],
   },
   {
+    title: "MCP Tools",
+    items: [
+      { to: "/mcp-spark", label: "MCP Spark", icon: Zap, desc: "27 SEO & scraping tools" },
+      { to: "/daily-checks", label: "Daily Checks", icon: CalendarCheck, desc: "Website monitoring & SEO" },
+      { to: "/asset-tracker", label: "Asset Tracker", icon: Package, desc: "Portfolio management" },
+      { to: "/nico-geo", label: "Nico GEO", icon: Globe2, desc: "GEO content engine" },
+      { to: "/nexus-opencopy", label: "Nexus OpenCopy", icon: FileEdit, desc: "AI content studio" },
+    ],
+  },
+  {
     title: "Monitoring",
     items: [
       { to: "/websites", label: "Site Monitor", icon: Activity, desc: "Health & uptime tracking" },
@@ -45,16 +55,6 @@ const navSections = [
       { to: "/seo-research", label: "SEO Research", icon: TrendingUp, desc: "Keywords & SERP analysis" },
       { to: "/research", label: "GEO Tools", icon: Search, desc: "Audit & optimization" },
       { to: "/planner", label: "Content Studio", icon: FileText, desc: "AI-powered copywriting" },
-    ],
-  },
-  {
-    title: "MCP Tools",
-    items: [
-      { to: "/mcp-spark", label: "MCP Spark", icon: Zap, desc: "27 SEO & scraping tools" },
-      { to: "/daily-checks", label: "Daily Checks", icon: CalendarCheck, desc: "Website monitoring & SEO" },
-      { to: "/asset-tracker", label: "Asset Tracker", icon: Package, desc: "Portfolio management" },
-      { to: "/nico-geo", label: "Nico GEO", icon: Globe2, desc: "GEO content engine" },
-      { to: "/nexus-opencopy", label: "Nexus OpenCopy", icon: FileEdit, desc: "AI content studio" },
     ],
   },
   {
