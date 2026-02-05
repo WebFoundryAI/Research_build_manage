@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../lib/auth";
 import { callEdgeFunction, type EdgeFunctionResult } from "../lib/edgeFunctions";
-import { getSupabase, getSupabaseInitError } from "../lib/supabase";
+import { getSupabase, getSupabaseEnvStatus, getSupabaseInitError } from "../lib/supabase";
 
 type DiagnosticsState = {
   sessionStatus: string;
@@ -149,8 +149,10 @@ export default function SettingsPage() {
   const [integrationStatus, setIntegrationStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const [integrationMessage, setIntegrationMessage] = useState<string | null>(null);
 
-  const supabaseUrlPresent = Boolean((import.meta as any).env?.VITE_SUPABASE_URL);
-  const supabaseAnonPresent = Boolean((import.meta as any).env?.VITE_SUPABASE_ANON_KEY);
+  const [inputVisibility, setInputVisibility] = useState<Record<string, boolean>>({});
+  const [revealedVisibility, setRevealedVisibility] = useState<Record<string, boolean>>({});
+
+  const supabaseEnv = getSupabaseEnvStatus();
 
   useEffect(() => {
     setDiagnostics((prev) => ({
@@ -569,6 +571,21 @@ export default function SettingsPage() {
     );
   }
 
+  function toggleInputVisibility(key: string) {
+    setInputVisibility((prev) => ({ ...prev, [key]: !prev[key] }));
+  }
+
+  function toggleRevealVisibility(key: string) {
+    setRevealedVisibility((prev) => ({ ...prev, [key]: !prev[key] }));
+  }
+
+  const envBanner =
+    supabaseEnv.status === "ok"
+      ? { label: "OK", classes: "border-emerald-200 bg-emerald-50 text-emerald-800" }
+      : supabaseEnv.status === "warn"
+      ? { label: "WARN", classes: "border-amber-200 bg-amber-50 text-amber-800" }
+      : { label: "ERROR", classes: "border-red-200 bg-red-50 text-red-800" };
+
   if (mode === "demo" || !supabase) {
     return (
       <div className="rounded-2xl border bg-white p-6 shadow-soft">
@@ -588,6 +605,11 @@ export default function SettingsPage() {
         <p className="mt-1 text-sm text-slate-600">
           Centralize API keys, MCP servers, integrations, and diagnostics for the master app.
         </p>
+      </div>
+
+      <div className={`rounded-2xl border p-4 text-sm ${envBanner.classes}`}>
+        <div className="font-semibold">Supabase env status: {envBanner.label}</div>
+        <div className="mt-1">URL and anon key validation includes presence, format, and safe metadata checks.</div>
       </div>
 
       {initError && (
@@ -646,9 +668,9 @@ export default function SettingsPage() {
                       Reveal
                     </button>
                   </div>
-                  <div className="grid gap-2 md:grid-cols-[1fr_auto]">
+                  <div className="grid gap-2 md:grid-cols-[1fr_auto_auto]">
                     <input
-                      type="password"
+                      type={inputVisibility[field.key] ? "text" : "password"}
                       value={state.value}
                       onChange={(event) =>
                         setApiKeys((prev) => ({
@@ -660,6 +682,12 @@ export default function SettingsPage() {
                       className="rounded-xl border px-3 py-2"
                     />
                     <button
+                      onClick={() => toggleInputVisibility(field.key)}
+                      className="rounded-xl border px-4 py-2 text-sm hover:bg-slate-50"
+                    >
+                      {inputVisibility[field.key] ? "Hide" : "Show"}
+                    </button>
+                    <button
                       onClick={() => saveSecret(field.key)}
                       className="rounded-xl bg-slate-900 px-4 py-2 text-sm text-white disabled:opacity-60"
                       disabled={state.status === "saving" || !state.value.trim()}
@@ -668,7 +696,20 @@ export default function SettingsPage() {
                     </button>
                   </div>
                   {state.revealed && (
-                    <div className="text-xs text-slate-500">Revealed: {state.revealed}</div>
+                    <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">Reveal block</span>
+                        <button
+                          onClick={() => toggleRevealVisibility(field.key)}
+                          className="rounded border border-slate-300 px-2 py-1 text-[11px] hover:bg-white"
+                        >
+                          {revealedVisibility[field.key] ? "Hide" : "Reveal"}
+                        </button>
+                      </div>
+                      <div className="mt-2 break-all">
+                        {revealedVisibility[field.key] ? state.revealed : "••••••••••••"}
+                      </div>
+                    </div>
                   )}
                   {state.error && <div className="text-xs text-red-600">{state.error}</div>}
                 </div>
@@ -732,9 +773,9 @@ export default function SettingsPage() {
                         Remove
                       </button>
                     </div>
-                    <div className="grid gap-2 md:grid-cols-[1fr_auto_auto]">
+                    <div className="grid gap-2 md:grid-cols-[1fr_auto_auto_auto]">
                       <input
-                        type="password"
+                        type={inputVisibility[entry.key] ? "text" : "password"}
                         value={state.value}
                         onChange={(event) =>
                           setApiKeys((prev) => ({
@@ -745,6 +786,12 @@ export default function SettingsPage() {
                         placeholder="Secret value"
                         className="rounded-lg border px-3 py-2 text-sm"
                       />
+                      <button
+                        onClick={() => toggleInputVisibility(entry.key)}
+                        className="rounded-lg border px-3 py-1.5 text-xs hover:bg-slate-50"
+                      >
+                        {inputVisibility[entry.key] ? "Hide" : "Show"}
+                      </button>
                       <button
                         onClick={() => revealSecret(entry.key)}
                         className="rounded-lg border px-3 py-1.5 text-xs hover:bg-slate-50"
@@ -763,6 +810,22 @@ export default function SettingsPage() {
                     <div className="text-xs text-slate-500">
                       {state.masked ? `Stored (${state.masked})` : "Not set"}
                     </div>
+                    {state.revealed && (
+                      <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium">Reveal block</span>
+                          <button
+                            onClick={() => toggleRevealVisibility(entry.key)}
+                            className="rounded border border-slate-300 px-2 py-1 text-[11px] hover:bg-white"
+                          >
+                            {revealedVisibility[entry.key] ? "Hide" : "Reveal"}
+                          </button>
+                        </div>
+                        <div className="mt-2 break-all">
+                          {revealedVisibility[entry.key] ? state.revealed : "••••••••••••"}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -887,14 +950,22 @@ export default function SettingsPage() {
                       </div>
                       {header.isSecret && (
                         <input
-                          type="password"
+                          type={inputVisibility[header.id] ? "text" : "password"}
                           value={header.secretValue}
                           onChange={(event) =>
                             updateHeader(server.id, header.id, { secretValue: event.target.value })
                           }
                           placeholder="Secret value (saved to secrets-set)"
-                          className="w-full rounded-lg border px-3 py-2 text-sm"
+                          className="w-full rounded-lg border bg-white px-3 py-2 text-sm text-slate-900"
                         />
+                      )}
+                      {header.isSecret && (
+                        <button
+                          onClick={() => toggleInputVisibility(header.id)}
+                          className="rounded-lg border px-3 py-1.5 text-xs hover:bg-slate-50"
+                        >
+                          {inputVisibility[header.id] ? "Hide" : "Show"}
+                        </button>
                       )}
                     </div>
                   ))}
@@ -1023,13 +1094,20 @@ export default function SettingsPage() {
             <div className="rounded-xl border p-4 space-y-2">
               <div className="font-medium">Supabase env</div>
               <div className="flex justify-between">
+                <span>Status</span>
+                <span>{supabaseEnv.status.toUpperCase()}</span>
+              </div>
+              <div className="flex justify-between">
                 <span>URL</span>
-                <span>{supabaseUrlPresent ? "present" : "missing"}</span>
+                <span>{supabaseEnv.url.present ? "present" : "missing"} · len {supabaseEnv.url.length} · …{supabaseEnv.url.last4 || "----"} · {supabaseEnv.url.format}</span>
               </div>
               <div className="flex justify-between">
                 <span>Anon key</span>
-                <span>{supabaseAnonPresent ? "present" : "missing"}</span>
+                <span>{supabaseEnv.anonKey.present ? "present" : "missing"} · len {supabaseEnv.anonKey.length} · …{supabaseEnv.anonKey.last4 || "----"} · {supabaseEnv.anonKey.format}</span>
               </div>
+              {supabaseEnv.errors.length > 0 && (
+                <div className="text-xs text-amber-700">{supabaseEnv.errors.join(" ")}</div>
+              )}
             </div>
 
             <div className="rounded-xl border p-4 space-y-2">
