@@ -71,6 +71,26 @@ import AssetAlerts from "./pages/asset-tracker/Alerts";
 import AssetTrash from "./pages/asset-tracker/Trash";
 import AssetSettings from "./pages/asset-tracker/AssetSettings";
 
+// Nico GEO Pages
+import NicoGeoLayout from "./pages/nico-geo/NicoGeoLayout";
+import NicoGeoIndex from "./pages/nico-geo/Index";
+import NicoGeoGenerate from "./pages/nico-geo/Generate";
+import NicoGeoAudit from "./pages/nico-geo/Audit";
+import NicoGeoImprove from "./pages/nico-geo/Improve";
+import NicoGeoReviews from "./pages/nico-geo/Reviews";
+import NicoGeoApiKeys from "./pages/nico-geo/ApiKeys";
+import NicoGeoSettings from "./pages/nico-geo/Settings";
+
+// Nexus OpenCopy Pages
+import NexusOpenCopyLayout from "./pages/nexus-opencopy/NexusOpenCopyLayout";
+import NexusOpenCopyIndex from "./pages/nexus-opencopy/Index";
+import NexusOpenCopyProjects from "./pages/nexus-opencopy/Projects";
+import NexusOpenCopyKeywords from "./pages/nexus-opencopy/Keywords";
+import NexusOpenCopyArticles from "./pages/nexus-opencopy/Articles";
+import NexusOpenCopyContentPlanner from "./pages/nexus-opencopy/ContentPlanner";
+import NexusOpenCopyIntegrations from "./pages/nexus-opencopy/Integrations";
+import NexusOpenCopySettings from "./pages/nexus-opencopy/NexusSettings";
+
 class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { err: any }> {
   state = { err: null };
   static getDerivedStateFromError(err: any) { return { err }; }
@@ -174,6 +194,28 @@ export default function App() {
                 <Route path="alerts" element={<AssetAlerts />} />
                 <Route path="trash" element={<AssetTrash />} />
                 <Route path="settings" element={<AssetSettings />} />
+              </Route>
+
+              {/* Nico GEO Section */}
+              <Route path="/nico-geo" element={<NicoGeoLayout />}>
+                <Route index element={<NicoGeoIndex />} />
+                <Route path="generate" element={<NicoGeoGenerate />} />
+                <Route path="audit" element={<NicoGeoAudit />} />
+                <Route path="improve" element={<NicoGeoImprove />} />
+                <Route path="reviews" element={<NicoGeoReviews />} />
+                <Route path="api-keys" element={<NicoGeoApiKeys />} />
+                <Route path="settings" element={<NicoGeoSettings />} />
+              </Route>
+
+              {/* Nexus OpenCopy Section */}
+              <Route path="/nexus-opencopy" element={<NexusOpenCopyLayout />}>
+                <Route index element={<NexusOpenCopyIndex />} />
+                <Route path="projects" element={<NexusOpenCopyProjects />} />
+                <Route path="keywords" element={<NexusOpenCopyKeywords />} />
+                <Route path="articles" element={<NexusOpenCopyArticles />} />
+                <Route path="content-planner" element={<NexusOpenCopyContentPlanner />} />
+                <Route path="integrations" element={<NexusOpenCopyIntegrations />} />
+                <Route path="settings" element={<NexusOpenCopySettings />} />
               </Route>
             </Route>
 
