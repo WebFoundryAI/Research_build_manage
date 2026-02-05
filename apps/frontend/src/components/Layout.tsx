@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../lib/auth";
+import { useTheme } from "../lib/ThemeContext";
 import {
   BarChart3,
   Settings,
@@ -16,6 +17,8 @@ import {
   Package,
   Globe2,
   FileEdit,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 const navSections = [
@@ -47,6 +50,7 @@ const navSections = [
 
 export default function Layout() {
   const { mode, user, error, signOut } = useAuth();
+  const { mode: themeMode, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -173,13 +177,22 @@ export default function Layout() {
                 <div className="text-[10px] text-slate-500">Mode: {mode}</div>
               </div>
             </div>
-            <button
-              onClick={() => signOut()}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 px-4 py-2.5 text-sm font-medium transition-colors"
-            >
-              <LogOut size={16} />
-              Sign out
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={toggleTheme}
+                className="flex items-center justify-center gap-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 px-3 py-2.5 text-sm font-medium transition-colors"
+                title={themeMode === "light" ? "Switch to dark mode" : "Switch to light mode"}
+              >
+                {themeMode === "light" ? <Moon size={16} /> : <Sun size={16} />}
+              </button>
+              <button
+                onClick={() => signOut()}
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 px-4 py-2.5 text-sm font-medium transition-colors"
+              >
+                <LogOut size={16} />
+                Sign out
+              </button>
+            </div>
           </div>
         </div>
       </aside>
@@ -264,13 +277,22 @@ export default function Layout() {
                 </div>
               </div>
             </div>
-            <button
-              onClick={() => signOut()}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-slate-800/60 hover:bg-slate-700 px-4 py-2.5 text-sm font-medium transition-all duration-200 hover:shadow-lg"
-            >
-              <LogOut size={16} />
-              Sign out
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={toggleTheme}
+                className="flex items-center justify-center gap-2 rounded-xl bg-slate-800/60 hover:bg-slate-700 px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:shadow-lg"
+                title={themeMode === "light" ? "Switch to dark mode" : "Switch to light mode"}
+              >
+                {themeMode === "light" ? <Moon size={16} /> : <Sun size={16} />}
+              </button>
+              <button
+                onClick={() => signOut()}
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-slate-800/60 hover:bg-slate-700 px-4 py-2.5 text-sm font-medium transition-all duration-200 hover:shadow-lg"
+              >
+                <LogOut size={16} />
+                Sign out
+              </button>
+            </div>
           </div>
         </aside>
 
