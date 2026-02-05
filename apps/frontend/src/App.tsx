@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import AuthPage from "./pages/AuthPage";
 import WebsitesPage from "./pages/WebsitesPage";
 import ProjectsPage from "./pages/ProjectsPage";
+import TasksPage from "./pages/TasksPage";
 import ResearchPage from "./pages/ResearchPage";
 import PlannerPage from "./pages/PlannerPage";
 import AdminPage from "./pages/AdminPage";
@@ -47,6 +48,7 @@ export default function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/websites" element={<WebsitesPage />} />
               <Route path="/projects" element={<ProjectsPage />} />
+              <Route path="/tasks" element={<TasksPage />} />
               <Route path="/research" element={<ResearchPage />} />
               <Route path="/planner" element={<PlannerPage />} />
               <Route path="/admin" element={<AdminPage />} />
