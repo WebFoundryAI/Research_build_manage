@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../lib/auth";
+import { useTheme } from "../lib/ThemeContext";
 import {
   BarChart3,
   Settings,
@@ -16,6 +17,8 @@ import {
   Package,
   Globe2,
   FileEdit,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 const navSections = [
@@ -47,6 +50,7 @@ const navSections = [
 
 export default function Layout() {
   const { mode, user, error, signOut } = useAuth();
+  const { mode: themeMode, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -72,9 +76,9 @@ export default function Layout() {
     });
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
       {/* Mobile Header */}
-      <header className="md:hidden fixed top-0 left-0 right-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur-xl">
+      <header className="md:hidden fixed top-0 left-0 right-0 z-50 border-b border-slate-200 bg-white/95 dark:border-slate-800 dark:bg-slate-950/95 backdrop-blur-xl">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
@@ -84,7 +88,7 @@ export default function Layout() {
           </div>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-lg hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -101,12 +105,12 @@ export default function Layout() {
 
       {/* Mobile Sidebar */}
       <aside
-        className={`md:hidden fixed top-0 left-0 bottom-0 z-50 w-72 bg-slate-950 border-r border-slate-800 transform transition-transform duration-300 ease-out ${
+        className={`md:hidden fixed top-0 left-0 bottom-0 z-50 w-72 bg-white border-r border-slate-200 dark:bg-slate-950 dark:border-slate-800 transform transition-transform duration-300 ease-out ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
-          <div className="p-5 border-b border-slate-800">
+          <div className="p-5 border-b border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
                 <Sparkles size={20} className="text-white" />
@@ -121,7 +125,7 @@ export default function Layout() {
           <nav className="flex-1 overflow-y-auto py-4 px-3">
             {navSections.map((section) => (
               <div key={section.title} className="mb-6">
-                <div className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                <div className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                   {section.title}
                 </div>
                 {section.items.map(({ to, label, icon: Icon, desc }) => (
@@ -132,8 +136,8 @@ export default function Layout() {
                     className={({ isActive }) =>
                       `group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200 ${
                         isActive
-                          ? "bg-gradient-to-r from-indigo-500/20 to-purple-500/10 text-white shadow-lg shadow-indigo-500/5"
-                          : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                          ? "bg-gradient-to-r from-indigo-500/20 to-purple-500/10 text-slate-900 dark:text-white shadow-lg shadow-indigo-500/5"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/50"
                       }`
                     }
                   >
@@ -142,18 +146,18 @@ export default function Layout() {
                         <div
                           className={`p-1.5 rounded-lg transition-colors ${
                             isActive
-                              ? "bg-indigo-500/20 text-indigo-400"
-                              : "bg-slate-800/50 text-slate-500 group-hover:text-slate-300"
+                              ? "bg-indigo-500/20 text-indigo-600 dark:text-indigo-400"
+                              : "bg-slate-100 text-slate-400 group-hover:text-slate-600 dark:bg-slate-800/50 dark:text-slate-500 dark:group-hover:text-slate-300"
                           }`}
                         >
                           <Icon size={16} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="font-medium">{label}</div>
-                          <div className="text-[10px] text-slate-500 truncate">{desc}</div>
+                          <div className="text-[10px] text-slate-400 dark:text-slate-500 truncate">{desc}</div>
                         </div>
                         {isActive && (
-                          <ChevronRight size={14} className="text-indigo-400" />
+                          <ChevronRight size={14} className="text-indigo-600 dark:text-indigo-400" />
                         )}
                       </>
                     )}
@@ -163,38 +167,47 @@ export default function Layout() {
             ))}
           </nav>
 
-          <div className="p-4 border-t border-slate-800">
+          <div className="p-4 border-t border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-sm font-medium">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center text-sm font-medium">
                 {user?.email?.charAt(0).toUpperCase() || "U"}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium truncate">{user?.email || "Unknown"}</div>
-                <div className="text-[10px] text-slate-500">Mode: {mode}</div>
+                <div className="text-[10px] text-slate-400 dark:text-slate-500">Mode: {mode}</div>
               </div>
             </div>
-            <button
-              onClick={() => signOut()}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 px-4 py-2.5 text-sm font-medium transition-colors"
-            >
-              <LogOut size={16} />
-              Sign out
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={toggleTheme}
+                className="flex items-center justify-center gap-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-700 px-3 py-2.5 text-sm font-medium transition-colors"
+                title={themeMode === "light" ? "Switch to dark mode" : "Switch to light mode"}
+              >
+                {themeMode === "light" ? <Moon size={16} /> : <Sun size={16} />}
+              </button>
+              <button
+                onClick={() => signOut()}
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-700 px-4 py-2.5 text-sm font-medium transition-colors"
+              >
+                <LogOut size={16} />
+                Sign out
+              </button>
+            </div>
           </div>
         </div>
       </aside>
 
       <div className="flex">
         {/* Desktop Sidebar */}
-        <aside className="hidden md:flex w-64 flex-col fixed top-0 left-0 bottom-0 border-r border-slate-800 bg-slate-950/80 backdrop-blur-xl">
+        <aside className="hidden md:flex w-64 flex-col fixed top-0 left-0 bottom-0 border-r border-slate-200 bg-white/80 dark:border-slate-800 dark:bg-slate-950/80 backdrop-blur-xl">
           {/* Brand Header */}
-          <div className="p-5 border-b border-slate-800/50">
+          <div className="p-5 border-b border-slate-200/50 dark:border-slate-800/50">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
                 <Sparkles size={20} className="text-white" />
               </div>
               <div>
-                <div className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">
+                <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium uppercase tracking-wider">
                   WebFoundryAI
                 </div>
                 <div className="font-semibold text-sm">Research Build Manage</div>
@@ -206,7 +219,7 @@ export default function Layout() {
           <nav className="flex-1 overflow-y-auto py-4 px-3">
             {navSections.map((section) => (
               <div key={section.title} className="mb-6">
-                <div className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                <div className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                   {section.title}
                 </div>
                 {section.items.map(({ to, label, icon: Icon, desc }) => (
@@ -216,8 +229,8 @@ export default function Layout() {
                     className={({ isActive }) =>
                       `group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200 ${
                         isActive
-                          ? "bg-gradient-to-r from-indigo-500/20 to-purple-500/10 text-white shadow-lg shadow-indigo-500/5"
-                          : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                          ? "bg-gradient-to-r from-indigo-500/20 to-purple-500/10 text-slate-900 dark:text-white shadow-lg shadow-indigo-500/5"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/50"
                       }`
                     }
                   >
@@ -226,18 +239,18 @@ export default function Layout() {
                         <div
                           className={`p-1.5 rounded-lg transition-colors ${
                             isActive
-                              ? "bg-indigo-500/20 text-indigo-400"
-                              : "bg-slate-800/50 text-slate-500 group-hover:text-slate-300"
+                              ? "bg-indigo-500/20 text-indigo-600 dark:text-indigo-400"
+                              : "bg-slate-100 text-slate-400 group-hover:text-slate-600 dark:bg-slate-800/50 dark:text-slate-500 dark:group-hover:text-slate-300"
                           }`}
                         >
                           <Icon size={16} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="font-medium">{label}</div>
-                          <div className="text-[10px] text-slate-500 truncate">{desc}</div>
+                          <div className="text-[10px] text-slate-400 dark:text-slate-500 truncate">{desc}</div>
                         </div>
                         {isActive && (
-                          <ChevronRight size={14} className="text-indigo-400" />
+                          <ChevronRight size={14} className="text-indigo-600 dark:text-indigo-400" />
                         )}
                       </>
                     )}
@@ -248,46 +261,55 @@ export default function Layout() {
           </nav>
 
           {/* User Section */}
-          <div className="p-4 border-t border-slate-800/50">
+          <div className="p-4 border-t border-slate-200/50 dark:border-slate-800/50">
             <div className="flex items-center gap-3 mb-3">
               <div className="relative">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-sm font-medium ring-2 ring-slate-700">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center text-sm font-medium ring-2 ring-slate-200 dark:ring-slate-700">
                   {user?.email?.charAt(0).toUpperCase() || "U"}
                 </div>
-                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-slate-950" />
+                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-950" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium truncate">{user?.email || "Unknown"}</div>
-                <div className="text-[10px] text-slate-500 flex items-center gap-1">
+                <div className="text-[10px] text-slate-400 dark:text-slate-500 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                   Online
                 </div>
               </div>
             </div>
-            <button
-              onClick={() => signOut()}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-slate-800/60 hover:bg-slate-700 px-4 py-2.5 text-sm font-medium transition-all duration-200 hover:shadow-lg"
-            >
-              <LogOut size={16} />
-              Sign out
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={toggleTheme}
+                className="flex items-center justify-center gap-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/60 dark:hover:bg-slate-700 px-3 py-2.5 text-sm font-medium transition-all duration-200 hover:shadow-lg"
+                title={themeMode === "light" ? "Switch to dark mode" : "Switch to light mode"}
+              >
+                {themeMode === "light" ? <Moon size={16} /> : <Sun size={16} />}
+              </button>
+              <button
+                onClick={() => signOut()}
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/60 dark:hover:bg-slate-700 px-4 py-2.5 text-sm font-medium transition-all duration-200 hover:shadow-lg"
+              >
+                <LogOut size={16} />
+                Sign out
+              </button>
+            </div>
           </div>
         </aside>
 
         {/* Main Content */}
         <main className="flex-1 md:ml-64">
           {/* Top Header */}
-          <header className="sticky top-0 z-30 border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-xl">
+          <header className="sticky top-0 z-30 border-b border-slate-200/50 bg-white/80 dark:border-slate-800/50 dark:bg-slate-950/80 backdrop-blur-xl">
             <div className="px-6 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3 pt-12 md:pt-0">
                 {currentPage && (
                   <>
-                    <div className="p-2 rounded-lg bg-slate-800/50">
-                      <currentPage.icon size={18} className="text-indigo-400" />
+                    <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800/50">
+                      <currentPage.icon size={18} className="text-indigo-600 dark:text-indigo-400" />
                     </div>
                     <div>
                       <h1 className="font-semibold">{currentPage.label}</h1>
-                      <p className="text-xs text-slate-500">{currentPage.desc}</p>
+                      <p className="text-xs text-slate-400 dark:text-slate-500">{currentPage.desc}</p>
                     </div>
                   </>
                 )}
@@ -296,12 +318,12 @@ export default function Layout() {
                 {error ? (
                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
                     <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                    <span className="text-xs text-amber-400">{error}</span>
+                    <span className="text-xs text-amber-600 dark:text-amber-400">{error}</span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                     <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                    <span className="text-xs text-emerald-400">System OK</span>
+                    <span className="text-xs text-emerald-600 dark:text-emerald-400">System OK</span>
                   </div>
                 )}
               </div>

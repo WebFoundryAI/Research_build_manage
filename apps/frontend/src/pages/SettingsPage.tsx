@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../lib/auth";
+import { useTheme } from "../lib/ThemeContext";
 import { callEdgeFunction, type EdgeFunctionResult } from "../lib/edgeFunctions";
 import { getSupabase, getSupabaseEnvStatus, getSupabaseInitError } from "../lib/supabase";
 import {
@@ -16,6 +17,9 @@ import {
   CheckCircle,
   Settings,
   RefreshCw,
+  Palette,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 type DiagnosticsState = {
@@ -130,10 +134,11 @@ function normalizeCustomKeys(input: unknown): CustomKey[] {
 
 export default function SettingsPage() {
   const { user, mode } = useAuth();
+  const { mode: themeMode, toggleTheme } = useTheme();
   const supabase = useMemo(() => getSupabase(), []);
   const initError = getSupabaseInitError();
 
-  const [activeTab, setActiveTab] = useState<"api" | "mcp" | "integrations" | "diagnostics">("api");
+  const [activeTab, setActiveTab] = useState<"appearance" | "api" | "mcp" | "integrations" | "diagnostics">("appearance");
   const [diagnostics, setDiagnostics] = useState<DiagnosticsState>({
     sessionStatus: "unknown",
     userId: user?.id ?? "",
@@ -590,17 +595,17 @@ export default function SettingsPage() {
   if (mode === "demo" || !supabase) {
     return (
       <div className="max-w-4xl">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+        <div className="rounded-2xl border border-slate-200 bg-white/60 dark:border-slate-800 dark:bg-slate-900/40 p-6">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-3 rounded-xl bg-amber-500/20">
-              <AlertTriangle size={24} className="text-amber-400" />
+              <AlertTriangle size={24} className="text-amber-600 dark:text-amber-400" />
             </div>
             <div>
               <h1 className="text-xl font-semibold">Settings</h1>
-              <p className="text-sm text-slate-400">Demo mode - Settings disabled</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Demo mode - Settings disabled</p>
             </div>
           </div>
-          <p className="text-slate-500">
+          <p className="text-slate-500 dark:text-slate-500">
             Configure Supabase environment variables to manage API keys, MCP servers, and diagnostics.
           </p>
         </div>
@@ -614,17 +619,17 @@ export default function SettingsPage() {
       <div>
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-xl bg-indigo-500/20">
-            <Settings size={20} className="text-indigo-400" />
+            <Settings size={20} className="text-indigo-600 dark:text-indigo-400" />
           </div>
           <h1 className="text-2xl font-semibold">Settings</h1>
         </div>
-        <p className="mt-2 text-sm text-slate-400">
+        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
           Centralize API keys, MCP servers, integrations, and diagnostics.
         </p>
       </div>
 
       {initError && (
-        <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-4 text-sm text-amber-400 flex items-center gap-3">
+        <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-4 text-sm text-amber-600 dark:text-amber-400 flex items-center gap-3">
           <AlertTriangle size={18} />
           Supabase init warning: {initError.message}
         </div>
@@ -633,6 +638,7 @@ export default function SettingsPage() {
       {/* Tabs */}
       <div className="flex gap-2 overflow-x-auto pb-2">
         {[
+          { id: "appearance", label: "Appearance", icon: Palette },
           { id: "api", label: "API Keys", icon: Key },
           { id: "mcp", label: "MCP Servers", icon: Server },
           { id: "integrations", label: "Integrations", icon: Link2 },
@@ -643,8 +649,8 @@ export default function SettingsPage() {
             onClick={() => setActiveTab(tab.id as typeof activeTab)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
               activeTab === tab.id
-                ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500/30"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/50 border border-transparent"
+                ? "bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30"
+                : "text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/50 border border-transparent"
             }`}
           >
             <tab.icon size={16} />
@@ -653,16 +659,68 @@ export default function SettingsPage() {
         ))}
       </div>
 
+      {/* Appearance Tab */}
+      {activeTab === "appearance" && (
+        <div className="rounded-2xl border border-slate-200 bg-white/60 dark:border-slate-800 dark:bg-slate-900/40 p-6 space-y-6">
+          <div>
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <Palette size={18} className="text-slate-500 dark:text-slate-400" />
+              Appearance
+            </h2>
+            <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
+              Customize how the platform looks and feels.
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-medium">Theme</div>
+                <div className="text-sm text-slate-500 dark:text-slate-500 mt-1">
+                  Switch between light and dark mode
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className={`flex items-center gap-2 transition-colors ${themeMode === "light" ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400 dark:text-slate-500"}`}>
+                  <Sun size={16} />
+                  <span className="text-sm font-medium">Light</span>
+                </div>
+                <button
+                  onClick={toggleTheme}
+                  className={`relative w-12 h-6 rounded-full transition-colors ${
+                    themeMode === "dark" ? "bg-indigo-500" : "bg-slate-300 dark:bg-slate-600"
+                  }`}
+                >
+                  <div
+                    className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                      themeMode === "dark" ? "translate-x-7" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+                <div className={`flex items-center gap-2 transition-colors ${themeMode === "dark" ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400 dark:text-slate-500"}`}>
+                  <Moon size={16} />
+                  <span className="text-sm font-medium">Dark</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-xs text-slate-500 dark:text-slate-500">
+            Your theme preference is saved locally and will persist across sessions.
+          </div>
+        </div>
+      )}
+
       {/* API Keys Tab */}
       {activeTab === "api" && (
         <div className="space-y-6">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 space-y-6">
+          <div className="rounded-2xl border border-slate-200 bg-white/60 dark:border-slate-800 dark:bg-slate-900/40 p-6 space-y-6">
             <div>
               <h2 className="text-lg font-semibold flex items-center gap-2">
-                <Key size={18} className="text-slate-400" />
+                <Key size={18} className="text-slate-500 dark:text-slate-400" />
                 API Keys
               </h2>
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
                 Keys are stored server-side via Supabase Edge Functions. Values are masked by default.
               </p>
             </div>
@@ -672,23 +730,23 @@ export default function SettingsPage() {
                 const state = apiKeys[field.key];
                 const isPasswordVisible = showPasswords[field.key];
                 return (
-                  <div key={field.key} className="rounded-xl border border-slate-700 p-4 space-y-3">
+                  <div key={field.key} className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="font-medium">{field.label}</div>
-                        <div className="text-xs text-slate-500 mt-0.5">
+                        <div className="text-xs text-slate-500 dark:text-slate-500 mt-0.5">
                           {state.masked ? (
-                            <span className="text-emerald-400 flex items-center gap-1">
+                            <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                               <CheckCircle size={12} /> Stored ({state.masked})
                             </span>
                           ) : (
-                            <span className="text-slate-500">Not configured</span>
+                            <span className="text-slate-500 dark:text-slate-500">Not configured</span>
                           )}
                         </div>
                       </div>
                       <button
                         onClick={() => revealSecret(field.key)}
-                        className="flex items-center gap-1.5 rounded-lg border border-slate-600 px-3 py-1.5 text-xs hover:bg-slate-700 transition-colors"
+                        className="flex items-center gap-1.5 rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-1.5 text-xs hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                         disabled={state.status !== "idle"}
                       >
                         <Eye size={14} />
@@ -707,19 +765,19 @@ export default function SettingsPage() {
                             }))
                           }
                           placeholder={field.placeholder}
-                          className="w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none pr-10"
+                          className="w-full rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none pr-10"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPasswords(prev => ({ ...prev, [field.key]: !prev[field.key] }))}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
                         >
                           {isPasswordVisible ? <EyeOff size={16} /> : <Eye size={16} />}
                         </button>
                       </div>
                       <button
                         onClick={() => saveSecret(field.key)}
-                        className="flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-50"
+                        className="flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-4 py-2.5 text-sm font-medium text-white transition-colors disabled:opacity-50"
                         disabled={state.status === "saving" || !state.value.trim()}
                       >
                         <Save size={14} />
@@ -727,12 +785,12 @@ export default function SettingsPage() {
                       </button>
                     </div>
                     {state.revealed && (
-                      <div className="text-xs bg-slate-800 rounded-lg p-2 font-mono break-all">
+                      <div className="text-xs bg-slate-100 dark:bg-slate-800 rounded-lg p-2 font-mono break-all">
                         {state.revealed}
                       </div>
                     )}
                     {state.error && (
-                      <div className="text-xs text-red-400 flex items-center gap-1">
+                      <div className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
                         <AlertTriangle size={12} />
                         {state.error}
                       </div>
@@ -744,13 +802,13 @@ export default function SettingsPage() {
           </div>
 
           {/* Custom Keys Section */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 space-y-4">
+          <div className="rounded-2xl border border-slate-200 bg-white/60 dark:border-slate-800 dark:bg-slate-900/40 p-6 space-y-4">
             <div>
               <h3 className="font-semibold flex items-center gap-2">
-                <Plus size={16} className="text-slate-400" />
+                <Plus size={16} className="text-slate-500 dark:text-slate-400" />
                 Custom API Keys
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
                 Add custom secret keys by name (e.g., "partner_api_key").
               </p>
             </div>
@@ -760,17 +818,17 @@ export default function SettingsPage() {
                 value={customDraft.label}
                 onChange={(event) => setCustomDraft((prev) => ({ ...prev, label: event.target.value }))}
                 placeholder="Label (optional)"
-                className="flex-1 rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
+                className="flex-1 rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
               />
               <input
                 value={customDraft.key}
                 onChange={(event) => setCustomDraft((prev) => ({ ...prev, key: event.target.value }))}
                 placeholder="Key name"
-                className="flex-1 rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
+                className="flex-1 rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
               />
               <button
                 onClick={addCustomKey}
-                className="flex items-center gap-2 rounded-xl border border-slate-600 px-4 py-2.5 text-sm hover:bg-slate-700 transition-colors"
+                className="flex items-center gap-2 rounded-xl border border-slate-300 dark:border-slate-600 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
               >
                 <Plus size={14} />
                 Add
@@ -778,7 +836,7 @@ export default function SettingsPage() {
             </div>
 
             {customKeys.length === 0 && (
-              <div className="text-sm text-slate-500 text-center py-4">No custom keys yet.</div>
+              <div className="text-sm text-slate-500 dark:text-slate-500 text-center py-4">No custom keys yet.</div>
             )}
 
             <div className="space-y-3">
@@ -791,15 +849,15 @@ export default function SettingsPage() {
                   error: null,
                 };
                 return (
-                  <div key={entry.id} className="rounded-xl border border-slate-700 p-4 space-y-3">
+                  <div key={entry.id} className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="font-medium">{entry.label || entry.key}</div>
-                        <div className="text-xs text-slate-500">{entry.key}</div>
+                        <div className="text-xs text-slate-500 dark:text-slate-500">{entry.key}</div>
                       </div>
                       <button
                         onClick={() => removeCustomKey(entry.id)}
-                        className="flex items-center gap-1.5 rounded-lg border border-red-900/50 text-red-400 px-3 py-1.5 text-xs hover:bg-red-950/30 transition-colors"
+                        className="flex items-center gap-1.5 rounded-lg border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 px-3 py-1.5 text-xs hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
                       >
                         <Trash2 size={12} />
                         Remove
@@ -816,24 +874,24 @@ export default function SettingsPage() {
                           }))
                         }
                         placeholder="Secret value"
-                        className="flex-1 rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
+                        className="flex-1 rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
                       />
                       <button
                         onClick={() => revealSecret(entry.key)}
-                        className="rounded-lg border border-slate-600 px-3 py-1.5 text-xs hover:bg-slate-700 transition-colors"
+                        className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-1.5 text-xs hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                         disabled={state.status !== "idle"}
                       >
                         Reveal
                       </button>
                       <button
                         onClick={() => saveSecret(entry.key)}
-                        className="rounded-xl bg-indigo-600 hover:bg-indigo-500 px-4 py-2.5 text-sm font-medium transition-colors"
+                        className="rounded-xl bg-indigo-600 hover:bg-indigo-500 px-4 py-2.5 text-sm font-medium text-white transition-colors"
                         disabled={!state.value.trim() || state.status === "saving"}
                       >
                         Save
                       </button>
                     </div>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-slate-500 dark:text-slate-500">
                       {state.masked ? `Stored (${state.masked})` : "Not set"}
                     </div>
                   </div>
@@ -844,7 +902,7 @@ export default function SettingsPage() {
             {customMessage && (
               <div
                 className={`text-sm flex items-center gap-2 ${
-                  customStatus === "error" ? "text-red-400" : "text-emerald-400"
+                  customStatus === "error" ? "text-red-600 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"
                 }`}
               >
                 {customStatus === "error" ? <AlertTriangle size={14} /> : <CheckCircle size={14} />}
@@ -857,20 +915,20 @@ export default function SettingsPage() {
 
       {/* MCP Tab */}
       {activeTab === "mcp" && (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 space-y-6">
+        <div className="rounded-2xl border border-slate-200 bg-white/60 dark:border-slate-800 dark:bg-slate-900/40 p-6 space-y-6">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold flex items-center gap-2">
-                <Server size={18} className="text-slate-400" />
+                <Server size={18} className="text-slate-500 dark:text-slate-400" />
                 MCP Servers
               </h2>
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
                 Define server endpoints, toggle enablement, and manage header secrets.
               </p>
             </div>
             <button
               onClick={addServer}
-              className="flex items-center gap-2 rounded-xl border border-slate-600 px-4 py-2.5 text-sm hover:bg-slate-700 transition-colors"
+              className="flex items-center gap-2 rounded-xl border border-slate-300 dark:border-slate-600 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
             >
               <Plus size={14} />
               Add Server
@@ -878,27 +936,27 @@ export default function SettingsPage() {
           </div>
 
           {mcpServers.length === 0 && (
-            <div className="text-sm text-slate-500 text-center py-8">
+            <div className="text-sm text-slate-500 dark:text-slate-500 text-center py-8">
               No MCP servers configured yet.
             </div>
           )}
 
           <div className="space-y-4">
             {mcpServers.map((server) => (
-              <div key={server.id} className="rounded-xl border border-slate-700 p-5 space-y-4">
+              <div key={server.id} className="rounded-xl border border-slate-200 dark:border-slate-700 p-5 space-y-4">
                 <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                   <div className="grid gap-3 md:grid-cols-2 flex-1">
                     <input
                       value={server.name}
                       onChange={(event) => updateServer(server.id, { name: event.target.value })}
                       placeholder="Server name"
-                      className="rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
+                      className="rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
                     />
                     <input
                       value={server.base_url}
                       onChange={(event) => updateServer(server.id, { base_url: event.target.value })}
                       placeholder="https://mcp.example.com"
-                      className="rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
+                      className="rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
                     />
                   </div>
                   <div className="flex items-center gap-3">
@@ -907,34 +965,34 @@ export default function SettingsPage() {
                         type="checkbox"
                         checked={server.enabled}
                         onChange={(event) => updateServer(server.id, { enabled: event.target.checked })}
-                        className="rounded border-slate-600 bg-slate-800 text-indigo-500 focus:ring-indigo-500"
+                        className="rounded border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 text-indigo-500 focus:ring-indigo-500"
                       />
                       Enabled
                     </label>
                     <button
                       onClick={() => removeServer(server.id)}
-                      className="rounded-lg border border-red-900/50 text-red-400 px-3 py-1.5 text-xs hover:bg-red-950/30 transition-colors"
+                      className="rounded-lg border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 px-3 py-1.5 text-xs hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
                     >
                       Remove
                     </button>
                   </div>
                 </div>
 
-                <div className="space-y-3 pt-3 border-t border-slate-700">
+                <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-slate-700">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-slate-300">Headers</span>
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Headers</span>
                     <button
                       onClick={() => addHeader(server.id)}
-                      className="rounded-lg border border-slate-600 px-3 py-1.5 text-xs hover:bg-slate-700 transition-colors"
+                      className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-1.5 text-xs hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                     >
                       Add Header
                     </button>
                   </div>
                   {server.headers.length === 0 && (
-                    <div className="text-xs text-slate-500">No headers configured.</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-500">No headers configured.</div>
                   )}
                   {server.headers.map((header) => (
-                    <div key={header.id} className="rounded-lg border border-slate-600 p-3 space-y-2">
+                    <div key={header.id} className="rounded-lg border border-slate-200 dark:border-slate-600 p-3 space-y-2">
                       <div className="grid gap-2 md:grid-cols-3">
                         <input
                           value={header.key}
@@ -942,7 +1000,7 @@ export default function SettingsPage() {
                             updateHeader(server.id, header.id, { key: event.target.value })
                           }
                           placeholder="Header key"
-                          className="rounded-lg border border-slate-600 bg-slate-800/50 px-3 py-2 text-sm placeholder:text-slate-500"
+                          className="rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-600 dark:bg-slate-800/50 px-3 py-2 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500"
                         />
                         <input
                           value={header.value}
@@ -950,7 +1008,7 @@ export default function SettingsPage() {
                             updateHeader(server.id, header.id, { value: event.target.value })
                           }
                           placeholder={header.isSecret ? "Secret name" : "Header value"}
-                          className="rounded-lg border border-slate-600 bg-slate-800/50 px-3 py-2 text-sm placeholder:text-slate-500"
+                          className="rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-600 dark:bg-slate-800/50 px-3 py-2 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500"
                         />
                         <div className="flex items-center gap-2">
                           <label className="flex items-center gap-2 text-xs cursor-pointer">
@@ -960,13 +1018,13 @@ export default function SettingsPage() {
                               onChange={(event) =>
                                 updateHeader(server.id, header.id, { isSecret: event.target.checked })
                               }
-                              className="rounded border-slate-600 bg-slate-800"
+                              className="rounded border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800"
                             />
                             Secret
                           </label>
                           <button
                             onClick={() => removeHeader(server.id, header.id)}
-                            className="ml-auto rounded-lg border border-slate-600 px-2 py-1 text-xs hover:bg-slate-700 transition-colors"
+                            className="ml-auto rounded-lg border border-slate-300 dark:border-slate-600 px-2 py-1 text-xs hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                           >
                             Remove
                           </button>
@@ -980,7 +1038,7 @@ export default function SettingsPage() {
                             updateHeader(server.id, header.id, { secretValue: event.target.value })
                           }
                           placeholder="Secret value (saved to secrets-set)"
-                          className="w-full rounded-lg border border-slate-600 bg-slate-800/50 px-3 py-2 text-sm placeholder:text-slate-500"
+                          className="w-full rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-600 dark:bg-slate-800/50 px-3 py-2 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500"
                         />
                       )}
                     </div>
@@ -990,10 +1048,10 @@ export default function SettingsPage() {
             ))}
           </div>
 
-          <div className="flex items-center gap-3 pt-4 border-t border-slate-700">
+          <div className="flex items-center gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
             <button
               onClick={saveMcpConfig}
-              className="flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 text-sm font-medium transition-colors"
+              className="flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 text-sm font-medium text-white transition-colors"
               disabled={mcpStatus === "saving"}
             >
               <Save size={14} />
@@ -1001,7 +1059,7 @@ export default function SettingsPage() {
             </button>
             {mcpMessage && (
               <span
-                className={`text-sm flex items-center gap-2 ${mcpStatus === "error" ? "text-red-400" : "text-emerald-400"}`}
+                className={`text-sm flex items-center gap-2 ${mcpStatus === "error" ? "text-red-600 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"}`}
               >
                 {mcpStatus === "error" ? <AlertTriangle size={14} /> : <CheckCircle size={14} />}
                 {mcpMessage}
@@ -1013,71 +1071,71 @@ export default function SettingsPage() {
 
       {/* Integrations Tab */}
       {activeTab === "integrations" && (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 space-y-6">
+        <div className="rounded-2xl border border-slate-200 bg-white/60 dark:border-slate-800 dark:bg-slate-900/40 p-6 space-y-6">
           <div>
             <h2 className="text-lg font-semibold flex items-center gap-2">
-              <Link2 size={18} className="text-slate-400" />
+              <Link2 size={18} className="text-slate-500 dark:text-slate-400" />
               Integrations
             </h2>
-            <p className="text-sm text-slate-500 mt-1">
+            <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
               Store non-secret IDs and metadata for upstream services.
             </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-300">Cloudflare Account ID</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Cloudflare Account ID</span>
               <input
                 value={integrations.cloudflare_account_id}
                 onChange={(event) =>
                   setIntegrations((prev) => ({ ...prev, cloudflare_account_id: event.target.value }))
                 }
                 placeholder="Account ID"
-                className="w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
               />
             </label>
 
             <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-300">Cloudflare Zone ID</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Cloudflare Zone ID</span>
               <input
                 value={integrations.cloudflare_zone_id}
                 onChange={(event) =>
                   setIntegrations((prev) => ({ ...prev, cloudflare_zone_id: event.target.value }))
                 }
                 placeholder="Zone ID"
-                className="w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
               />
             </label>
 
             <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-300">Google Analytics Property ID</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Google Analytics Property ID</span>
               <input
                 value={integrations.google_ga_property_id}
                 onChange={(event) =>
                   setIntegrations((prev) => ({ ...prev, google_ga_property_id: event.target.value }))
                 }
                 placeholder="GA property ID"
-                className="w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
               />
             </label>
 
             <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-300">Google Search Console Site</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Google Search Console Site</span>
               <input
                 value={integrations.google_gsc_site}
                 onChange={(event) =>
                   setIntegrations((prev) => ({ ...prev, google_gsc_site: event.target.value }))
                 }
                 placeholder="https://example.com"
-                className="w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 px-4 py-2.5 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
               />
             </label>
           </div>
 
-          <div className="flex items-center gap-3 pt-4 border-t border-slate-700">
+          <div className="flex items-center gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
             <button
               onClick={saveIntegrations}
-              className="flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 text-sm font-medium transition-colors"
+              className="flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 text-sm font-medium text-white transition-colors"
               disabled={integrationStatus === "saving"}
             >
               <Save size={14} />
@@ -1086,7 +1144,7 @@ export default function SettingsPage() {
             {integrationMessage && (
               <span
                 className={`text-sm flex items-center gap-2 ${
-                  integrationStatus === "error" ? "text-red-400" : "text-emerald-400"
+                  integrationStatus === "error" ? "text-red-600 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"
                 }`}
               >
                 {integrationStatus === "error" ? <AlertTriangle size={14} /> : <CheckCircle size={14} />}
@@ -1099,20 +1157,20 @@ export default function SettingsPage() {
 
       {/* Diagnostics Tab */}
       {activeTab === "diagnostics" && (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 space-y-6">
+        <div className="rounded-2xl border border-slate-200 bg-white/60 dark:border-slate-800 dark:bg-slate-900/40 p-6 space-y-6">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold flex items-center gap-2">
-                <Activity size={18} className="text-slate-400" />
+                <Activity size={18} className="text-slate-500 dark:text-slate-400" />
                 Diagnostics
               </h2>
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
                 Confirm Supabase connectivity and Edge Functions availability.
               </p>
             </div>
             <button
               onClick={runDiagnostics}
-              className="flex items-center gap-2 rounded-xl border border-slate-600 px-4 py-2.5 text-sm hover:bg-slate-700 transition-colors"
+              className="flex items-center gap-2 rounded-xl border border-slate-300 dark:border-slate-600 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
             >
               <RefreshCw size={14} />
               Run Diagnostics
@@ -1120,84 +1178,84 @@ export default function SettingsPage() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-xl border border-slate-700 p-4 space-y-3">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 space-y-3">
               <h3 className="font-medium text-sm">Supabase Environment</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">URL</span>
-                  <span className={supabaseUrlPresent ? "text-emerald-400" : "text-red-400"}>
+                  <span className="text-slate-500 dark:text-slate-400">URL</span>
+                  <span className={supabaseUrlPresent ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}>
                     {supabaseUrlPresent ? "Present" : "Missing"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Anon Key</span>
-                  <span className={supabaseAnonPresent ? "text-emerald-400" : "text-red-400"}>
+                  <span className="text-slate-500 dark:text-slate-400">Anon Key</span>
+                  <span className={supabaseAnonPresent ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}>
                     {supabaseAnonPresent ? "Present" : "Missing"}
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-xl border border-slate-700 p-4 space-y-3">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 space-y-3">
               <h3 className="font-medium text-sm">Session</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Status</span>
-                  <span className={diagnostics.sessionStatus === "active" ? "text-emerald-400" : "text-slate-300"}>
+                  <span className="text-slate-500 dark:text-slate-400">Status</span>
+                  <span className={diagnostics.sessionStatus === "active" ? "text-emerald-600 dark:text-emerald-400" : "text-slate-700 dark:text-slate-300"}>
                     {diagnostics.sessionStatus}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">User ID</span>
-                  <code className="text-xs bg-slate-800 px-2 py-0.5 rounded">
+                  <span className="text-slate-500 dark:text-slate-400">User ID</span>
+                  <code className="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
                     {diagnostics.userId ? `${diagnostics.userId.slice(0, 8)}...` : "—"}
                   </code>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Email</span>
+                  <span className="text-slate-500 dark:text-slate-400">Email</span>
                   <span className="text-xs">{diagnostics.userEmail || "—"}</span>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-xl border border-slate-700 p-4 space-y-3 md:col-span-2">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 space-y-3 md:col-span-2">
               <h3 className="font-medium text-sm">Edge Functions</h3>
               <div className="flex justify-between text-sm">
-                <span className="text-slate-400">secrets-list</span>
+                <span className="text-slate-500 dark:text-slate-400">secrets-list</span>
                 <span
                   className={
                     diagnostics.edgeStatus === "ok"
-                      ? "text-emerald-400"
+                      ? "text-emerald-600 dark:text-emerald-400"
                       : diagnostics.edgeStatus === "error"
-                      ? "text-red-400"
-                      : "text-slate-400"
+                      ? "text-red-600 dark:text-red-400"
+                      : "text-slate-500 dark:text-slate-400"
                   }
                 >
                   {diagnostics.edgeStatus === "checking" ? "Checking..." : diagnostics.edgeStatus}
                 </span>
               </div>
               {diagnostics.edgeMessage && (
-                <div className="text-xs text-slate-500 bg-slate-800 rounded-lg p-2 break-all">
+                <div className="text-xs text-slate-500 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 rounded-lg p-2 break-all">
                   {diagnostics.edgeMessage}
                 </div>
               )}
             </div>
 
-            <div className="rounded-xl border border-slate-700 p-4 space-y-3 md:col-span-2">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 space-y-3 md:col-span-2">
               <div className="flex items-center justify-between">
                 <h3 className="font-medium text-sm">Edge Function Test</h3>
                 <button
                   onClick={runEdgeTest}
-                  className="rounded-lg border border-slate-600 px-3 py-1.5 text-xs hover:bg-slate-700 transition-colors"
+                  className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-1.5 text-xs hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                   disabled={edgeTest.status === "running"}
                 >
                   {edgeTest.status === "running" ? "Testing..." : "Test Edge Functions"}
                 </button>
               </div>
-              <p className="text-xs text-slate-500">
-                Calls <code className="bg-slate-800 px-1 rounded">secrets-list</code> and returns the response.
+              <p className="text-xs text-slate-500 dark:text-slate-500">
+                Calls <code className="bg-slate-100 dark:bg-slate-800 px-1 rounded">secrets-list</code> and returns the response.
               </p>
-              <pre className="rounded-lg bg-slate-800 p-3 text-xs text-slate-300 overflow-x-auto">
+              <pre className="rounded-lg bg-slate-100 dark:bg-slate-800 p-3 text-xs text-slate-700 dark:text-slate-300 overflow-x-auto">
                 {JSON.stringify(
                   {
                     status: edgeTest.status,
