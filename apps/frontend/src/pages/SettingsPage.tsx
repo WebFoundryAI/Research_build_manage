@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../lib/auth";
+import { useTheme } from "../lib/ThemeContext";
 import { callEdgeFunction, type EdgeFunctionResult } from "../lib/edgeFunctions";
 import { getSupabase, getSupabaseEnvStatus, getSupabaseInitError } from "../lib/supabase";
 import {
@@ -16,6 +17,9 @@ import {
   CheckCircle,
   Settings,
   RefreshCw,
+  Palette,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 type DiagnosticsState = {
@@ -130,10 +134,11 @@ function normalizeCustomKeys(input: unknown): CustomKey[] {
 
 export default function SettingsPage() {
   const { user, mode } = useAuth();
+  const { mode: themeMode, toggleTheme } = useTheme();
   const supabase = useMemo(() => getSupabase(), []);
   const initError = getSupabaseInitError();
 
-  const [activeTab, setActiveTab] = useState<"api" | "mcp" | "integrations" | "diagnostics">("api");
+  const [activeTab, setActiveTab] = useState<"appearance" | "api" | "mcp" | "integrations" | "diagnostics">("appearance");
   const [diagnostics, setDiagnostics] = useState<DiagnosticsState>({
     sessionStatus: "unknown",
     userId: user?.id ?? "",
@@ -633,6 +638,7 @@ export default function SettingsPage() {
       {/* Tabs */}
       <div className="flex gap-2 overflow-x-auto pb-2">
         {[
+          { id: "appearance", label: "Appearance", icon: Palette },
           { id: "api", label: "API Keys", icon: Key },
           { id: "mcp", label: "MCP Servers", icon: Server },
           { id: "integrations", label: "Integrations", icon: Link2 },
@@ -652,6 +658,58 @@ export default function SettingsPage() {
           </button>
         ))}
       </div>
+
+      {/* Appearance Tab */}
+      {activeTab === "appearance" && (
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 space-y-6">
+          <div>
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <Palette size={18} className="text-slate-400" />
+              Appearance
+            </h2>
+            <p className="text-sm text-slate-500 mt-1">
+              Customize how the platform looks and feels.
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-slate-700 p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-medium">Theme</div>
+                <div className="text-sm text-slate-500 mt-1">
+                  Switch between light and dark mode
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className={`flex items-center gap-2 transition-colors ${themeMode === "light" ? "text-indigo-400" : "text-slate-500"}`}>
+                  <Sun size={16} />
+                  <span className="text-sm font-medium">Light</span>
+                </div>
+                <button
+                  onClick={toggleTheme}
+                  className={`relative w-12 h-6 rounded-full transition-colors ${
+                    themeMode === "dark" ? "bg-indigo-500" : "bg-slate-600"
+                  }`}
+                >
+                  <div
+                    className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                      themeMode === "dark" ? "translate-x-7" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+                <div className={`flex items-center gap-2 transition-colors ${themeMode === "dark" ? "text-indigo-400" : "text-slate-500"}`}>
+                  <Moon size={16} />
+                  <span className="text-sm font-medium">Dark</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-xs text-slate-500">
+            Your theme preference is saved locally and will persist across sessions.
+          </div>
+        </div>
+      )}
 
       {/* API Keys Tab */}
       {activeTab === "api" && (
