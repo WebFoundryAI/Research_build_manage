@@ -3,15 +3,9 @@ import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../lib/auth";
 import {
   BarChart3,
-  Search,
   Settings,
   Shield,
   User,
-  Briefcase,
-  Activity,
-  FileText,
-  CheckSquare,
-  TrendingUp,
   Menu,
   X,
   LogOut,
@@ -32,23 +26,7 @@ const navSections = [
     ],
   },
   {
-    title: "Monitoring",
-    items: [
-      { to: "/websites", label: "Site Monitor", icon: Activity, desc: "Health & uptime tracking" },
-      { to: "/projects", label: "Portfolio", icon: Briefcase, desc: "Asset management" },
-      { to: "/tasks", label: "Tasks", icon: CheckSquare, desc: "Project workflows" },
-    ],
-  },
-  {
-    title: "Research Tools",
-    items: [
-      { to: "/seo-research", label: "SEO Research", icon: TrendingUp, desc: "Keywords & SERP analysis" },
-      { to: "/research", label: "GEO Tools", icon: Search, desc: "Audit & optimization" },
-      { to: "/planner", label: "Content Studio", icon: FileText, desc: "AI-powered copywriting" },
-    ],
-  },
-  {
-    title: "MCP Tools",
+    title: "Modules",
     items: [
       { to: "/mcp-spark", label: "MCP Spark", icon: Zap, desc: "27 SEO & scraping tools" },
       { to: "/daily-checks", label: "Daily Checks", icon: CalendarCheck, desc: "Website monitoring & SEO" },
