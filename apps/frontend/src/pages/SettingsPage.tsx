@@ -75,6 +75,8 @@ const apiKeyFields = [
   { key: "dataforseo_token", label: "DataForSEO Token", placeholder: "Optional token value" },
   { key: "openai_api_key", label: "OpenAI API Key", placeholder: "sk-..." },
   { key: "google_api_key", label: "Google API Key (GSC/GA)", placeholder: "Optional" },
+  { key: "gsc_client_id", label: "Google Search Console Client ID", placeholder: "OAuth 2.0 Client ID from Google Cloud Console" },
+  { key: "gsc_client_secret", label: "Google Search Console Client Secret", placeholder: "OAuth 2.0 Client Secret" },
   { key: "cloudflare_api_key", label: "Cloudflare API Key", placeholder: "Optional" },
 ];
 
