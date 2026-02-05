@@ -2,38 +2,90 @@ import { useState, useEffect, useCallback } from "react";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
 import { callEdgeFunction } from "../lib/edgeFunctions";
 import type { Website, WebsitesSummary } from "../lib/types";
-import { RefreshCw, Globe, Activity, Shield, TrendingUp } from "lucide-react";
+import { RefreshCw, Globe, Activity, Shield, TrendingUp, ArrowRight, Zap } from "lucide-react";
 
 const COLORS = {
-  live: "#22c55e",
+  live: "#10b981",
   down: "#ef4444",
-  unknown: "#94a3b8",
+  unknown: "#64748b",
 };
 
-function Card({ title, value, sub, color }: { title: string; value: string | number; sub: string; color?: string }) {
+const CHART_COLORS = {
+  primary: "#8b5cf6",
+  secondary: "#06b6d4",
+  accent: "#a78bfa",
+};
+
+function Card({ title, value, sub, icon: Icon, gradient }: {
+  title: string;
+  value: string | number;
+  sub: string;
+  icon?: React.ComponentType<{ size?: number; className?: string }>;
+  gradient?: string;
+}) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
-      <div className="text-xs opacity-70">{title}</div>
-      <div className={`mt-2 text-2xl font-semibold ${color || ""}`}>{value}</div>
-      <div className="mt-1 text-xs opacity-60">{sub}</div>
+    <div className="group relative rounded-2xl border border-neutral-200 dark:border-white/[0.08] bg-white dark:bg-neutral-900 p-5 transition-all duration-300 hover:shadow-lg dark:hover:shadow-primary-500/10 hover:border-neutral-300 dark:hover:border-primary-500/30 overflow-hidden">
+      {/* Subtle gradient background on hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-500/[0.03] to-secondary-500/[0.03] dark:from-primary-500/[0.05] dark:to-secondary-500/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+      <div className="relative">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">{title}</span>
+          {Icon && (
+            <div className={`p-2 rounded-lg ${gradient || 'bg-gradient-to-br from-primary-500/10 to-secondary-500/10 dark:from-primary-500/20 dark:to-secondary-500/20'}`}>
+              <Icon size={16} className="text-primary-600 dark:text-primary-400" />
+            </div>
+          )}
+        </div>
+        <div className="text-3xl font-bold text-neutral-900 dark:text-neutral-50 tracking-tight">{value}</div>
+        <div className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">{sub}</div>
+      </div>
     </div>
   );
 }
 
 function StatusBadge({ isLive }: { isLive?: boolean }) {
   if (isLive === undefined) {
-    return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-slate-700 text-slate-300">Unknown</span>;
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
+        <span className="w-1.5 h-1.5 rounded-full bg-neutral-400" />
+        Unknown
+      </span>
+    );
   }
   if (isLive) {
-    return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-emerald-900/50 text-emerald-400">Live</span>;
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+        Live
+      </span>
+    );
   }
-  return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-red-900/50 text-red-400">Down</span>;
+  return (
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-500/15 text-red-700 dark:text-red-400">
+      <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+      Down
+    </span>
+  );
 }
 
 function SeoScoreBadge({ score }: { score?: number }) {
-  if (score === undefined) return <span className="text-slate-500">—</span>;
-  const color = score >= 80 ? "text-emerald-400" : score >= 50 ? "text-amber-400" : "text-red-400";
-  return <span className={`font-semibold ${color}`}>{score}</span>;
+  if (score === undefined) return <span className="text-neutral-400 dark:text-neutral-500">—</span>;
+
+  let colorClasses = "";
+  if (score >= 80) {
+    colorClasses = "text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-500/15";
+  } else if (score >= 50) {
+    colorClasses = "text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-500/15";
+  } else {
+    colorClasses = "text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-500/15";
+  }
+
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold ${colorClasses}`}>
+      {score}
+    </span>
+  );
 }
 
 export default function Dashboard() {
@@ -52,7 +104,6 @@ export default function Dashboard() {
         setWebsites(data.websites || []);
         setSummary(data.summary || { total: 0, live: 0, down: 0, avgSeoScore: 0 });
       } else if (!result.ok && result.status === 401) {
-        // Not authenticated - show demo data
         setWebsites([]);
         setSummary({ total: 0, live: 0, down: 0, avgSeoScore: 0 });
       } else {
@@ -118,18 +169,19 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 animate-in">
+      {/* Header */}
+      <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-semibold">Dashboard</h1>
-          <p className="mt-2 text-sm opacity-70">
-            Unified monitoring for your website portfolio, SEO health, and performance.
+          <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-50 tracking-tight">Dashboard</h1>
+          <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400 max-w-xl">
+            Unified monitoring for your website portfolio, SEO health, and performance metrics.
           </p>
         </div>
         <button
           onClick={loadData}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white text-sm font-medium shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-200 disabled:opacity-50"
         >
           <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
           Refresh
@@ -137,27 +189,54 @@ export default function Dashboard() {
       </div>
 
       {error && (
-        <div className="rounded-xl bg-red-900/20 border border-red-800 p-4 text-red-400">
+        <div className="rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-4 text-red-700 dark:text-red-400 text-sm">
           {error}
         </div>
       )}
 
       {/* Summary Cards */}
-      <div className="grid gap-3 md:grid-cols-4">
-        <Card title="Total Sites" value={summary.total} sub="in your portfolio" />
-        <Card title="Live" value={summary.live} sub="passing uptime checks" color="text-emerald-400" />
-        <Card title="Down" value={summary.down} sub="need attention" color="text-red-400" />
-        <Card title="Avg SEO Score" value={summary.avgSeoScore || "—"} sub="across all sites" color="text-blue-400" />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card
+          title="Total Sites"
+          value={summary.total}
+          sub="in your portfolio"
+          icon={Globe}
+        />
+        <Card
+          title="Live"
+          value={summary.live}
+          sub="passing uptime checks"
+          icon={Activity}
+          gradient="bg-emerald-100 dark:bg-emerald-500/20"
+        />
+        <Card
+          title="Down"
+          value={summary.down}
+          sub="need attention"
+          icon={Shield}
+          gradient="bg-red-100 dark:bg-red-500/20"
+        />
+        <Card
+          title="Avg SEO Score"
+          value={summary.avgSeoScore || "—"}
+          sub="across all sites"
+          icon={TrendingUp}
+          gradient="bg-secondary-100 dark:bg-secondary-500/20"
+        />
       </div>
 
       {/* Charts Row */}
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Fleet Status Pie Chart */}
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
-          <div className="text-sm font-semibold mb-4">Fleet Status</div>
+        <div className="rounded-2xl border border-neutral-200 dark:border-white/[0.08] bg-white dark:bg-neutral-900 p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">Fleet Status</h3>
+            <span className="text-xs text-neutral-500 dark:text-neutral-400">{summary.total} total</span>
+          </div>
           {summary.total === 0 ? (
-            <div className="h-64 flex items-center justify-center text-slate-500">
-              No websites added yet
+            <div className="h-64 flex flex-col items-center justify-center text-neutral-400 dark:text-neutral-500">
+              <Globe size={32} className="mb-2 opacity-50" />
+              <p className="text-sm">No websites added yet</p>
             </div>
           ) : (
             <div className="h-64">
@@ -177,7 +256,14 @@ export default function Dashboard() {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'var(--color-bg-surface)',
+                      border: '1px solid var(--color-border-subtle)',
+                      borderRadius: '0.75rem',
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -185,21 +271,32 @@ export default function Dashboard() {
         </div>
 
         {/* SEO Score Distribution */}
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
-          <div className="text-sm font-semibold mb-4">SEO Score Distribution</div>
+        <div className="rounded-2xl border border-neutral-200 dark:border-white/[0.08] bg-white dark:bg-neutral-900 p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">SEO Score Distribution</h3>
+            <span className="text-xs text-neutral-500 dark:text-neutral-400">Health overview</span>
+          </div>
           {summary.total === 0 ? (
-            <div className="h-64 flex items-center justify-center text-slate-500">
-              No SEO data yet
+            <div className="h-64 flex flex-col items-center justify-center text-neutral-400 dark:text-neutral-500">
+              <TrendingUp size={32} className="mb-2 opacity-50" />
+              <p className="text-sm">No SEO data yet</p>
             </div>
           ) : (
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={seoData} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.2} horizontal={false} />
-                  <XAxis type="number" />
-                  <YAxis dataKey="name" type="category" width={100} />
-                  <Tooltip />
-                  <Bar dataKey="value" fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.15} horizontal={false} />
+                  <XAxis type="number" tick={{ fill: 'var(--color-text-tertiary)', fontSize: 12 }} />
+                  <YAxis dataKey="name" type="category" width={100} tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'var(--color-bg-surface)',
+                      border: '1px solid var(--color-border-subtle)',
+                      borderRadius: '0.75rem',
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+                    }}
+                  />
+                  <Bar dataKey="value" fill={CHART_COLORS.primary} radius={[0, 6, 6, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -208,55 +305,78 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Websites Table */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="text-sm font-semibold">Recent Activity</div>
-          <a href="/websites" className="text-xs text-blue-400 hover:underline">View all websites →</a>
+      <div className="rounded-2xl border border-neutral-200 dark:border-white/[0.08] bg-white dark:bg-neutral-900 overflow-hidden">
+        <div className="flex items-center justify-between p-5 border-b border-neutral-200 dark:border-white/[0.08]">
+          <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">Recent Activity</h3>
+          <a
+            href="/websites"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+          >
+            View all websites
+            <ArrowRight size={12} />
+          </a>
         </div>
 
         {loading ? (
-          <div className="py-8 text-center text-slate-500">Loading...</div>
+          <div className="py-12 text-center text-neutral-400 dark:text-neutral-500">
+            <RefreshCw size={24} className="mx-auto mb-2 animate-spin opacity-50" />
+            <p className="text-sm">Loading...</p>
+          </div>
         ) : websites.length === 0 ? (
-          <div className="py-8 text-center text-slate-500">
-            <Globe size={32} className="mx-auto mb-2 opacity-50" />
-            <p>No websites monitored yet.</p>
-            <a href="/websites" className="text-blue-400 hover:underline text-sm">Add your first website →</a>
+          <div className="py-12 text-center">
+            <Globe size={40} className="mx-auto mb-3 text-neutral-300 dark:text-neutral-600" />
+            <p className="text-neutral-500 dark:text-neutral-400 mb-2">No websites monitored yet.</p>
+            <a
+              href="/websites"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
+            >
+              Add your first website
+              <ArrowRight size={14} />
+            </a>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="text-left opacity-70">
-                <tr>
-                  <th className="py-2 pr-4">Website</th>
-                  <th className="py-2 pr-4">Status</th>
-                  <th className="py-2 pr-4">SEO</th>
-                  <th className="py-2 pr-4">Response</th>
-                  <th className="py-2 pr-4">Last Check</th>
+            <table className="w-full">
+              <thead>
+                <tr className="bg-neutral-50 dark:bg-neutral-850">
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Website</th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Status</th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">SEO</th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Response</th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Last Check</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-neutral-200 dark:divide-white/[0.08]">
                 {recentWebsites.map((website) => {
                   const latestStatus = website.status_checks?.[0];
                   const latestSeo = website.seo_health_checks?.[0];
                   return (
-                    <tr key={website.id} className="border-t border-slate-800/60">
-                      <td className="py-3 pr-4">
-                        <a href="/websites" className="hover:text-blue-400">
-                          <div className="font-medium">{website.name || website.url}</div>
-                          {website.name && <div className="text-xs opacity-60">{website.url}</div>}
+                    <tr key={website.id} className="hover:bg-neutral-50 dark:hover:bg-primary-500/[0.04] transition-colors">
+                      <td className="px-5 py-4">
+                        <a href="/websites" className="group">
+                          <div className="font-medium text-neutral-900 dark:text-neutral-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                            {website.name || website.url}
+                          </div>
+                          {website.name && (
+                            <div className="text-xs text-neutral-500 dark:text-neutral-500 mt-0.5">{website.url}</div>
+                          )}
                         </a>
                       </td>
-                      <td className="py-3 pr-4">
+                      <td className="px-5 py-4">
                         <StatusBadge isLive={latestStatus?.is_live} />
                       </td>
-                      <td className="py-3 pr-4">
+                      <td className="px-5 py-4">
                         <SeoScoreBadge score={latestSeo?.health_score} />
                       </td>
-                      <td className="py-3 pr-4 text-slate-400">
-                        {latestStatus?.response_time_ms ? `${latestStatus.response_time_ms}ms` : "—"}
+                      <td className="px-5 py-4">
+                        <span className="text-sm text-neutral-600 dark:text-neutral-400">
+                          {latestStatus?.response_time_ms ? `${latestStatus.response_time_ms}ms` : "—"}
+                        </span>
                       </td>
-                      <td className="py-3 pr-4 text-slate-500 text-xs">
-                        {formatDate(website.last_checked_at)}
+                      <td className="px-5 py-4">
+                        <span className="text-xs text-neutral-500 dark:text-neutral-500">
+                          {formatDate(website.last_checked_at)}
+                        </span>
                       </td>
                     </tr>
                   );
@@ -271,44 +391,47 @@ export default function Dashboard() {
       <div className="grid gap-4 md:grid-cols-3">
         <a
           href="/websites"
-          className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4 hover:bg-slate-800/60 transition-colors"
+          className="group rounded-2xl border border-neutral-200 dark:border-white/[0.08] bg-white dark:bg-neutral-900 p-5 hover:border-primary-300 dark:hover:border-primary-500/30 hover:shadow-lg dark:hover:shadow-primary-500/10 transition-all duration-300"
         >
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-900/50">
-              <Globe size={20} className="text-blue-400" />
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-xl bg-gradient-to-br from-secondary-500/10 to-secondary-600/10 dark:from-secondary-500/20 dark:to-secondary-600/20 group-hover:from-secondary-500/20 group-hover:to-secondary-600/20 dark:group-hover:from-secondary-500/30 dark:group-hover:to-secondary-600/30 transition-colors">
+              <Globe size={24} className="text-secondary-600 dark:text-secondary-400" />
             </div>
-            <div>
-              <div className="font-medium">Website Monitor</div>
-              <div className="text-xs opacity-60">Manage and check your websites</div>
+            <div className="flex-1">
+              <div className="font-semibold text-neutral-900 dark:text-neutral-50 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">Website Monitor</div>
+              <div className="text-sm text-neutral-500 dark:text-neutral-400 mt-0.5">Manage and check your websites</div>
             </div>
+            <ArrowRight size={18} className="text-neutral-300 dark:text-neutral-600 group-hover:text-primary-500 dark:group-hover:text-primary-400 group-hover:translate-x-1 transition-all" />
           </div>
         </a>
         <a
-          href="/research"
-          className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4 hover:bg-slate-800/60 transition-colors"
+          href="/mcp-spark"
+          className="group rounded-2xl border border-neutral-200 dark:border-white/[0.08] bg-white dark:bg-neutral-900 p-5 hover:border-primary-300 dark:hover:border-primary-500/30 hover:shadow-lg dark:hover:shadow-primary-500/10 transition-all duration-300"
         >
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-900/50">
-              <TrendingUp size={20} className="text-emerald-400" />
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-xl bg-gradient-to-br from-primary-500/10 to-primary-600/10 dark:from-primary-500/20 dark:to-primary-600/20 group-hover:from-primary-500/20 group-hover:to-primary-600/20 dark:group-hover:from-primary-500/30 dark:group-hover:to-primary-600/30 transition-colors">
+              <Zap size={24} className="text-primary-600 dark:text-primary-400" />
             </div>
-            <div>
-              <div className="font-medium">Research Tools</div>
-              <div className="text-xs opacity-60">SEO audit & content generation</div>
+            <div className="flex-1">
+              <div className="font-semibold text-neutral-900 dark:text-neutral-50 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">MCP Spark</div>
+              <div className="text-sm text-neutral-500 dark:text-neutral-400 mt-0.5">27 SEO & scraping tools</div>
             </div>
+            <ArrowRight size={18} className="text-neutral-300 dark:text-neutral-600 group-hover:text-primary-500 dark:group-hover:text-primary-400 group-hover:translate-x-1 transition-all" />
           </div>
         </a>
         <a
           href="/settings"
-          className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4 hover:bg-slate-800/60 transition-colors"
+          className="group rounded-2xl border border-neutral-200 dark:border-white/[0.08] bg-white dark:bg-neutral-900 p-5 hover:border-primary-300 dark:hover:border-primary-500/30 hover:shadow-lg dark:hover:shadow-primary-500/10 transition-all duration-300"
         >
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-purple-900/50">
-              <Shield size={20} className="text-purple-400" />
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-500/10 to-emerald-600/10 dark:from-emerald-500/20 dark:to-emerald-600/20 group-hover:from-emerald-500/20 group-hover:to-emerald-600/20 dark:group-hover:from-emerald-500/30 dark:group-hover:to-emerald-600/30 transition-colors">
+              <Shield size={24} className="text-emerald-600 dark:text-emerald-400" />
             </div>
-            <div>
-              <div className="font-medium">Settings</div>
-              <div className="text-xs opacity-60">API keys & integrations</div>
+            <div className="flex-1">
+              <div className="font-semibold text-neutral-900 dark:text-neutral-50 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">Settings</div>
+              <div className="text-sm text-neutral-500 dark:text-neutral-400 mt-0.5">API keys & integrations</div>
             </div>
+            <ArrowRight size={18} className="text-neutral-300 dark:text-neutral-600 group-hover:text-primary-500 dark:group-hover:text-primary-400 group-hover:translate-x-1 transition-all" />
           </div>
         </a>
       </div>
