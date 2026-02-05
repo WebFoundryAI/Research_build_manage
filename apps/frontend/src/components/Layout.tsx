@@ -20,6 +20,8 @@ import {
   Zap,
   CalendarCheck,
   Package,
+  Globe2,
+  FileEdit,
 } from "lucide-react";
 
 const navSections = [
@@ -51,6 +53,8 @@ const navSections = [
       { to: "/mcp-spark", label: "MCP Spark", icon: Zap, desc: "27 SEO & scraping tools" },
       { to: "/daily-checks", label: "Daily Checks", icon: CalendarCheck, desc: "Website monitoring & SEO" },
       { to: "/asset-tracker", label: "Asset Tracker", icon: Package, desc: "Portfolio management" },
+      { to: "/nico-geo", label: "Nico GEO", icon: Globe2, desc: "GEO content engine" },
+      { to: "/nexus-opencopy", label: "Nexus OpenCopy", icon: FileEdit, desc: "AI content studio" },
     ],
   },
   {
@@ -79,6 +83,12 @@ export default function Layout() {
       }
       if (item.to === "/asset-tracker") {
         return location.pathname.startsWith("/asset-tracker");
+      }
+      if (item.to === "/nico-geo") {
+        return location.pathname.startsWith("/nico-geo");
+      }
+      if (item.to === "/nexus-opencopy") {
+        return location.pathname.startsWith("/nexus-opencopy");
       }
       return location.pathname === item.to || (item.to !== "/" && location.pathname.startsWith(item.to + "/"));
     });
