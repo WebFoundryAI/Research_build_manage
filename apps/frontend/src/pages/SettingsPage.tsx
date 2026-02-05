@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../lib/auth";
 import { callEdgeFunction, type EdgeFunctionResult } from "../lib/edgeFunctions";
-import { getSupabase, getSupabaseInitError } from "../lib/supabase";
+import { getSupabase, getSupabaseEnvStatus, getSupabaseInitError } from "../lib/supabase";
 import {
   Key,
   Server,
