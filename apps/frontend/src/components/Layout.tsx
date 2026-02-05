@@ -18,6 +18,7 @@ import {
   ChevronRight,
   Sparkles,
   Zap,
+  CalendarCheck,
 } from "lucide-react";
 
 const navSections = [
@@ -47,6 +48,7 @@ const navSections = [
     title: "MCP Tools",
     items: [
       { to: "/mcp-spark", label: "MCP Spark", icon: Zap, desc: "27 SEO & scraping tools" },
+      { to: "/daily-checks", label: "Daily Checks", icon: CalendarCheck, desc: "Website monitoring & SEO" },
     ],
   },
   {
@@ -69,6 +71,9 @@ export default function Layout() {
     .find((item) => {
       if (item.to === "/mcp-spark") {
         return location.pathname.startsWith("/mcp-spark");
+      }
+      if (item.to === "/daily-checks") {
+        return location.pathname.startsWith("/daily-checks");
       }
       return location.pathname === item.to || (item.to !== "/" && location.pathname.startsWith(item.to + "/"));
     });

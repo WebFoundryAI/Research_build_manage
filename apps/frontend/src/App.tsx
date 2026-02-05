@@ -48,6 +48,16 @@ import ScheduledReports from "./pages/mcp-spark/ScheduledReports";
 import Monitoring from "./pages/mcp-spark/Monitoring";
 import McpSettings from "./pages/mcp-spark/McpSettings";
 
+// Daily Checks Pages
+import DailyChecksLayout from "./pages/daily-checks/DailyChecksLayout";
+import DailyChecksIndex from "./pages/daily-checks/Index";
+import DailyWebsites from "./pages/daily-checks/Websites";
+import DailySeoHealth from "./pages/daily-checks/SeoHealth";
+import DailyKeywords from "./pages/daily-checks/Keywords";
+import DailyRankings from "./pages/daily-checks/Rankings";
+import DailyContentChanges from "./pages/daily-checks/ContentChanges";
+import DailySettings from "./pages/daily-checks/DailySettings";
+
 class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { err: any }> {
   state = { err: null };
   static getDerivedStateFromError(err: any) { return { err }; }
@@ -126,6 +136,17 @@ export default function App() {
                 <Route path="scheduled-reports" element={<ScheduledReports />} />
                 <Route path="monitoring" element={<Monitoring />} />
                 <Route path="settings" element={<McpSettings />} />
+              </Route>
+
+              {/* Daily Checks Section */}
+              <Route path="/daily-checks" element={<DailyChecksLayout />}>
+                <Route index element={<DailyChecksIndex />} />
+                <Route path="websites" element={<DailyWebsites />} />
+                <Route path="seo-health" element={<DailySeoHealth />} />
+                <Route path="keywords" element={<DailyKeywords />} />
+                <Route path="rankings" element={<DailyRankings />} />
+                <Route path="content-changes" element={<DailyContentChanges />} />
+                <Route path="settings" element={<DailySettings />} />
               </Route>
             </Route>
 
