@@ -19,6 +19,7 @@ import {
   Sparkles,
   Zap,
   CalendarCheck,
+  Package,
 } from "lucide-react";
 
 const navSections = [
@@ -49,6 +50,7 @@ const navSections = [
     items: [
       { to: "/mcp-spark", label: "MCP Spark", icon: Zap, desc: "27 SEO & scraping tools" },
       { to: "/daily-checks", label: "Daily Checks", icon: CalendarCheck, desc: "Website monitoring & SEO" },
+      { to: "/asset-tracker", label: "Asset Tracker", icon: Package, desc: "Portfolio management" },
     ],
   },
   {
@@ -74,6 +76,9 @@ export default function Layout() {
       }
       if (item.to === "/daily-checks") {
         return location.pathname.startsWith("/daily-checks");
+      }
+      if (item.to === "/asset-tracker") {
+        return location.pathname.startsWith("/asset-tracker");
       }
       return location.pathname === item.to || (item.to !== "/" && location.pathname.startsWith(item.to + "/"));
     });
