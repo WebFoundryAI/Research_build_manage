@@ -138,7 +138,7 @@ export default function DailyChecksDashboard() {
             <h3 className="font-medium text-amber-600">Connect Your APIs</h3>
             <p className="text-sm text-slate-400 mt-1">
               Configure your Cloudflare Workers endpoint or Supabase Edge Functions in{" "}
-              <Link to="/daily-checks/settings" className="text-amber-600 hover:underline">
+              <Link to="/settings" className="text-amber-600 hover:underline">
                 Settings
               </Link>{" "}
               to enable live monitoring.

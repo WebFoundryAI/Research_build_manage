@@ -153,7 +153,7 @@ export default function RankingsPage() {
         </div>
         {!gscStatus.connected && (
           <Link
-            to="/daily-checks/settings"
+            to="/settings"
             className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium"
           >
             Connect GSC
