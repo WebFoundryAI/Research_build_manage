@@ -47,7 +47,6 @@ import LocalSeo from "./pages/mcp-spark/LocalSeo";
 import ResearchHistory from "./pages/mcp-spark/ResearchHistory";
 import ScheduledReports from "./pages/mcp-spark/ScheduledReports";
 import Monitoring from "./pages/mcp-spark/Monitoring";
-import McpSettings from "./pages/mcp-spark/McpSettings";
 
 // Daily Checks Pages
 import DailyChecksLayout from "./pages/daily-checks/DailyChecksLayout";
@@ -57,7 +56,6 @@ import DailySeoHealth from "./pages/daily-checks/SeoHealth";
 import DailyKeywords from "./pages/daily-checks/Keywords";
 import DailyRankings from "./pages/daily-checks/Rankings";
 import DailyContentChanges from "./pages/daily-checks/ContentChanges";
-import DailySettings from "./pages/daily-checks/DailySettings";
 
 // Asset Tracker Pages
 import AssetTrackerLayout from "./pages/asset-tracker/AssetTrackerLayout";
@@ -70,7 +68,6 @@ import AssetReports from "./pages/asset-tracker/Reports";
 import AssetOpsReview from "./pages/asset-tracker/OpsReview";
 import AssetAlerts from "./pages/asset-tracker/Alerts";
 import AssetTrash from "./pages/asset-tracker/Trash";
-import AssetSettings from "./pages/asset-tracker/AssetSettings";
 
 // Nico GEO Pages
 import NicoGeoLayout from "./pages/nico-geo/NicoGeoLayout";
@@ -79,8 +76,6 @@ import NicoGeoGenerate from "./pages/nico-geo/Generate";
 import NicoGeoAudit from "./pages/nico-geo/Audit";
 import NicoGeoImprove from "./pages/nico-geo/Improve";
 import NicoGeoReviews from "./pages/nico-geo/Reviews";
-import NicoGeoApiKeys from "./pages/nico-geo/ApiKeys";
-import NicoGeoSettings from "./pages/nico-geo/Settings";
 
 // Nexus OpenCopy Pages
 import NexusOpenCopyLayout from "./pages/nexus-opencopy/NexusOpenCopyLayout";
@@ -90,7 +85,6 @@ import NexusOpenCopyKeywords from "./pages/nexus-opencopy/Keywords";
 import NexusOpenCopyArticles from "./pages/nexus-opencopy/Articles";
 import NexusOpenCopyContentPlanner from "./pages/nexus-opencopy/ContentPlanner";
 import NexusOpenCopyIntegrations from "./pages/nexus-opencopy/Integrations";
-import NexusOpenCopySettings from "./pages/nexus-opencopy/NexusSettings";
 
 class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { err: any }> {
   state = { err: null };
@@ -170,7 +164,6 @@ export default function App() {
                 <Route path="history" element={<ResearchHistory />} />
                 <Route path="scheduled-reports" element={<ScheduledReports />} />
                 <Route path="monitoring" element={<Monitoring />} />
-                <Route path="settings" element={<McpSettings />} />
               </Route>
 
               {/* Daily Checks Section */}
@@ -181,7 +174,6 @@ export default function App() {
                 <Route path="keywords" element={<DailyKeywords />} />
                 <Route path="rankings" element={<DailyRankings />} />
                 <Route path="content-changes" element={<DailyContentChanges />} />
-                <Route path="settings" element={<DailySettings />} />
               </Route>
 
               {/* Asset Tracker Section */}
@@ -195,7 +187,6 @@ export default function App() {
                 <Route path="ops-review" element={<AssetOpsReview />} />
                 <Route path="alerts" element={<AssetAlerts />} />
                 <Route path="trash" element={<AssetTrash />} />
-                <Route path="settings" element={<AssetSettings />} />
               </Route>
 
               {/* Nico GEO Section */}
@@ -205,8 +196,6 @@ export default function App() {
                 <Route path="audit" element={<NicoGeoAudit />} />
                 <Route path="improve" element={<NicoGeoImprove />} />
                 <Route path="reviews" element={<NicoGeoReviews />} />
-                <Route path="api-keys" element={<NicoGeoApiKeys />} />
-                <Route path="settings" element={<NicoGeoSettings />} />
               </Route>
 
               {/* Nexus OpenCopy Section */}
@@ -217,7 +206,6 @@ export default function App() {
                 <Route path="articles" element={<NexusOpenCopyArticles />} />
                 <Route path="content-planner" element={<NexusOpenCopyContentPlanner />} />
                 <Route path="integrations" element={<NexusOpenCopyIntegrations />} />
-                <Route path="settings" element={<NexusOpenCopySettings />} />
               </Route>
             </Route>
 

@@ -20,6 +20,21 @@ import {
   Palette,
   Sun,
   Moon,
+  Zap,
+  CalendarCheck,
+  Package,
+  Globe2,
+  FileEdit,
+  Globe,
+  Database,
+  Bell,
+  FileText,
+  Code,
+  GitBranch,
+  Sparkles,
+  Mail,
+  Slack,
+  ExternalLink,
 } from "lucide-react";
 
 type DiagnosticsState = {
@@ -138,7 +153,115 @@ export default function SettingsPage() {
   const supabase = useMemo(() => getSupabase(), []);
   const initError = getSupabaseInitError();
 
-  const [activeTab, setActiveTab] = useState<"appearance" | "api" | "mcp" | "integrations" | "diagnostics">("appearance");
+  const [activeTab, setActiveTab] = useState<"appearance" | "api" | "mcp" | "integrations" | "diagnostics" | "mcp-spark" | "daily-checks" | "asset-tracker" | "nico-geo" | "nexus-opencopy">("appearance");
+
+  // --- MCP Spark Module Settings ---
+  const [mcpSparkSettings, setMcpSparkSettings] = useState(() => {
+    const saved = localStorage.getItem("mcp-tools-settings");
+    if (saved) {
+      try { return JSON.parse(saved); } catch { /* ignore */ }
+    }
+    return {
+      defaultLocation: 2840,
+      defaultLanguage: "en",
+      defaultKeywordLimit: 50,
+      autoSaveResults: true,
+      defaultExportFormat: "csv" as "csv" | "pdf",
+      showCreditWarnings: true,
+      creditWarningThreshold: 100,
+    };
+  });
+  const [mcpSparkHasChanges, setMcpSparkHasChanges] = useState(false);
+  const [mcpSparkFeedback, setMcpSparkFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+  // --- Daily Checks Module Settings ---
+  const [dailyActiveSubTab, setDailyActiveSubTab] = useState<"general" | "api-keys" | "gsc">("general");
+  const [dailyGeneralSettings, setDailyGeneralSettings] = useState({
+    default_country: "United Kingdom",
+    default_language: "en",
+    check_interval: "30",
+    seo_check_time: "02:00",
+  });
+  const [dailyApiKeys, setDailyApiKeys] = useState({
+    dataforseo_login: "",
+    dataforseo_password: "",
+    cloudflare_worker_url: "",
+  });
+  const [dailyShowPassword, setDailyShowPassword] = useState<Record<string, boolean>>({});
+  const [dailyGscStatus, setDailyGscStatus] = useState<{ connected: boolean; email: string | null }>({
+    connected: false,
+    email: null,
+  });
+  const [dailySaving, setDailySaving] = useState(false);
+
+  // --- Asset Tracker Module Settings ---
+  const [assetActiveSubTab, setAssetActiveSubTab] = useState<"general" | "notifications" | "integrations">("general");
+  const [assetGeneralSettings, setAssetGeneralSettings] = useState({
+    default_status: "Idea / Backlog",
+    health_check_interval: "24",
+    auto_backup: true,
+    trash_retention_days: "30",
+  });
+  const [assetNotificationSettings, setAssetNotificationSettings] = useState({
+    email_alerts: true,
+    slack_alerts: false,
+    critical_only: false,
+    daily_digest: true,
+    email: "",
+    slack_webhook: "",
+  });
+  const [assetIntegrationSettings, setAssetIntegrationSettings] = useState({
+    google_analytics_id: "",
+    cloudflare_api_key: "",
+    uptime_robot_key: "",
+  });
+  const [assetShowApiKey, setAssetShowApiKey] = useState(false);
+  const [assetSaving, setAssetSaving] = useState(false);
+
+  // --- Nico GEO Module Settings ---
+  const [nicoGeneralSettings, setNicoGeneralSettings] = useState({
+    defaultOutputFormat: "json",
+    includeSchemaMarkup: true,
+    antiHallucination: true,
+    maxFaqs: "5",
+    answerCapsuleLength: "medium",
+  });
+  const [nicoApiSettings, setNicoApiSettings] = useState({
+    workerUrl: "",
+    defaultPlan: "free",
+    enableRateLimiting: true,
+  });
+  const [nicoGitHubSettings, setNicoGitHubSettings] = useState({
+    defaultOwner: "",
+    defaultRepo: "",
+    defaultBranch: "main",
+    projectType: "astro-pages",
+  });
+  const [nicoSaving, setNicoSaving] = useState(false);
+
+  // --- Nexus OpenCopy Module Settings ---
+  const [nexusContentSettings, setNexusContentSettings] = useState({
+    defaultWordCount: "2000",
+    defaultTone: "professional",
+    defaultLanguage: "en",
+    includeImages: true,
+    includeInternalLinks: true,
+    includeFaqs: true,
+    seoOptimization: true,
+  });
+  const [nexusAiSettings, setNexusAiSettings] = useState({
+    model: "gpt-4",
+    temperature: "0.7",
+    maxTokens: "4000",
+    enableFactChecking: true,
+  });
+  const [nexusPublishingSettings, setNexusPublishingSettings] = useState({
+    autoPublish: false,
+    requireReview: true,
+    defaultStatus: "draft",
+    notifyOnPublish: true,
+  });
+  const [nexusSaving, setNexusSaving] = useState(false);
   const [diagnostics, setDiagnostics] = useState<DiagnosticsState>({
     sessionStatus: "unknown",
     userId: user?.id ?? "",
@@ -636,27 +759,66 @@ export default function SettingsPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
-        {[
-          { id: "appearance", label: "Appearance", icon: Palette },
-          { id: "api", label: "API Keys", icon: Key },
-          { id: "mcp", label: "MCP Servers", icon: Server },
-          { id: "integrations", label: "Integrations", icon: Link2 },
-          { id: "diagnostics", label: "Diagnostics", icon: Activity },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as typeof activeTab)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
-              activeTab === tab.id
-                ? "bg-indigo-500/20 text-indigo-600 border border-indigo-500/30"
-                : "text-slate-500 hover:text-slate-900 hover:bg-slate-100 border border-transparent"
-            }`}
-          >
-            <tab.icon size={16} />
-            {tab.label}
-          </button>
-        ))}
+      <div className="space-y-3">
+        {/* Core Settings */}
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          {[
+            { id: "appearance", label: "Appearance", icon: Palette },
+            { id: "api", label: "API Keys", icon: Key },
+            { id: "mcp", label: "MCP Servers", icon: Server },
+            { id: "integrations", label: "Integrations", icon: Link2 },
+            { id: "diagnostics", label: "Diagnostics", icon: Activity },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as typeof activeTab)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+                activeTab === tab.id
+                  ? "bg-indigo-500/20 text-indigo-600 border border-indigo-500/30"
+                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-100 border border-transparent"
+              }`}
+            >
+              <tab.icon size={16} />
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Module Settings */}
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-2 px-1">Module Settings</div>
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {[
+              { id: "mcp-spark", label: "MCP Spark", icon: Zap, color: "amber" },
+              { id: "daily-checks", label: "Daily Checks", icon: CalendarCheck, color: "emerald" },
+              { id: "asset-tracker", label: "Asset Tracker", icon: Package, color: "blue" },
+              { id: "nico-geo", label: "Nico GEO", icon: Globe2, color: "teal" },
+              { id: "nexus-opencopy", label: "Nexus OpenCopy", icon: FileEdit, color: "pink" },
+            ].map((tab) => {
+              const colorMap: Record<string, string> = {
+                amber: activeTab === tab.id ? "bg-amber-500/20 text-amber-600 border-amber-500/30" : "",
+                emerald: activeTab === tab.id ? "bg-emerald-500/20 text-emerald-600 border-emerald-500/30" : "",
+                blue: activeTab === tab.id ? "bg-blue-500/20 text-blue-600 border-blue-500/30" : "",
+                teal: activeTab === tab.id ? "bg-teal-500/20 text-teal-600 border-teal-500/30" : "",
+                pink: activeTab === tab.id ? "bg-pink-500/20 text-pink-600 border-pink-500/30" : "",
+              };
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap border ${
+                    activeTab === tab.id
+                      ? colorMap[tab.color]
+                      : "text-slate-500 hover:text-slate-900 hover:bg-slate-100 border-transparent"
+                  }`}
+                >
+                  <tab.icon size={16} />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       {/* Appearance Tab */}
@@ -1274,6 +1436,509 @@ export default function SettingsPage() {
                 )}
               </pre>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== MCP SPARK MODULE SETTINGS ===== */}
+      {activeTab === "mcp-spark" && (
+        <div className="space-y-6">
+          {mcpSparkFeedback && (
+            <div className={`p-3 rounded-lg ${mcpSparkFeedback.type === "success" ? "bg-green-500/20 text-green-600" : "bg-red-500/20 text-red-600"}`}>
+              {mcpSparkFeedback.message}
+            </div>
+          )}
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                <Zap size={18} className="text-amber-500" />
+                MCP Spark Settings
+              </h2>
+              <p className="text-sm text-slate-500 mt-1">Configure default preferences for SEO research tools</p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  const defaults = { defaultLocation: 2840, defaultLanguage: "en", defaultKeywordLimit: 50, autoSaveResults: true, defaultExportFormat: "csv" as const, showCreditWarnings: true, creditWarningThreshold: 100 };
+                  setMcpSparkSettings(defaults);
+                  localStorage.setItem("mcp-tools-settings", JSON.stringify(defaults));
+                  setMcpSparkHasChanges(false);
+                  setMcpSparkFeedback({ type: "success", message: "Settings reset to defaults" });
+                  setTimeout(() => setMcpSparkFeedback(null), 3000);
+                }}
+                className="px-4 py-2 border border-slate-200 text-slate-600 hover:bg-slate-100 rounded-lg text-sm transition-colors"
+              >
+                Reset
+              </button>
+              <button
+                onClick={() => {
+                  localStorage.setItem("mcp-tools-settings", JSON.stringify(mcpSparkSettings));
+                  setMcpSparkHasChanges(false);
+                  setMcpSparkFeedback({ type: "success", message: "Settings saved" });
+                  setTimeout(() => setMcpSparkFeedback(null), 3000);
+                }}
+                disabled={!mcpSparkHasChanges}
+                className="px-4 py-2 bg-amber-500 hover:bg-amber-600 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 text-sm transition-colors"
+              >
+                <Save size={14} />
+                Save Changes
+              </button>
+            </div>
+          </div>
+
+          {/* Location & Language */}
+          <div className="rounded-2xl border border-slate-200 bg-white/60 p-6 space-y-4">
+            <div>
+              <h3 className="font-semibold flex items-center gap-2"><Globe size={16} className="text-slate-500" /> Default Location & Language</h3>
+              <p className="text-xs text-slate-500 mt-1">Pre-filled when starting new research</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label className="space-y-2">
+                <span className="text-sm font-medium text-slate-600">Default Location</span>
+                <select value={mcpSparkSettings.defaultLocation} onChange={(e) => { setMcpSparkSettings((p: typeof mcpSparkSettings) => ({ ...p, defaultLocation: Number(e.target.value) })); setMcpSparkHasChanges(true); }} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-amber-500">
+                  <option value={2840}>United States</option><option value={2826}>United Kingdom</option><option value={2124}>Canada</option><option value={2036}>Australia</option><option value={2276}>Germany</option><option value={2250}>France</option>
+                </select>
+              </label>
+              <label className="space-y-2">
+                <span className="text-sm font-medium text-slate-600">Default Language</span>
+                <select value={mcpSparkSettings.defaultLanguage} onChange={(e) => { setMcpSparkSettings((p: typeof mcpSparkSettings) => ({ ...p, defaultLanguage: e.target.value })); setMcpSparkHasChanges(true); }} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-amber-500">
+                  <option value="en">English</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          {/* Research Defaults */}
+          <div className="rounded-2xl border border-slate-200 bg-white/60 p-6 space-y-4">
+            <div>
+              <h3 className="font-semibold flex items-center gap-2"><Database size={16} className="text-slate-500" /> Research Defaults</h3>
+              <p className="text-xs text-slate-500 mt-1">Configure default limits and behavior</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label className="space-y-2">
+                <span className="text-sm font-medium text-slate-600">Default Keyword Limit</span>
+                <select value={mcpSparkSettings.defaultKeywordLimit} onChange={(e) => { setMcpSparkSettings((p: typeof mcpSparkSettings) => ({ ...p, defaultKeywordLimit: Number(e.target.value) })); setMcpSparkHasChanges(true); }} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-amber-500">
+                  <option value={25}>25 keywords</option><option value={50}>50 keywords</option><option value={100}>100 keywords</option><option value={200}>200 keywords</option>
+                </select>
+              </label>
+              <label className="space-y-2">
+                <span className="text-sm font-medium text-slate-600">Default Export Format</span>
+                <select value={mcpSparkSettings.defaultExportFormat} onChange={(e) => { setMcpSparkSettings((p: typeof mcpSparkSettings) => ({ ...p, defaultExportFormat: e.target.value })); setMcpSparkHasChanges(true); }} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-amber-500">
+                  <option value="csv">CSV (Spreadsheet)</option><option value="pdf">PDF (Report)</option>
+                </select>
+              </label>
+            </div>
+            <div className="flex items-center justify-between pt-4 border-t border-slate-200">
+              <div><div className="font-medium text-sm">Auto-save Results</div><div className="text-xs text-slate-500">Automatically save research results to history</div></div>
+              <button onClick={() => { setMcpSparkSettings((p: typeof mcpSparkSettings) => ({ ...p, autoSaveResults: !p.autoSaveResults })); setMcpSparkHasChanges(true); }} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${mcpSparkSettings.autoSaveResults ? "bg-amber-500" : "bg-slate-200"}`}>
+                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${mcpSparkSettings.autoSaveResults ? "translate-x-6" : "translate-x-1"}`} />
+              </button>
+            </div>
+          </div>
+
+          {/* Notifications */}
+          <div className="rounded-2xl border border-slate-200 bg-white/60 p-6 space-y-4">
+            <div>
+              <h3 className="font-semibold flex items-center gap-2"><Bell size={16} className="text-slate-500" /> Notifications & Warnings</h3>
+            </div>
+            <div className="flex items-center justify-between">
+              <div><div className="font-medium text-sm">Show Credit Warnings</div><div className="text-xs text-slate-500">Alert when credits are running low</div></div>
+              <button onClick={() => { setMcpSparkSettings((p: typeof mcpSparkSettings) => ({ ...p, showCreditWarnings: !p.showCreditWarnings })); setMcpSparkHasChanges(true); }} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${mcpSparkSettings.showCreditWarnings ? "bg-amber-500" : "bg-slate-200"}`}>
+                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${mcpSparkSettings.showCreditWarnings ? "translate-x-6" : "translate-x-1"}`} />
+              </button>
+            </div>
+            {mcpSparkSettings.showCreditWarnings && (
+              <label className="space-y-2">
+                <span className="text-sm font-medium text-slate-600">Credit Warning Threshold</span>
+                <input type="number" value={mcpSparkSettings.creditWarningThreshold} onChange={(e) => { setMcpSparkSettings((p: typeof mcpSparkSettings) => ({ ...p, creditWarningThreshold: Number(e.target.value) || 100 })); setMcpSparkHasChanges(true); }} min={10} max={1000} className="w-full md:w-48 px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-amber-500" />
+                <p className="text-xs text-slate-500">Show warning when credits fall below this amount</p>
+              </label>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ===== DAILY CHECKS MODULE SETTINGS ===== */}
+      {activeTab === "daily-checks" && (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <CalendarCheck size={18} className="text-emerald-500" />
+              Daily Checks Settings
+            </h2>
+            <p className="text-sm text-slate-500 mt-1">Configure Daily Checks module settings</p>
+          </div>
+
+          {/* Sub-tabs */}
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {[
+              { id: "general" as const, label: "General", icon: Settings },
+              { id: "api-keys" as const, label: "API Keys", icon: Key },
+              { id: "gsc" as const, label: "Search Console", icon: Globe },
+            ].map((tab) => (
+              <button key={tab.id} onClick={() => setDailyActiveSubTab(tab.id)} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${dailyActiveSubTab === tab.id ? "bg-emerald-500/20 text-emerald-600 border border-emerald-500/30" : "text-slate-400 hover:text-slate-900 hover:bg-slate-100 border border-transparent"}`}>
+                <tab.icon size={16} />{tab.label}
+              </button>
+            ))}
+          </div>
+
+          {dailyActiveSubTab === "general" && (
+            <div className="rounded-2xl border border-slate-200 bg-white/60 p-6">
+              <h3 className="font-semibold mb-6">General Settings</h3>
+              <div className="space-y-4 max-w-md">
+                <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Default Country</span><input type="text" value={dailyGeneralSettings.default_country} onChange={(e) => setDailyGeneralSettings({ ...dailyGeneralSettings, default_country: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-emerald-500" /></label>
+                <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Default Language</span>
+                  <select value={dailyGeneralSettings.default_language} onChange={(e) => setDailyGeneralSettings({ ...dailyGeneralSettings, default_language: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-emerald-500">
+                    <option value="en">English</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option><option value="it">Italian</option>
+                  </select>
+                </label>
+                <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Check Interval (minutes)</span>
+                  <select value={dailyGeneralSettings.check_interval} onChange={(e) => setDailyGeneralSettings({ ...dailyGeneralSettings, check_interval: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-emerald-500">
+                    <option value="15">Every 15 minutes</option><option value="30">Every 30 minutes</option><option value="60">Every hour</option><option value="360">Every 6 hours</option><option value="720">Every 12 hours</option>
+                  </select>
+                </label>
+                <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Daily SEO Check Time (UTC)</span><input type="time" value={dailyGeneralSettings.seo_check_time} onChange={(e) => setDailyGeneralSettings({ ...dailyGeneralSettings, seo_check_time: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-emerald-500" /></label>
+                <button onClick={async () => { setDailySaving(true); await new Promise(r => setTimeout(r, 1000)); setDailySaving(false); }} disabled={dailySaving} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-medium text-sm transition-colors disabled:opacity-60 mt-4">
+                  {dailySaving ? <RefreshCw size={16} className="animate-spin" /> : <Save size={16} />}{dailySaving ? "Saving..." : "Save Settings"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {dailyActiveSubTab === "api-keys" && (
+            <div className="rounded-2xl border border-slate-200 bg-white/60 p-6">
+              <h3 className="font-semibold mb-2">API Keys</h3>
+              <p className="text-sm text-slate-500 mb-6">Configure API keys for enhanced functionality</p>
+              <div className="space-y-4 max-w-md">
+                <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">DataForSEO Login</span><input type="text" value={dailyApiKeys.dataforseo_login} onChange={(e) => setDailyApiKeys({ ...dailyApiKeys, dataforseo_login: e.target.value })} placeholder="login@domain.com" className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder-slate-400 focus:outline-none focus:border-emerald-500" /><p className="text-xs text-slate-500 mt-1">For advanced rank tracking</p></label>
+                <div><span className="block text-sm font-medium text-slate-500 mb-2">DataForSEO Password</span>
+                  <div className="relative"><input type={dailyShowPassword.dataforseo ? "text" : "password"} value={dailyApiKeys.dataforseo_password} onChange={(e) => setDailyApiKeys({ ...dailyApiKeys, dataforseo_password: e.target.value })} placeholder="API password" className="w-full px-4 py-2.5 pr-12 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder-slate-400 focus:outline-none focus:border-emerald-500" /><button type="button" onClick={() => setDailyShowPassword({ ...dailyShowPassword, dataforseo: !dailyShowPassword.dataforseo })} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">{dailyShowPassword.dataforseo ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>
+                </div>
+                <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Cloudflare Worker URL</span><input type="url" value={dailyApiKeys.cloudflare_worker_url} onChange={(e) => setDailyApiKeys({ ...dailyApiKeys, cloudflare_worker_url: e.target.value })} placeholder="https://your-worker.workers.dev" className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder-slate-400 focus:outline-none focus:border-emerald-500" /><p className="text-xs text-slate-500 mt-1">URL of your deployed Daily Checks worker</p></label>
+                <button onClick={async () => { setDailySaving(true); await new Promise(r => setTimeout(r, 1000)); setDailySaving(false); }} disabled={dailySaving} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-medium text-sm transition-colors disabled:opacity-60 mt-4">
+                  {dailySaving ? <RefreshCw size={16} className="animate-spin" /> : <Save size={16} />}{dailySaving ? "Saving..." : "Save API Keys"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {dailyActiveSubTab === "gsc" && (
+            <div className="rounded-2xl border border-slate-200 bg-white/60 p-6 space-y-6">
+              <div><h3 className="font-semibold mb-2">Google Search Console</h3><p className="text-sm text-slate-500">Connect to import ranking data and search analytics</p></div>
+              <div className={`rounded-xl p-4 ${dailyGscStatus.connected ? "bg-emerald-500/10 border border-emerald-500/20" : "bg-slate-100 border border-slate-200"}`}>
+                <div className="flex items-center gap-3">
+                  {dailyGscStatus.connected ? <CheckCircle size={20} className="text-emerald-600" /> : <AlertTriangle size={20} className="text-slate-400" />}
+                  <div className="flex-1"><div className={dailyGscStatus.connected ? "text-emerald-600 font-medium" : "text-slate-600"}>{dailyGscStatus.connected ? "Connected" : "Not Connected"}</div>{dailyGscStatus.email && <div className="text-xs text-slate-500">{dailyGscStatus.email}</div>}</div>
+                  {dailyGscStatus.connected ? (
+                    <button onClick={() => { if (confirm("Disconnect from Google Search Console?")) setDailyGscStatus({ connected: false, email: null }); }} className="px-4 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-600 text-sm font-medium transition-colors">Disconnect</button>
+                  ) : (
+                    <button onClick={() => alert("This would redirect to Google OAuth for Search Console authorization")} className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium transition-colors">Connect GSC</button>
+                  )}
+                </div>
+              </div>
+              <div className="rounded-xl border border-slate-200 p-4">
+                <h4 className="font-medium mb-3">Setup Instructions</h4>
+                <ol className="text-sm text-slate-500 space-y-2 list-decimal list-inside">
+                  <li>Go to <a href="https://console.cloud.google.com" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">Google Cloud Console <ExternalLink size={12} className="inline" /></a></li>
+                  <li>Create a new project or select existing one</li>
+                  <li>Enable the "Search Console API"</li>
+                  <li>Create OAuth 2.0 credentials (Web application)</li>
+                  <li>Add your worker URL as authorized redirect URI</li>
+                  <li>Configure GSC_CLIENT_ID and GSC_CLIENT_SECRET in your worker</li>
+                  <li>Click "Connect GSC" above to authorize</li>
+                </ol>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ===== ASSET TRACKER MODULE SETTINGS ===== */}
+      {activeTab === "asset-tracker" && (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <Package size={18} className="text-blue-500" />
+              Asset Tracker Settings
+            </h2>
+            <p className="text-sm text-slate-500 mt-1">Configure Asset Tracker preferences</p>
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {[
+              { id: "general" as const, label: "General", icon: Settings },
+              { id: "notifications" as const, label: "Notifications", icon: Bell },
+              { id: "integrations" as const, label: "Integrations", icon: Key },
+            ].map((tab) => (
+              <button key={tab.id} onClick={() => setAssetActiveSubTab(tab.id)} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${assetActiveSubTab === tab.id ? "bg-blue-500/20 text-blue-600 border border-blue-500/30" : "text-slate-400 hover:text-slate-900 hover:bg-slate-100 border border-transparent"}`}>
+                <tab.icon size={16} />{tab.label}
+              </button>
+            ))}
+          </div>
+
+          {assetActiveSubTab === "general" && (
+            <div className="rounded-2xl border border-slate-200 bg-white/60 p-6">
+              <h3 className="font-semibold mb-6">General Settings</h3>
+              <div className="space-y-4 max-w-md">
+                <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Default Project Status</span>
+                  <select value={assetGeneralSettings.default_status} onChange={(e) => setAssetGeneralSettings({ ...assetGeneralSettings, default_status: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-blue-500">
+                    <option value="Idea / Backlog">Idea / Backlog</option><option value="Planning">Planning</option><option value="In Build">In Build</option>
+                  </select>
+                </label>
+                <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Health Check Interval (hours)</span>
+                  <select value={assetGeneralSettings.health_check_interval} onChange={(e) => setAssetGeneralSettings({ ...assetGeneralSettings, health_check_interval: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-blue-500">
+                    <option value="1">Every hour</option><option value="6">Every 6 hours</option><option value="12">Every 12 hours</option><option value="24">Every 24 hours</option>
+                  </select>
+                </label>
+                <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Trash Retention (days)</span>
+                  <select value={assetGeneralSettings.trash_retention_days} onChange={(e) => setAssetGeneralSettings({ ...assetGeneralSettings, trash_retention_days: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-blue-500">
+                    <option value="7">7 days</option><option value="14">14 days</option><option value="30">30 days</option><option value="60">60 days</option>
+                  </select>
+                </label>
+                <div className="flex items-center justify-between py-3 border-t border-slate-200">
+                  <div><div className="font-medium text-sm">Auto Backup</div><div className="text-xs text-slate-500">Automatically backup project data</div></div>
+                  <button onClick={() => setAssetGeneralSettings({ ...assetGeneralSettings, auto_backup: !assetGeneralSettings.auto_backup })} className={`w-12 h-6 rounded-full transition-colors ${assetGeneralSettings.auto_backup ? "bg-blue-500" : "bg-slate-200"}`}><div className={`w-5 h-5 rounded-full bg-white transition-transform ${assetGeneralSettings.auto_backup ? "translate-x-6" : "translate-x-0.5"}`} /></button>
+                </div>
+                <button onClick={async () => { setAssetSaving(true); await new Promise(r => setTimeout(r, 1000)); setAssetSaving(false); }} disabled={assetSaving} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium text-sm transition-colors disabled:opacity-60 mt-4">
+                  {assetSaving ? <RefreshCw size={16} className="animate-spin" /> : <Save size={16} />}{assetSaving ? "Saving..." : "Save Settings"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {assetActiveSubTab === "notifications" && (
+            <div className="rounded-2xl border border-slate-200 bg-white/60 p-6">
+              <h3 className="font-semibold mb-6">Notification Preferences</h3>
+              <div className="space-y-4 max-w-md">
+                <div className="flex items-center justify-between py-3 border-b border-slate-200">
+                  <div className="flex items-center gap-3"><Mail size={18} className="text-slate-400" /><div><div className="font-medium text-sm">Email Alerts</div><div className="text-xs text-slate-500">Receive alerts via email</div></div></div>
+                  <button onClick={() => setAssetNotificationSettings({ ...assetNotificationSettings, email_alerts: !assetNotificationSettings.email_alerts })} className={`w-12 h-6 rounded-full transition-colors ${assetNotificationSettings.email_alerts ? "bg-blue-500" : "bg-slate-200"}`}><div className={`w-5 h-5 rounded-full bg-white transition-transform ${assetNotificationSettings.email_alerts ? "translate-x-6" : "translate-x-0.5"}`} /></button>
+                </div>
+                {assetNotificationSettings.email_alerts && (
+                  <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Email Address</span><input type="email" value={assetNotificationSettings.email} onChange={(e) => setAssetNotificationSettings({ ...assetNotificationSettings, email: e.target.value })} placeholder="alerts@example.com" className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder-slate-400 focus:outline-none focus:border-blue-500" /></label>
+                )}
+                <div className="flex items-center justify-between py-3 border-b border-slate-200">
+                  <div className="flex items-center gap-3"><Slack size={18} className="text-slate-400" /><div><div className="font-medium text-sm">Slack Alerts</div><div className="text-xs text-slate-500">Send alerts to Slack</div></div></div>
+                  <button onClick={() => setAssetNotificationSettings({ ...assetNotificationSettings, slack_alerts: !assetNotificationSettings.slack_alerts })} className={`w-12 h-6 rounded-full transition-colors ${assetNotificationSettings.slack_alerts ? "bg-blue-500" : "bg-slate-200"}`}><div className={`w-5 h-5 rounded-full bg-white transition-transform ${assetNotificationSettings.slack_alerts ? "translate-x-6" : "translate-x-0.5"}`} /></button>
+                </div>
+                <div className="flex items-center justify-between py-3 border-b border-slate-200">
+                  <div><div className="font-medium text-sm">Critical Only</div><div className="text-xs text-slate-500">Only receive critical alerts</div></div>
+                  <button onClick={() => setAssetNotificationSettings({ ...assetNotificationSettings, critical_only: !assetNotificationSettings.critical_only })} className={`w-12 h-6 rounded-full transition-colors ${assetNotificationSettings.critical_only ? "bg-blue-500" : "bg-slate-200"}`}><div className={`w-5 h-5 rounded-full bg-white transition-transform ${assetNotificationSettings.critical_only ? "translate-x-6" : "translate-x-0.5"}`} /></button>
+                </div>
+                <div className="flex items-center justify-between py-3">
+                  <div><div className="font-medium text-sm">Daily Digest</div><div className="text-xs text-slate-500">Receive daily summary email</div></div>
+                  <button onClick={() => setAssetNotificationSettings({ ...assetNotificationSettings, daily_digest: !assetNotificationSettings.daily_digest })} className={`w-12 h-6 rounded-full transition-colors ${assetNotificationSettings.daily_digest ? "bg-blue-500" : "bg-slate-200"}`}><div className={`w-5 h-5 rounded-full bg-white transition-transform ${assetNotificationSettings.daily_digest ? "translate-x-6" : "translate-x-0.5"}`} /></button>
+                </div>
+                <button onClick={async () => { setAssetSaving(true); await new Promise(r => setTimeout(r, 1000)); setAssetSaving(false); }} disabled={assetSaving} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium text-sm transition-colors disabled:opacity-60 mt-4">
+                  {assetSaving ? <RefreshCw size={16} className="animate-spin" /> : <Save size={16} />}{assetSaving ? "Saving..." : "Save Settings"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {assetActiveSubTab === "integrations" && (
+            <div className="rounded-2xl border border-slate-200 bg-white/60 p-6">
+              <h3 className="font-semibold mb-2">Integrations</h3>
+              <p className="text-sm text-slate-500 mb-6">Connect external services for enhanced monitoring</p>
+              <div className="space-y-4 max-w-md">
+                <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Google Analytics Property ID</span><input type="text" value={assetIntegrationSettings.google_analytics_id} onChange={(e) => setAssetIntegrationSettings({ ...assetIntegrationSettings, google_analytics_id: e.target.value })} placeholder="G-XXXXXXXXXX" className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder-slate-400 focus:outline-none focus:border-blue-500" /></label>
+                <div><span className="block text-sm font-medium text-slate-500 mb-2">Cloudflare API Key</span>
+                  <div className="relative"><input type={assetShowApiKey ? "text" : "password"} value={assetIntegrationSettings.cloudflare_api_key} onChange={(e) => setAssetIntegrationSettings({ ...assetIntegrationSettings, cloudflare_api_key: e.target.value })} placeholder="Your Cloudflare API key" className="w-full px-4 py-2.5 pr-12 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder-slate-400 focus:outline-none focus:border-blue-500" /><button type="button" onClick={() => setAssetShowApiKey(!assetShowApiKey)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">{assetShowApiKey ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>
+                </div>
+                <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">UptimeRobot API Key</span><input type="password" value={assetIntegrationSettings.uptime_robot_key} onChange={(e) => setAssetIntegrationSettings({ ...assetIntegrationSettings, uptime_robot_key: e.target.value })} placeholder="Your UptimeRobot API key" className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder-slate-400 focus:outline-none focus:border-blue-500" /></label>
+                <button onClick={async () => { setAssetSaving(true); await new Promise(r => setTimeout(r, 1000)); setAssetSaving(false); }} disabled={assetSaving} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium text-sm transition-colors disabled:opacity-60 mt-4">
+                  {assetSaving ? <RefreshCw size={16} className="animate-spin" /> : <Save size={16} />}{assetSaving ? "Saving..." : "Save Settings"}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ===== NICO GEO MODULE SETTINGS ===== */}
+      {activeTab === "nico-geo" && (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <Globe2 size={18} className="text-teal-500" />
+              Nico GEO Settings
+            </h2>
+            <p className="text-sm text-slate-500 mt-1">Configure GEO content engine preferences</p>
+          </div>
+
+          {/* Content Generation */}
+          <div className="rounded-2xl border border-slate-200 bg-white/60 p-6 space-y-4">
+            <h3 className="font-semibold flex items-center gap-2"><Globe2 size={16} className="text-teal-600" /> Content Generation</h3>
+            <div className="space-y-4 max-w-md">
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Default Output Format</span>
+                <select value={nicoGeneralSettings.defaultOutputFormat} onChange={(e) => setNicoGeneralSettings({ ...nicoGeneralSettings, defaultOutputFormat: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-teal-500">
+                  <option value="json">JSON (Recommended)</option><option value="markdown">Markdown</option><option value="html">HTML</option>
+                </select>
+              </label>
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Maximum FAQs to Generate</span>
+                <select value={nicoGeneralSettings.maxFaqs} onChange={(e) => setNicoGeneralSettings({ ...nicoGeneralSettings, maxFaqs: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-teal-500">
+                  <option value="3">3 FAQs</option><option value="5">5 FAQs</option><option value="10">10 FAQs</option>
+                </select>
+              </label>
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Answer Capsule Length</span>
+                <select value={nicoGeneralSettings.answerCapsuleLength} onChange={(e) => setNicoGeneralSettings({ ...nicoGeneralSettings, answerCapsuleLength: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-teal-500">
+                  <option value="short">Short (1-2 sentences)</option><option value="medium">Medium (2-3 sentences)</option><option value="long">Long (3-4 sentences)</option>
+                </select>
+              </label>
+              <div className="flex items-center justify-between py-3 border-t border-slate-200">
+                <div><div className="font-medium text-sm">Include Schema.org Markup</div><div className="text-xs text-slate-500">Generate JSON-LD structured data</div></div>
+                <button onClick={() => setNicoGeneralSettings({ ...nicoGeneralSettings, includeSchemaMarkup: !nicoGeneralSettings.includeSchemaMarkup })} className={`w-12 h-6 rounded-full transition-colors ${nicoGeneralSettings.includeSchemaMarkup ? "bg-teal-500" : "bg-slate-200"}`}><div className={`w-5 h-5 rounded-full bg-white transition-transform ${nicoGeneralSettings.includeSchemaMarkup ? "translate-x-6" : "translate-x-0.5"}`} /></button>
+              </div>
+              <div className="flex items-center justify-between py-3 border-t border-slate-200">
+                <div><div className="font-medium text-sm flex items-center gap-2">Anti-Hallucination Mode <span className="px-2 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-600">Required</span></div><div className="text-xs text-slate-500">Output derived solely from input data</div></div>
+                <button disabled className="w-12 h-6 rounded-full bg-emerald-500 opacity-75 cursor-not-allowed"><div className="w-5 h-5 rounded-full bg-white translate-x-6" /></button>
+              </div>
+            </div>
+          </div>
+
+          {/* API Configuration */}
+          <div className="rounded-2xl border border-slate-200 bg-white/60 p-6 space-y-4">
+            <h3 className="font-semibold flex items-center gap-2"><Code size={16} className="text-blue-600" /> API Configuration</h3>
+            <div className="space-y-4 max-w-md">
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Cloudflare Worker URL</span><input type="url" value={nicoApiSettings.workerUrl} onChange={(e) => setNicoApiSettings({ ...nicoApiSettings, workerUrl: e.target.value })} placeholder="https://your-worker.workers.dev" className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder-slate-400 focus:outline-none focus:border-blue-500" /></label>
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Default API Plan</span>
+                <select value={nicoApiSettings.defaultPlan} onChange={(e) => setNicoApiSettings({ ...nicoApiSettings, defaultPlan: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-blue-500">
+                  <option value="free">Free (20 req/day)</option><option value="pro">Pro (500 req/day)</option>
+                </select>
+              </label>
+              <div className="flex items-center justify-between py-3 border-t border-slate-200">
+                <div><div className="font-medium text-sm">Enable Rate Limiting</div><div className="text-xs text-slate-500">Enforce daily and burst limits</div></div>
+                <button onClick={() => setNicoApiSettings({ ...nicoApiSettings, enableRateLimiting: !nicoApiSettings.enableRateLimiting })} className={`w-12 h-6 rounded-full transition-colors ${nicoApiSettings.enableRateLimiting ? "bg-blue-500" : "bg-slate-200"}`}><div className={`w-5 h-5 rounded-full bg-white transition-transform ${nicoApiSettings.enableRateLimiting ? "translate-x-6" : "translate-x-0.5"}`} /></button>
+              </div>
+            </div>
+          </div>
+
+          {/* GitHub Integration */}
+          <div className="rounded-2xl border border-slate-200 bg-white/60 p-6 space-y-4">
+            <h3 className="font-semibold flex items-center gap-2"><GitBranch size={16} className="text-purple-600" /> GitHub Integration (Pro)</h3>
+            <div className="space-y-4 max-w-md">
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Default Repository Owner</span><input type="text" value={nicoGitHubSettings.defaultOwner} onChange={(e) => setNicoGitHubSettings({ ...nicoGitHubSettings, defaultOwner: e.target.value })} placeholder="your-org" className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder-slate-400 focus:outline-none focus:border-purple-500" /></label>
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Default Repository</span><input type="text" value={nicoGitHubSettings.defaultRepo} onChange={(e) => setNicoGitHubSettings({ ...nicoGitHubSettings, defaultRepo: e.target.value })} placeholder="your-site" className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder-slate-400 focus:outline-none focus:border-purple-500" /></label>
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Default Branch</span><input type="text" value={nicoGitHubSettings.defaultBranch} onChange={(e) => setNicoGitHubSettings({ ...nicoGitHubSettings, defaultBranch: e.target.value })} placeholder="main" className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm placeholder-slate-400 focus:outline-none focus:border-purple-500" /></label>
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Project Type</span>
+                <select value={nicoGitHubSettings.projectType} onChange={(e) => setNicoGitHubSettings({ ...nicoGitHubSettings, projectType: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-purple-500">
+                  <option value="astro-pages">Astro Pages</option><option value="next-pages">Next.js Pages</option><option value="static-html">Static HTML</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button onClick={async () => { setNicoSaving(true); await new Promise(r => setTimeout(r, 1000)); setNicoSaving(false); }} disabled={nicoSaving} className="flex items-center gap-2 px-6 py-3 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-medium transition-colors disabled:opacity-60">
+              {nicoSaving ? <RefreshCw size={18} className="animate-spin" /> : <Save size={18} />}{nicoSaving ? "Saving..." : "Save Settings"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ===== NEXUS OPENCOPY MODULE SETTINGS ===== */}
+      {activeTab === "nexus-opencopy" && (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <FileEdit size={18} className="text-pink-500" />
+              Nexus OpenCopy Settings
+            </h2>
+            <p className="text-sm text-slate-500 mt-1">Configure AI content studio preferences</p>
+          </div>
+
+          {/* Content Generation */}
+          <div className="rounded-2xl border border-slate-200 bg-white/60 p-6 space-y-4">
+            <h3 className="font-semibold flex items-center gap-2"><FileText size={16} className="text-pink-600" /> Content Generation</h3>
+            <div className="space-y-4 max-w-md">
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Default Word Count Target</span>
+                <select value={nexusContentSettings.defaultWordCount} onChange={(e) => setNexusContentSettings({ ...nexusContentSettings, defaultWordCount: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-pink-500">
+                  <option value="1000">~1,000 words</option><option value="1500">~1,500 words</option><option value="2000">~2,000 words</option><option value="2500">~2,500 words</option><option value="3000">~3,000 words</option>
+                </select>
+              </label>
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Default Writing Tone</span>
+                <select value={nexusContentSettings.defaultTone} onChange={(e) => setNexusContentSettings({ ...nexusContentSettings, defaultTone: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-pink-500">
+                  <option value="professional">Professional</option><option value="conversational">Conversational</option><option value="academic">Academic</option><option value="casual">Casual</option>
+                </select>
+              </label>
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Default Language</span>
+                <select value={nexusContentSettings.defaultLanguage} onChange={(e) => setNexusContentSettings({ ...nexusContentSettings, defaultLanguage: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-pink-500">
+                  <option value="en">English</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option><option value="pt">Portuguese</option>
+                </select>
+              </label>
+              {[
+                { key: "includeImages" as const, label: "Include Image Suggestions", desc: "Suggest images for articles" },
+                { key: "includeInternalLinks" as const, label: "Internal Linking", desc: "Auto-suggest internal links" },
+                { key: "includeFaqs" as const, label: "Generate FAQs", desc: "Include FAQ section in articles" },
+                { key: "seoOptimization" as const, label: "SEO Optimization", desc: "Auto-optimize for search engines" },
+              ].map((toggle) => (
+                <div key={toggle.key} className="flex items-center justify-between py-3 border-t border-slate-200">
+                  <div><div className="font-medium text-sm">{toggle.label}</div><div className="text-xs text-slate-500">{toggle.desc}</div></div>
+                  <button onClick={() => setNexusContentSettings({ ...nexusContentSettings, [toggle.key]: !nexusContentSettings[toggle.key] })} className={`w-12 h-6 rounded-full transition-colors ${nexusContentSettings[toggle.key] ? "bg-pink-500" : "bg-slate-200"}`}><div className={`w-5 h-5 rounded-full bg-white transition-transform ${nexusContentSettings[toggle.key] ? "translate-x-6" : "translate-x-0.5"}`} /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* AI Configuration */}
+          <div className="rounded-2xl border border-slate-200 bg-white/60 p-6 space-y-4">
+            <h3 className="font-semibold flex items-center gap-2"><Sparkles size={16} className="text-purple-600" /> AI Configuration</h3>
+            <div className="space-y-4 max-w-md">
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">AI Model</span>
+                <select value={nexusAiSettings.model} onChange={(e) => setNexusAiSettings({ ...nexusAiSettings, model: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-purple-500">
+                  <option value="gpt-4">GPT-4 (Recommended)</option><option value="gpt-4-turbo">GPT-4 Turbo</option><option value="gpt-3.5-turbo">GPT-3.5 Turbo</option><option value="claude-3">Claude 3</option>
+                </select>
+              </label>
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Temperature (Creativity)</span>
+                <select value={nexusAiSettings.temperature} onChange={(e) => setNexusAiSettings({ ...nexusAiSettings, temperature: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-purple-500">
+                  <option value="0.3">0.3 - More focused</option><option value="0.5">0.5 - Balanced</option><option value="0.7">0.7 - More creative</option><option value="0.9">0.9 - Highly creative</option>
+                </select>
+              </label>
+              <div className="flex items-center justify-between py-3 border-t border-slate-200">
+                <div><div className="font-medium text-sm">Fact Checking</div><div className="text-xs text-slate-500">Verify claims in generated content</div></div>
+                <button onClick={() => setNexusAiSettings({ ...nexusAiSettings, enableFactChecking: !nexusAiSettings.enableFactChecking })} className={`w-12 h-6 rounded-full transition-colors ${nexusAiSettings.enableFactChecking ? "bg-purple-500" : "bg-slate-200"}`}><div className={`w-5 h-5 rounded-full bg-white transition-transform ${nexusAiSettings.enableFactChecking ? "translate-x-6" : "translate-x-0.5"}`} /></button>
+              </div>
+            </div>
+          </div>
+
+          {/* Publishing */}
+          <div className="rounded-2xl border border-slate-200 bg-white/60 p-6 space-y-4">
+            <h3 className="font-semibold flex items-center gap-2"><Globe size={16} className="text-emerald-600" /> Publishing</h3>
+            <div className="space-y-4 max-w-md">
+              <label className="block"><span className="block text-sm font-medium text-slate-500 mb-2">Default Article Status</span>
+                <select value={nexusPublishingSettings.defaultStatus} onChange={(e) => setNexusPublishingSettings({ ...nexusPublishingSettings, defaultStatus: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-emerald-500">
+                  <option value="draft">Draft</option><option value="in_review">In Review</option><option value="published">Published</option>
+                </select>
+              </label>
+              {[
+                { key: "requireReview" as const, label: "Require Review", desc: "Articles must be reviewed before publishing", color: "emerald" },
+                { key: "notifyOnPublish" as const, label: "Notify on Publish", desc: "Send notifications when articles are published", color: "emerald" },
+              ].map((toggle) => (
+                <div key={toggle.key} className="flex items-center justify-between py-3 border-t border-slate-200">
+                  <div><div className="font-medium text-sm">{toggle.label}</div><div className="text-xs text-slate-500">{toggle.desc}</div></div>
+                  <button onClick={() => setNexusPublishingSettings({ ...nexusPublishingSettings, [toggle.key]: !nexusPublishingSettings[toggle.key] })} className={`w-12 h-6 rounded-full transition-colors ${nexusPublishingSettings[toggle.key] ? "bg-emerald-500" : "bg-slate-200"}`}><div className={`w-5 h-5 rounded-full bg-white transition-transform ${nexusPublishingSettings[toggle.key] ? "translate-x-6" : "translate-x-0.5"}`} /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Danger Zone */}
+          <div className="rounded-2xl border border-red-500/30 bg-red-500/5 p-6 space-y-4">
+            <h3 className="font-semibold flex items-center gap-2 text-red-600"><AlertTriangle size={16} /> Danger Zone</h3>
+            <div className="flex items-center justify-between">
+              <div><div className="font-medium text-sm">Reset All Settings</div><div className="text-xs text-slate-500">Restore default configuration</div></div>
+              <button className="px-4 py-2 rounded-lg border border-red-500/30 hover:bg-red-500/20 text-red-600 text-sm transition-colors">Reset</button>
+            </div>
+            <div className="flex items-center justify-between pt-4 border-t border-red-500/20">
+              <div><div className="font-medium text-sm">Delete All Data</div><div className="text-xs text-slate-500">Permanently delete all projects and articles</div></div>
+              <button className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm transition-colors">Delete All</button>
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button onClick={async () => { setNexusSaving(true); await new Promise(r => setTimeout(r, 1000)); setNexusSaving(false); }} disabled={nexusSaving} className="flex items-center gap-2 px-6 py-3 rounded-xl bg-pink-500 hover:bg-pink-600 text-white font-medium transition-colors disabled:opacity-60">
+              {nexusSaving ? <RefreshCw size={18} className="animate-spin" /> : <Save size={18} />}{nexusSaving ? "Saving..." : "Save Settings"}
+            </button>
           </div>
         </div>
       )}

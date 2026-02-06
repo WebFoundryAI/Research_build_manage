@@ -7,7 +7,6 @@ import {
   Key,
   TrendingUp,
   FileText,
-  Settings,
   Menu,
   X,
   ArrowLeft,
@@ -34,12 +33,6 @@ const menuSections = [
     items: [
       { to: "/daily-checks/keywords", label: "Keywords", icon: Key },
       { to: "/daily-checks/rankings", label: "GSC Rankings", icon: TrendingUp },
-    ],
-  },
-  {
-    title: "Configuration",
-    items: [
-      { to: "/daily-checks/settings", label: "Settings", icon: Settings },
     ],
   },
 ];

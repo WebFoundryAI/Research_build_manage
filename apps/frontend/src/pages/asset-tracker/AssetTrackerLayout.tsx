@@ -10,7 +10,6 @@ import {
   ClipboardList,
   Bell,
   Trash2,
-  Settings,
   Menu,
   X,
   ArrowLeft,
@@ -45,7 +44,6 @@ const menuSections = [
     title: "Management",
     items: [
       { to: "/asset-tracker/trash", label: "Trash", icon: Trash2 },
-      { to: "/asset-tracker/settings", label: "Settings", icon: Settings },
     ],
   },
 ];
