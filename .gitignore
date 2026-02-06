@@ -1,3 +1,5 @@
+node_modules
+dist
 .env.local
 super-seo-tool/apps/frontend/.env.local
 apps/frontend/.env.local
