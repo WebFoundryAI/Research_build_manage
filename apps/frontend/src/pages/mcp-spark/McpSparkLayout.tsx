@@ -27,7 +27,6 @@ import {
   Calendar,
   Activity,
   ArrowLeft,
-  Settings,
   Menu,
   X,
   ChevronDown,
@@ -103,7 +102,6 @@ const menuSections = [
       { title: "Research History", url: "/mcp-spark/history", icon: History },
       { title: "Scheduled Reports", url: "/mcp-spark/scheduled-reports", icon: Calendar },
       { title: "Monitoring", url: "/mcp-spark/monitoring", icon: Activity },
-      { title: "MCP Settings", url: "/mcp-spark/settings", icon: Settings },
     ],
   },
 ];

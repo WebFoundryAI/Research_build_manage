@@ -7,7 +7,6 @@ import {
   FileText,
   CalendarDays,
   Link2,
-  Settings,
   ChevronLeft,
   Menu,
   Home,
@@ -20,7 +19,6 @@ const navItems = [
   { to: "/nexus-opencopy/articles", label: "Articles", icon: FileText },
   { to: "/nexus-opencopy/content-planner", label: "Content Planner", icon: CalendarDays },
   { to: "/nexus-opencopy/integrations", label: "Integrations", icon: Link2 },
-  { to: "/nexus-opencopy/settings", label: "Settings", icon: Settings },
 ];
 
 export default function NexusOpenCopyLayout() {

@@ -6,8 +6,6 @@ import {
   Search,
   Sparkles,
   ClipboardCheck,
-  Key,
-  Settings,
   ChevronLeft,
   Menu,
   Home,
@@ -19,8 +17,6 @@ const navItems = [
   { to: "/nico-geo/audit", label: "Audit Content", icon: Search },
   { to: "/nico-geo/improve", label: "Improve Content", icon: FileText },
   { to: "/nico-geo/reviews", label: "Review Sessions", icon: ClipboardCheck },
-  { to: "/nico-geo/api-keys", label: "API Keys", icon: Key },
-  { to: "/nico-geo/settings", label: "Settings", icon: Settings },
 ];
 
 export default function NicoGeoLayout() {
