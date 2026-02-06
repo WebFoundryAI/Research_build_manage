@@ -36,7 +36,9 @@ function setDemoUser(u: AppUser | null) {
   try {
     if (!u) localStorage.removeItem(DEMO_KEY);
     else localStorage.setItem(DEMO_KEY, JSON.stringify(u));
-  } catch {}
+  } catch {
+    // localStorage may be unavailable (e.g. private browsing)
+  }
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
