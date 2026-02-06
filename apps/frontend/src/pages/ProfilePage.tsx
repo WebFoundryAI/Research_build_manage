@@ -84,10 +84,10 @@ export default function ProfilePage() {
   if (mode === "demo" || !supabase) {
     return (
       <div className="max-w-2xl">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-3 rounded-xl bg-amber-500/20">
-              <AlertTriangle size={24} className="text-amber-400" />
+              <AlertTriangle size={24} className="text-amber-600" />
             </div>
             <div>
               <h1 className="text-xl font-semibold">Profile</h1>
@@ -108,7 +108,7 @@ export default function ProfilePage() {
       <div>
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-xl bg-indigo-500/20">
-            <User size={20} className="text-indigo-400" />
+            <User size={20} className="text-indigo-600" />
           </div>
           <h1 className="text-2xl font-semibold">Profile</h1>
         </div>
@@ -119,9 +119,9 @@ export default function ProfilePage() {
 
       {/* Profile Form */}
       <form onSubmit={saveProfile} className="space-y-6">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 space-y-6">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 space-y-6">
           {/* Avatar Section */}
-          <div className="flex items-center gap-6 pb-6 border-b border-slate-800">
+          <div className="flex items-center gap-6 pb-6 border-b border-slate-200">
             <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-3xl font-semibold shadow-lg shadow-indigo-500/20">
               {form.display_name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U"}
             </div>
@@ -137,7 +137,7 @@ export default function ProfilePage() {
           {/* Form Fields */}
           <div className="grid gap-5 md:grid-cols-2">
             <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-300 flex items-center gap-2">
+              <span className="text-sm font-medium text-slate-600 flex items-center gap-2">
                 <User size={14} className="text-slate-500" />
                 Display Name
               </span>
@@ -147,13 +147,13 @@ export default function ProfilePage() {
                   setForm((prev) => ({ ...prev, display_name: event.target.value }))
                 }
                 placeholder="Jane Founder"
-                className="w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-3 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
+                className="w-full rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
               />
               <p className="text-xs text-slate-500">How you'll appear across the platform</p>
             </label>
 
             <label className="space-y-2">
-              <span className="text-sm font-medium text-slate-300 flex items-center gap-2">
+              <span className="text-sm font-medium text-slate-600 flex items-center gap-2">
                 <Building2 size={14} className="text-slate-500" />
                 Company Name
               </span>
@@ -163,21 +163,21 @@ export default function ProfilePage() {
                   setForm((prev) => ({ ...prev, company_name: event.target.value }))
                 }
                 placeholder="WebFoundryAI"
-                className="w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-3 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
+                className="w-full rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
               />
               <p className="text-xs text-slate-500">Your company or organization</p>
             </label>
           </div>
 
           <label className="space-y-2">
-            <span className="text-sm font-medium text-slate-300 flex items-center gap-2">
+            <span className="text-sm font-medium text-slate-600 flex items-center gap-2">
               <Mail size={14} className="text-slate-500" />
               Email Address
             </span>
             <input
               value={user?.email ?? ""}
               readOnly
-              className="w-full rounded-xl border border-slate-700 bg-slate-800/30 px-4 py-3 text-sm text-slate-400 cursor-not-allowed"
+              className="w-full rounded-xl border border-slate-200 bg-slate-100/30 px-4 py-3 text-sm text-slate-400 cursor-not-allowed"
             />
             <p className="text-xs text-slate-500">Email is managed through authentication</p>
           </label>
@@ -190,8 +190,8 @@ export default function ProfilePage() {
               <div
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${
                   status === "error"
-                    ? "bg-red-500/10 border border-red-500/20 text-red-400"
-                    : "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
+                    ? "bg-red-500/10 border border-red-500/20 text-red-600"
+                    : "bg-emerald-500/10 border border-emerald-500/20 text-emerald-600"
                 }`}
               >
                 {status === "error" ? (
@@ -215,16 +215,16 @@ export default function ProfilePage() {
       </form>
 
       {/* Account Info */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6">
         <h3 className="text-sm font-semibold mb-4">Account Information</h3>
         <div className="grid gap-4 md:grid-cols-2 text-sm">
-          <div className="rounded-xl border border-slate-700 p-4">
+          <div className="rounded-xl border border-slate-200 p-4">
             <p className="text-slate-500 text-xs mb-1">User ID</p>
-            <code className="text-xs bg-slate-800 px-2 py-1 rounded">
+            <code className="text-xs bg-slate-100 px-2 py-1 rounded">
               {user?.id?.slice(0, 8)}...{user?.id?.slice(-4)}
             </code>
           </div>
-          <div className="rounded-xl border border-slate-700 p-4">
+          <div className="rounded-xl border border-slate-200 p-4">
             <p className="text-slate-500 text-xs mb-1">Auth Provider</p>
             <p className="font-medium">Supabase Auth</p>
           </div>

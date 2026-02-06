@@ -87,14 +87,14 @@ export default function DailyChecksDashboard() {
   function getStatusBadge(status: number | null) {
     if (status === 1) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400">
+        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-600">
           <CheckCircle size={12} /> Live
         </span>
       );
     }
     if (status === 0) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-400">
+        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-600">
           <XCircle size={12} /> Down
         </span>
       );
@@ -109,9 +109,9 @@ export default function DailyChecksDashboard() {
   function getSeoScoreBadge(score: number | null) {
     if (score === null) return <span className="text-slate-500">-</span>;
 
-    let colorClass = "bg-red-500/20 text-red-400";
-    if (score >= 70) colorClass = "bg-emerald-500/20 text-emerald-400";
-    else if (score >= 40) colorClass = "bg-amber-500/20 text-amber-400";
+    let colorClass = "bg-red-500/20 text-red-600";
+    if (score >= 70) colorClass = "bg-emerald-500/20 text-emerald-600";
+    else if (score >= 40) colorClass = "bg-amber-500/20 text-amber-600";
 
     return (
       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${colorClass}`}>
@@ -133,12 +133,12 @@ export default function DailyChecksDashboard() {
       {/* API Notice */}
       <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-4">
         <div className="flex items-start gap-3">
-          <AlertTriangle size={18} className="text-amber-400 mt-0.5" />
+          <AlertTriangle size={18} className="text-amber-600 mt-0.5" />
           <div>
-            <h3 className="font-medium text-amber-400">Connect Your APIs</h3>
+            <h3 className="font-medium text-amber-600">Connect Your APIs</h3>
             <p className="text-sm text-slate-400 mt-1">
               Configure your Cloudflare Workers endpoint or Supabase Edge Functions in{" "}
-              <Link to="/daily-checks/settings" className="text-amber-400 hover:underline">
+              <Link to="/daily-checks/settings" className="text-amber-600 hover:underline">
                 Settings
               </Link>{" "}
               to enable live monitoring.
@@ -149,9 +149,9 @@ export default function DailyChecksDashboard() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+        <div className="rounded-xl border border-slate-200 bg-white p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-slate-800/50">
+            <div className="p-2 rounded-lg bg-slate-100">
               <Globe size={18} className="text-slate-400" />
             </div>
             <div>
@@ -164,10 +164,10 @@ export default function DailyChecksDashboard() {
         <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-emerald-500/20">
-              <CheckCircle size={18} className="text-emerald-400" />
+              <CheckCircle size={18} className="text-emerald-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-emerald-400">{summary.live}</div>
+              <div className="text-2xl font-semibold text-emerald-600">{summary.live}</div>
               <div className="text-xs text-slate-500">Live</div>
             </div>
           </div>
@@ -176,10 +176,10 @@ export default function DailyChecksDashboard() {
         <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-red-500/20">
-              <XCircle size={18} className="text-red-400" />
+              <XCircle size={18} className="text-red-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-red-400">{summary.down}</div>
+              <div className="text-2xl font-semibold text-red-600">{summary.down}</div>
               <div className="text-xs text-slate-500">Down</div>
             </div>
           </div>
@@ -188,10 +188,10 @@ export default function DailyChecksDashboard() {
         <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-indigo-500/20">
-              <TrendingUp size={18} className="text-indigo-400" />
+              <TrendingUp size={18} className="text-indigo-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-indigo-400">
+              <div className="text-2xl font-semibold text-indigo-600">
                 {summary.avgSeoScore ?? "-"}
               </div>
               <div className="text-xs text-slate-500">Avg SEO Score</div>
@@ -214,7 +214,7 @@ export default function DailyChecksDashboard() {
         <button
           onClick={runAllSeoChecks}
           disabled={runningSeoChecks}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium text-sm transition-colors disabled:opacity-60"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-white font-medium text-sm transition-colors disabled:opacity-60"
         >
           {runningSeoChecks ? <RefreshCw size={16} className="animate-spin" /> : <ShieldCheck size={16} />}
           {runningSeoChecks ? "Running..." : "Run SEO Checks"}
@@ -222,7 +222,7 @@ export default function DailyChecksDashboard() {
 
         <Link
           to="/daily-checks/websites"
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-white font-medium text-sm transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-white font-medium text-sm transition-colors"
         >
           <Globe size={16} />
           Manage Websites
@@ -230,7 +230,7 @@ export default function DailyChecksDashboard() {
 
         <button
           onClick={loadData}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-white font-medium text-sm transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-white font-medium text-sm transition-colors"
         >
           <RefreshCw size={16} />
           Refresh
@@ -238,8 +238,8 @@ export default function DailyChecksDashboard() {
       </div>
 
       {/* Websites Table */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden">
-        <div className="px-4 py-3 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+        <div className="px-4 py-3 border-b border-slate-200">
           <h2 className="font-semibold">Monitored Websites</h2>
         </div>
 
@@ -251,7 +251,7 @@ export default function DailyChecksDashboard() {
             <p className="text-slate-400">No websites yet</p>
             <Link
               to="/daily-checks/websites"
-              className="inline-flex items-center gap-2 mt-3 text-sm text-emerald-400 hover:underline"
+              className="inline-flex items-center gap-2 mt-3 text-sm text-emerald-600 hover:underline"
             >
               Add your first website
             </Link>
@@ -260,7 +260,7 @@ export default function DailyChecksDashboard() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-800 text-left">
+                <tr className="border-b border-slate-200 text-left">
                   <th className="px-4 py-3 font-medium text-slate-400">Name</th>
                   <th className="px-4 py-3 font-medium text-slate-400">URL</th>
                   <th className="px-4 py-3 font-medium text-slate-400">Status</th>
@@ -271,14 +271,14 @@ export default function DailyChecksDashboard() {
               </thead>
               <tbody>
                 {websites.map((site) => (
-                  <tr key={site.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
+                  <tr key={site.id} className="border-b border-slate-200 hover:bg-slate-100/30">
                     <td className="px-4 py-3 font-medium">{site.name}</td>
                     <td className="px-4 py-3">
                       <a
                         href={site.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-slate-400 hover:text-white flex items-center gap-1"
+                        className="text-slate-400 hover:text-slate-900 flex items-center gap-1"
                       >
                         {site.url.substring(0, 30)}{site.url.length > 30 ? "..." : ""}
                         <ExternalLink size={12} />
@@ -291,15 +291,15 @@ export default function DailyChecksDashboard() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <button className="px-2 py-1 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors">
+                        <button className="px-2 py-1 text-xs rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors">
                           Check
                         </button>
-                        <button className="px-2 py-1 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors">
+                        <button className="px-2 py-1 text-xs rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors">
                           SEO
                         </button>
                         <Link
                           to={`/daily-checks/websites/${site.id}`}
-                          className="px-2 py-1 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors"
+                          className="px-2 py-1 text-xs rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors"
                         >
                           View
                         </Link>
@@ -317,14 +317,14 @@ export default function DailyChecksDashboard() {
       <div className="grid md:grid-cols-3 gap-4">
         <Link
           to="/daily-checks/seo-health"
-          className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 hover:border-slate-700 transition-colors group"
+          className="rounded-xl border border-slate-200 bg-white p-4 hover:border-slate-200 transition-colors group"
         >
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-emerald-500/20">
-              <ShieldCheck size={18} className="text-emerald-400" />
+              <ShieldCheck size={18} className="text-emerald-600" />
             </div>
             <div>
-              <h3 className="font-medium group-hover:text-emerald-400 transition-colors">SEO Health</h3>
+              <h3 className="font-medium group-hover:text-emerald-600 transition-colors">SEO Health</h3>
               <p className="text-xs text-slate-500">Robots.txt, sitemap, SSL checks</p>
             </div>
           </div>
@@ -332,14 +332,14 @@ export default function DailyChecksDashboard() {
 
         <Link
           to="/daily-checks/keywords"
-          className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 hover:border-slate-700 transition-colors group"
+          className="rounded-xl border border-slate-200 bg-white p-4 hover:border-slate-200 transition-colors group"
         >
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-indigo-500/20">
-              <TrendingUp size={18} className="text-indigo-400" />
+              <TrendingUp size={18} className="text-indigo-600" />
             </div>
             <div>
-              <h3 className="font-medium group-hover:text-indigo-400 transition-colors">Keywords</h3>
+              <h3 className="font-medium group-hover:text-indigo-600 transition-colors">Keywords</h3>
               <p className="text-xs text-slate-500">Track target keywords</p>
             </div>
           </div>
@@ -347,14 +347,14 @@ export default function DailyChecksDashboard() {
 
         <Link
           to="/daily-checks/rankings"
-          className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 hover:border-slate-700 transition-colors group"
+          className="rounded-xl border border-slate-200 bg-white p-4 hover:border-slate-200 transition-colors group"
         >
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-amber-500/20">
-              <TrendingUp size={18} className="text-amber-400" />
+              <TrendingUp size={18} className="text-amber-600" />
             </div>
             <div>
-              <h3 className="font-medium group-hover:text-amber-400 transition-colors">GSC Rankings</h3>
+              <h3 className="font-medium group-hover:text-amber-600 transition-colors">GSC Rankings</h3>
               <p className="text-xs text-slate-500">Search Console performance</p>
             </div>
           </div>

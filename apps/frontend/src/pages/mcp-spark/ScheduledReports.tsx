@@ -101,21 +101,21 @@ export default function ScheduledReports() {
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
       {feedback && (
-        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
 
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
-          <Calendar className="h-6 w-6 text-blue-400" />
+          <Calendar className="h-6 w-6 text-blue-600" />
           Scheduled Reports
         </h1>
         <p className="text-slate-400">Automate your SEO reporting and tracking</p>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200 flex items-center justify-between">
           <div>
             <h2 className="text-lg font-semibold text-white">Your Scheduled Reports</h2>
             <p className="text-sm text-slate-400">Reports will be sent to your email automatically</p>
@@ -130,32 +130,32 @@ export default function ScheduledReports() {
         </div>
         <div className="p-6 space-y-4">
           {showAddForm && (
-            <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6 space-y-4">
+            <div className="rounded-lg border border-slate-200 bg-slate-100 p-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-slate-300 mb-2 block">Report Name</label>
+                  <label className="text-sm font-medium text-slate-600 mb-2 block">Report Name</label>
                   <input
                     placeholder="My Weekly Report"
                     value={newReport.name}
                     onChange={(e) => setNewReport({ ...newReport, name: e.target.value })}
-                    className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-slate-300 mb-2 block">Target (Keyword or Domain)</label>
+                  <label className="text-sm font-medium text-slate-600 mb-2 block">Target (Keyword or Domain)</label>
                   <input
                     placeholder="example.com or keyword"
                     value={newReport.target}
                     onChange={(e) => setNewReport({ ...newReport, target: e.target.value })}
-                    className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-slate-300 mb-2 block">Report Type</label>
+                  <label className="text-sm font-medium text-slate-600 mb-2 block">Report Type</label>
                   <select
                     value={newReport.type}
                     onChange={(e) => setNewReport({ ...newReport, type: e.target.value as any })}
-                    className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="keyword_tracking">Keyword Tracking</option>
                     <option value="domain_audit">Domain Audit</option>
@@ -163,11 +163,11 @@ export default function ScheduledReports() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-slate-300 mb-2 block">Frequency</label>
+                  <label className="text-sm font-medium text-slate-600 mb-2 block">Frequency</label>
                   <select
                     value={newReport.frequency}
                     onChange={(e) => setNewReport({ ...newReport, frequency: e.target.value as any })}
-                    className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>
@@ -179,7 +179,7 @@ export default function ScheduledReports() {
                 <button onClick={addReport} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
                   Create Report
                 </button>
-                <button onClick={() => setShowAddForm(false)} className="px-4 py-2 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-lg transition-colors">
+                <button onClick={() => setShowAddForm(false)} className="px-4 py-2 border border-slate-200 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
                   Cancel
                 </button>
               </div>
@@ -189,7 +189,7 @@ export default function ScheduledReports() {
           {reports.length > 0 ? (
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-700">
+                <tr className="border-b border-slate-200">
                   <th className="text-left p-3 text-slate-400 text-sm font-medium">Report</th>
                   <th className="text-left p-3 text-slate-400 text-sm font-medium">Type</th>
                   <th className="text-left p-3 text-slate-400 text-sm font-medium">Frequency</th>
@@ -200,7 +200,7 @@ export default function ScheduledReports() {
               </thead>
               <tbody>
                 {reports.map((report) => (
-                  <tr key={report.id} className="border-b border-slate-800">
+                  <tr key={report.id} className="border-b border-slate-200">
                     <td className="p-3">
                       <div>
                         <div className="font-medium text-white">{report.name}</div>
@@ -208,9 +208,9 @@ export default function ScheduledReports() {
                       </div>
                     </td>
                     <td className="p-3">
-                      <span className="px-2 py-0.5 text-xs bg-slate-700 rounded text-slate-300">{getTypeLabel(report.type)}</span>
+                      <span className="px-2 py-0.5 text-xs bg-slate-200 rounded text-slate-600">{getTypeLabel(report.type)}</span>
                     </td>
-                    <td className="p-3 text-slate-300 capitalize">{report.frequency}</td>
+                    <td className="p-3 text-slate-600 capitalize">{report.frequency}</td>
                     <td className="p-3">
                       <div className="flex items-center gap-1 text-sm text-slate-400">
                         <Clock className="h-3 w-3" />
@@ -220,7 +220,7 @@ export default function ScheduledReports() {
                     <td className="p-3 text-center">
                       <button
                         onClick={() => toggleReport(report.id)}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${report.enabled ? "bg-blue-600" : "bg-slate-700"}`}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${report.enabled ? "bg-blue-600" : "bg-slate-200"}`}
                       >
                         <span
                           className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${report.enabled ? "translate-x-6" : "translate-x-1"}`}
@@ -228,7 +228,7 @@ export default function ScheduledReports() {
                       </button>
                     </td>
                     <td className="p-3 text-center">
-                      <button onClick={() => deleteReport(report.id)} className="p-2 text-red-400 hover:text-red-300 hover:bg-slate-800 rounded transition-colors">
+                      <button onClick={() => deleteReport(report.id)} className="p-2 text-red-600 hover:text-red-300 hover:bg-slate-100 rounded transition-colors">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </td>
@@ -244,8 +244,8 @@ export default function ScheduledReports() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <Mail className="h-5 w-5" />
             Email Delivery

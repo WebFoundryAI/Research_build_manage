@@ -25,16 +25,16 @@ type Task = {
 };
 
 const priorityColors: Record<string, string> = {
-  Critical: "text-red-400 bg-red-500/20 border-red-500/30",
-  High: "text-amber-400 bg-amber-500/20 border-amber-500/30",
-  Medium: "text-blue-400 bg-blue-500/20 border-blue-500/30",
+  Critical: "text-red-600 bg-red-500/20 border-red-500/30",
+  High: "text-amber-600 bg-amber-500/20 border-amber-500/30",
+  Medium: "text-blue-600 bg-blue-500/20 border-blue-500/30",
   Low: "text-slate-400 bg-slate-500/20 border-slate-500/30",
 };
 
 const statusIcons: Record<string, React.ReactNode> = {
   "To Do": <Circle size={16} className="text-slate-400" />,
-  "In Progress": <Clock size={16} className="text-blue-400" />,
-  "Done": <CheckSquare size={16} className="text-emerald-400" />,
+  "In Progress": <Clock size={16} className="text-blue-600" />,
+  "Done": <CheckSquare size={16} className="text-emerald-600" />,
 };
 
 export default function TasksPage() {
@@ -138,13 +138,13 @@ export default function TasksPage() {
             placeholder="Search tasks..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-blue-500"
+          className="px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-blue-500"
         >
           <option value="all">All Status</option>
           <option value="To Do">To Do</option>
@@ -163,11 +163,11 @@ export default function TasksPage() {
             if (statusTasks.length === 0 && statusFilter !== "all" && statusFilter !== status) return null;
 
             return (
-              <div key={status} className="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden">
-                <div className="px-4 py-3 border-b border-slate-800 flex items-center gap-2">
+              <div key={status} className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+                <div className="px-4 py-3 border-b border-slate-200 flex items-center gap-2">
                   {statusIcons[status]}
                   <h2 className="font-medium">{status}</h2>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-400">
                     {statusTasks.length}
                   </span>
                 </div>
@@ -179,12 +179,12 @@ export default function TasksPage() {
                     {statusTasks.map(task => (
                       <div
                         key={task.id}
-                        className="px-4 py-3 hover:bg-slate-800/30 transition-colors group"
+                        className="px-4 py-3 hover:bg-slate-100/30 transition-colors group"
                       >
                         <div className="flex items-start gap-3">
                           <button
                             onClick={() => toggleTaskStatus(task.id)}
-                            className="mt-0.5 p-1 rounded hover:bg-slate-800"
+                            className="mt-0.5 p-1 rounded hover:bg-slate-100"
                           >
                             {statusIcons[task.status]}
                           </button>
@@ -205,7 +205,7 @@ export default function TasksPage() {
                               </div>
                             )}
                           </div>
-                          <button className="p-1 rounded hover:bg-slate-800 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button className="p-1 rounded hover:bg-slate-100 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">
                             <MoreVertical size={16} />
                           </button>
                         </div>
@@ -223,8 +223,8 @@ export default function TasksPage() {
       {showNewModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowNewModal(false)} />
-          <div className="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6">
-            <button onClick={() => setShowNewModal(false)} className="absolute right-4 top-4 p-1 rounded-lg hover:bg-slate-800">
+          <div className="relative w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6">
+            <button onClick={() => setShowNewModal(false)} className="absolute right-4 top-4 p-1 rounded-lg hover:bg-slate-100">
               <X size={20} />
             </button>
 
@@ -239,7 +239,7 @@ export default function TasksPage() {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="Task title"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
                 />
               </div>
 
@@ -250,7 +250,7 @@ export default function TasksPage() {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Task description"
                   rows={3}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 resize-none"
                 />
               </div>
 
@@ -260,7 +260,7 @@ export default function TasksPage() {
                   <select
                     value={formData.priority}
                     onChange={(e) => setFormData({ ...formData, priority: e.target.value as Task["priority"] })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-blue-500"
                   >
                     <option value="Critical">Critical</option>
                     <option value="High">High</option>
@@ -274,13 +274,13 @@ export default function TasksPage() {
                     type="date"
                     value={formData.due_date}
                     onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
 
               <div className="flex gap-3 pt-4">
-                <button type="button" onClick={() => setShowNewModal(false)} className="flex-1 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-sm font-medium transition-colors">
+                <button type="button" onClick={() => setShowNewModal(false)} className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-sm font-medium transition-colors">
                   Cancel
                 </button>
                 <button type="submit" className="flex-1 px-4 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium transition-colors">

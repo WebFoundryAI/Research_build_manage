@@ -88,42 +88,42 @@ export default function SerpFeatures() {
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
       {feedback && (
-        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
 
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
-          <Eye className="h-6 w-6 text-blue-400" />
+          <Eye className="h-6 w-6 text-blue-600" />
           SERP Features
         </h1>
         <p className="text-slate-400">Analyze which SERP features appear for your target keywords</p>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white">Feature Analysis</h2>
           <p className="text-sm text-slate-400">Discover featured snippets, PAA, images, videos, and more</p>
         </div>
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="md:col-span-2">
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Target Keyword</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Target Keyword</label>
               <input
                 placeholder="Enter keyword to analyze..."
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleAnalyze()}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Location</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Location</label>
               <select
                 value={locationCode}
                 onChange={(e) => setLocationCode(Number(e.target.value))}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {LOCATION_OPTIONS.map((loc) => (
                   <option key={loc.code} value={loc.code}>{loc.name}</option>
@@ -131,11 +131,11 @@ export default function SerpFeatures() {
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Language</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Language</label>
               <select
                 value={languageCode}
                 onChange={(e) => setLanguageCode(e.target.value)}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {LANGUAGE_OPTIONS.map((lang) => (
                   <option key={lang.code} value={lang.code}>{lang.name}</option>
@@ -147,7 +147,7 @@ export default function SerpFeatures() {
           <button
             onClick={handleAnalyze}
             disabled={isLoading}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
           >
             {isLoading ? (
               <>
@@ -166,8 +166,8 @@ export default function SerpFeatures() {
 
       {features.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-            <div className="p-4 border-b border-slate-800">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+            <div className="p-4 border-b border-slate-200">
               <h2 className="text-lg font-semibold text-green-400 flex items-center gap-2">
                 <CheckCircle className="h-5 w-5" />
                 Present Features ({presentFeatures.length})
@@ -181,7 +181,7 @@ export default function SerpFeatures() {
                     <span className="font-medium text-white capitalize">{feature.type.replace(/_/g, " ")}</span>
                   </div>
                   {feature.position && (
-                    <span className="px-2 py-0.5 text-xs bg-slate-700 rounded text-slate-300">Position {feature.position}</span>
+                    <span className="px-2 py-0.5 text-xs bg-slate-200 rounded text-slate-600">Position {feature.position}</span>
                   )}
                 </div>
               ))}
@@ -191,8 +191,8 @@ export default function SerpFeatures() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-            <div className="p-4 border-b border-slate-800">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+            <div className="p-4 border-b border-slate-200">
               <h2 className="text-lg font-semibold text-slate-400 flex items-center gap-2">
                 <XCircle className="h-5 w-5" />
                 Absent Features ({absentFeatures.length})
@@ -200,7 +200,7 @@ export default function SerpFeatures() {
             </div>
             <div className="p-6 space-y-3">
               {absentFeatures.map((feature, idx) => (
-                <div key={idx} className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg">
+                <div key={idx} className="flex items-center gap-3 p-3 bg-slate-100 rounded-lg">
                   {FEATURE_ICONS[feature.type] || <Eye className="h-4 w-4" />}
                   <span className="text-slate-400 capitalize">{feature.type.replace(/_/g, " ")}</span>
                 </div>
@@ -211,7 +211,7 @@ export default function SerpFeatures() {
       )}
 
       {features.length === 0 && !isLoading && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-12">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-12">
           <div className="text-center space-y-4">
             <Eye className="h-12 w-12 mx-auto text-slate-600" />
             <p className="font-medium text-white">Discover SERP features</p>

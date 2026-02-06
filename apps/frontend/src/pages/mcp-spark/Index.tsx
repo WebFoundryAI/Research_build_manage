@@ -135,13 +135,13 @@ export default function McpSparkIndex() {
                 <Link
                   key={tool.url}
                   to={tool.url}
-                  className="group rounded-2xl border border-slate-800 bg-slate-900/40 p-4 hover:bg-slate-800/60 hover:border-slate-700 transition-all"
+                  className="group rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-100 hover:border-slate-200 transition-all"
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <div className={`p-2 rounded-lg bg-gradient-to-br ${category.color} bg-opacity-20`}>
                       <tool.icon size={20} className="text-white" />
                     </div>
-                    <h3 className="font-medium group-hover:text-white transition-colors">
+                    <h3 className="font-medium group-hover:text-slate-900 transition-colors">
                       {tool.title}
                     </h3>
                   </div>
@@ -158,9 +158,9 @@ export default function McpSparkIndex() {
       {/* API Notice */}
       <div className="mt-8 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4">
         <div className="flex items-start gap-3">
-          <AlertTriangle size={20} className="text-amber-400 mt-0.5" />
+          <AlertTriangle size={20} className="text-amber-600 mt-0.5" />
           <div>
-            <div className="font-medium text-amber-400 mb-1">API Keys Required</div>
+            <div className="font-medium text-amber-600 mb-1">API Keys Required</div>
             <p className="text-sm text-slate-400">
               Web scraping tools require a Firecrawl API key. Keyword and SEO tools require DataForSEO credentials.
               Configure your API keys in Settings → API Keys to enable all features.

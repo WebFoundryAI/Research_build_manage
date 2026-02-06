@@ -70,19 +70,19 @@ export default function ProjectsPage() {
   }
 
   function getStatusColor(status: string) {
-    if (status === "Live – Stable") return "text-emerald-400 bg-emerald-500/20";
-    if (status === "Live – Needs Improving") return "text-amber-400 bg-amber-500/20";
-    if (status === "In Build" || status === "Pre-Launch QA") return "text-blue-400 bg-blue-500/20";
-    if (status === "Planning" || status === "Idea / Backlog") return "text-purple-400 bg-purple-500/20";
+    if (status === "Live – Stable") return "text-emerald-600 bg-emerald-500/20";
+    if (status === "Live – Needs Improving") return "text-amber-600 bg-amber-500/20";
+    if (status === "In Build" || status === "Pre-Launch QA") return "text-blue-600 bg-blue-500/20";
+    if (status === "Planning" || status === "Idea / Backlog") return "text-purple-600 bg-purple-500/20";
     if (status === "On Hold" || status === "Archived") return "text-slate-400 bg-slate-500/20";
     return "text-slate-400 bg-slate-500/20";
   }
 
   function getHealthColor(score: number | null) {
     if (score === null) return "text-slate-500";
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-emerald-600";
+    if (score >= 60) return "text-amber-600";
+    return "text-red-600";
   }
 
   function toggleFavourite(id: string) {
@@ -147,13 +147,13 @@ export default function ProjectsPage() {
             placeholder="Search projects..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-blue-500"
+          className="px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-blue-500"
         >
           <option value="all">All Statuses</option>
           {statusOptions.map(status => (
@@ -164,8 +164,8 @@ export default function ProjectsPage() {
           onClick={() => setShowFavouritesOnly(!showFavouritesOnly)}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-colors ${
             showFavouritesOnly
-              ? "border-amber-500/50 bg-amber-500/20 text-amber-400"
-              : "border-slate-700 text-slate-400 hover:bg-slate-800"
+              ? "border-amber-500/50 bg-amber-500/20 text-amber-600"
+              : "border-slate-200 text-slate-400 hover:bg-slate-100"
           }`}
         >
           <Star size={16} className={showFavouritesOnly ? "fill-amber-400" : ""} />
@@ -193,28 +193,28 @@ export default function ProjectsPage() {
           {filteredProjects.map((project) => (
             <div
               key={project.id}
-              className="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden hover:border-slate-700 transition-colors group"
+              className="rounded-xl border border-slate-200 bg-white overflow-hidden hover:border-slate-200 transition-colors group"
             >
               <div className="p-4">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => toggleFavourite(project.id)}
-                      className="text-slate-500 hover:text-amber-400 transition-colors"
+                      className="text-slate-500 hover:text-amber-600 transition-colors"
                     >
-                      <Star size={16} className={project.is_favourite ? "fill-amber-400 text-amber-400" : ""} />
+                      <Star size={16} className={project.is_favourite ? "fill-amber-400 text-amber-600" : ""} />
                     </button>
                     <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(project.status)}`}>
                       {project.status}
                     </span>
                   </div>
-                  <button className="p-1 rounded-lg hover:bg-slate-800 text-slate-500 opacity-0 group-hover:opacity-100 transition-all">
+                  <button className="p-1 rounded-lg hover:bg-slate-100 text-slate-500 opacity-0 group-hover:opacity-100 transition-all">
                     <MoreVertical size={16} />
                   </button>
                 </div>
 
                 <Link to={`/asset-tracker/projects/${project.id}`}>
-                  <h3 className="font-semibold mb-1 hover:text-blue-400 transition-colors">
+                  <h3 className="font-semibold mb-1 hover:text-blue-600 transition-colors">
                     {project.name}
                   </h3>
                   <a
@@ -222,14 +222,14 @@ export default function ProjectsPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="text-sm text-slate-400 hover:text-blue-400 flex items-center gap-1"
+                    className="text-sm text-slate-400 hover:text-blue-600 flex items-center gap-1"
                   >
                     {project.domain}
                     <ExternalLink size={12} />
                   </a>
                 </Link>
 
-                <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-slate-800">
+                <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-slate-200">
                   <div className="text-center">
                     <div className={`text-lg font-semibold ${getHealthColor(project.health_score)}`}>
                       {project.health_score ?? "-"}
@@ -243,7 +243,7 @@ export default function ProjectsPage() {
                     <div className="text-[10px] text-slate-500">Traffic</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-lg font-semibold text-emerald-400">
+                    <div className="text-lg font-semibold text-emerald-600">
                       {project.monthly_revenue ? `$${(project.monthly_revenue / 1000).toFixed(1)}k` : "-"}
                     </div>
                     <div className="text-[10px] text-slate-500">Revenue</div>
@@ -262,10 +262,10 @@ export default function ProjectsPage() {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setShowNewModal(false)}
           />
-          <div className="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <div className="relative w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6">
             <button
               onClick={() => setShowNewModal(false)}
-              className="absolute right-4 top-4 p-1 rounded-lg hover:bg-slate-800"
+              className="absolute right-4 top-4 p-1 rounded-lg hover:bg-slate-100"
             >
               <X size={20} />
             </button>
@@ -283,7 +283,7 @@ export default function ProjectsPage() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="My Awesome Website"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
                 />
               </div>
 
@@ -297,7 +297,7 @@ export default function ProjectsPage() {
                   value={formData.domain}
                   onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
                   placeholder="example.com"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
                 />
               </div>
 
@@ -308,7 +308,7 @@ export default function ProjectsPage() {
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-blue-500"
                 >
                   <option value="general">General</option>
                   <option value="business">Business</option>
@@ -326,7 +326,7 @@ export default function ProjectsPage() {
                 <select
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-blue-500"
                 >
                   {statusOptions.map(status => (
                     <option key={status} value={status}>{status}</option>
@@ -338,7 +338,7 @@ export default function ProjectsPage() {
                 <button
                   type="button"
                   onClick={() => setShowNewModal(false)}
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-sm font-medium transition-colors"
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>

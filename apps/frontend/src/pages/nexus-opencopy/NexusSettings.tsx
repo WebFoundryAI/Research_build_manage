@@ -57,9 +57,9 @@ export default function NexusOpenCopySettings() {
       </div>
 
       {/* Content Settings */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
         <h2 className="text-lg font-semibold mb-6 flex items-center gap-2">
-          <FileText size={20} className="text-pink-400" />
+          <FileText size={20} className="text-pink-600" />
           Content Generation
         </h2>
 
@@ -73,7 +73,7 @@ export default function NexusOpenCopySettings() {
               onChange={(e) =>
                 setContentSettings({ ...contentSettings, defaultWordCount: e.target.value })
               }
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-pink-500"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-pink-500"
             >
               <option value="1000">~1,000 words</option>
               <option value="1500">~1,500 words</option>
@@ -92,7 +92,7 @@ export default function NexusOpenCopySettings() {
               onChange={(e) =>
                 setContentSettings({ ...contentSettings, defaultTone: e.target.value })
               }
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-pink-500"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-pink-500"
             >
               <option value="professional">Professional</option>
               <option value="conversational">Conversational</option>
@@ -110,7 +110,7 @@ export default function NexusOpenCopySettings() {
               onChange={(e) =>
                 setContentSettings({ ...contentSettings, defaultLanguage: e.target.value })
               }
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-pink-500"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-pink-500"
             >
               <option value="en">English</option>
               <option value="es">Spanish</option>
@@ -120,7 +120,7 @@ export default function NexusOpenCopySettings() {
             </select>
           </div>
 
-          <div className="flex items-center justify-between py-3 border-t border-slate-800">
+          <div className="flex items-center justify-between py-3 border-t border-slate-200">
             <div>
               <div className="font-medium text-sm">Include Image Suggestions</div>
               <div className="text-xs text-slate-500">Suggest images for articles</div>
@@ -130,7 +130,7 @@ export default function NexusOpenCopySettings() {
                 setContentSettings({ ...contentSettings, includeImages: !contentSettings.includeImages })
               }
               className={`w-12 h-6 rounded-full transition-colors ${
-                contentSettings.includeImages ? "bg-pink-500" : "bg-slate-700"
+                contentSettings.includeImages ? "bg-pink-500" : "bg-slate-200"
               }`}
             >
               <div
@@ -141,7 +141,7 @@ export default function NexusOpenCopySettings() {
             </button>
           </div>
 
-          <div className="flex items-center justify-between py-3 border-t border-slate-800">
+          <div className="flex items-center justify-between py-3 border-t border-slate-200">
             <div>
               <div className="font-medium text-sm">Internal Linking</div>
               <div className="text-xs text-slate-500">Auto-suggest internal links</div>
@@ -154,7 +154,7 @@ export default function NexusOpenCopySettings() {
                 })
               }
               className={`w-12 h-6 rounded-full transition-colors ${
-                contentSettings.includeInternalLinks ? "bg-pink-500" : "bg-slate-700"
+                contentSettings.includeInternalLinks ? "bg-pink-500" : "bg-slate-200"
               }`}
             >
               <div
@@ -165,7 +165,7 @@ export default function NexusOpenCopySettings() {
             </button>
           </div>
 
-          <div className="flex items-center justify-between py-3 border-t border-slate-800">
+          <div className="flex items-center justify-between py-3 border-t border-slate-200">
             <div>
               <div className="font-medium text-sm">Generate FAQs</div>
               <div className="text-xs text-slate-500">Include FAQ section in articles</div>
@@ -175,7 +175,7 @@ export default function NexusOpenCopySettings() {
                 setContentSettings({ ...contentSettings, includeFaqs: !contentSettings.includeFaqs })
               }
               className={`w-12 h-6 rounded-full transition-colors ${
-                contentSettings.includeFaqs ? "bg-pink-500" : "bg-slate-700"
+                contentSettings.includeFaqs ? "bg-pink-500" : "bg-slate-200"
               }`}
             >
               <div
@@ -186,7 +186,7 @@ export default function NexusOpenCopySettings() {
             </button>
           </div>
 
-          <div className="flex items-center justify-between py-3 border-t border-slate-800">
+          <div className="flex items-center justify-between py-3 border-t border-slate-200">
             <div>
               <div className="font-medium text-sm">SEO Optimization</div>
               <div className="text-xs text-slate-500">Auto-optimize for search engines</div>
@@ -196,7 +196,7 @@ export default function NexusOpenCopySettings() {
                 setContentSettings({ ...contentSettings, seoOptimization: !contentSettings.seoOptimization })
               }
               className={`w-12 h-6 rounded-full transition-colors ${
-                contentSettings.seoOptimization ? "bg-pink-500" : "bg-slate-700"
+                contentSettings.seoOptimization ? "bg-pink-500" : "bg-slate-200"
               }`}
             >
               <div
@@ -210,9 +210,9 @@ export default function NexusOpenCopySettings() {
       </div>
 
       {/* AI Settings */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
         <h2 className="text-lg font-semibold mb-6 flex items-center gap-2">
-          <Sparkles size={20} className="text-purple-400" />
+          <Sparkles size={20} className="text-purple-600" />
           AI Configuration
         </h2>
 
@@ -224,7 +224,7 @@ export default function NexusOpenCopySettings() {
             <select
               value={aiSettings.model}
               onChange={(e) => setAiSettings({ ...aiSettings, model: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-purple-500"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-purple-500"
             >
               <option value="gpt-4">GPT-4 (Recommended)</option>
               <option value="gpt-4-turbo">GPT-4 Turbo</option>
@@ -240,7 +240,7 @@ export default function NexusOpenCopySettings() {
             <select
               value={aiSettings.temperature}
               onChange={(e) => setAiSettings({ ...aiSettings, temperature: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-purple-500"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-purple-500"
             >
               <option value="0.3">0.3 - More focused</option>
               <option value="0.5">0.5 - Balanced</option>
@@ -249,7 +249,7 @@ export default function NexusOpenCopySettings() {
             </select>
           </div>
 
-          <div className="flex items-center justify-between py-3 border-t border-slate-800">
+          <div className="flex items-center justify-between py-3 border-t border-slate-200">
             <div>
               <div className="font-medium text-sm">Fact Checking</div>
               <div className="text-xs text-slate-500">Verify claims in generated content</div>
@@ -259,7 +259,7 @@ export default function NexusOpenCopySettings() {
                 setAiSettings({ ...aiSettings, enableFactChecking: !aiSettings.enableFactChecking })
               }
               className={`w-12 h-6 rounded-full transition-colors ${
-                aiSettings.enableFactChecking ? "bg-purple-500" : "bg-slate-700"
+                aiSettings.enableFactChecking ? "bg-purple-500" : "bg-slate-200"
               }`}
             >
               <div
@@ -273,9 +273,9 @@ export default function NexusOpenCopySettings() {
       </div>
 
       {/* Publishing Settings */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
         <h2 className="text-lg font-semibold mb-6 flex items-center gap-2">
-          <Globe size={20} className="text-emerald-400" />
+          <Globe size={20} className="text-emerald-600" />
           Publishing
         </h2>
 
@@ -289,7 +289,7 @@ export default function NexusOpenCopySettings() {
               onChange={(e) =>
                 setPublishingSettings({ ...publishingSettings, defaultStatus: e.target.value })
               }
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-emerald-500"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-emerald-500"
             >
               <option value="draft">Draft</option>
               <option value="in_review">In Review</option>
@@ -297,7 +297,7 @@ export default function NexusOpenCopySettings() {
             </select>
           </div>
 
-          <div className="flex items-center justify-between py-3 border-t border-slate-800">
+          <div className="flex items-center justify-between py-3 border-t border-slate-200">
             <div>
               <div className="font-medium text-sm">Require Review</div>
               <div className="text-xs text-slate-500">Articles must be reviewed before publishing</div>
@@ -310,7 +310,7 @@ export default function NexusOpenCopySettings() {
                 })
               }
               className={`w-12 h-6 rounded-full transition-colors ${
-                publishingSettings.requireReview ? "bg-emerald-500" : "bg-slate-700"
+                publishingSettings.requireReview ? "bg-emerald-500" : "bg-slate-200"
               }`}
             >
               <div
@@ -321,7 +321,7 @@ export default function NexusOpenCopySettings() {
             </button>
           </div>
 
-          <div className="flex items-center justify-between py-3 border-t border-slate-800">
+          <div className="flex items-center justify-between py-3 border-t border-slate-200">
             <div>
               <div className="font-medium text-sm">Notify on Publish</div>
               <div className="text-xs text-slate-500">Send notifications when articles are published</div>
@@ -334,7 +334,7 @@ export default function NexusOpenCopySettings() {
                 })
               }
               className={`w-12 h-6 rounded-full transition-colors ${
-                publishingSettings.notifyOnPublish ? "bg-emerald-500" : "bg-slate-700"
+                publishingSettings.notifyOnPublish ? "bg-emerald-500" : "bg-slate-200"
               }`}
             >
               <div
@@ -349,7 +349,7 @@ export default function NexusOpenCopySettings() {
 
       {/* Danger Zone */}
       <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-6">
-        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-red-400">
+        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-red-600">
           <AlertTriangle size={20} />
           Danger Zone
         </h2>
@@ -359,7 +359,7 @@ export default function NexusOpenCopySettings() {
               <div className="font-medium text-sm">Reset All Settings</div>
               <div className="text-xs text-slate-500">Restore default configuration</div>
             </div>
-            <button className="px-4 py-2 rounded-lg border border-red-500/30 hover:bg-red-500/20 text-red-400 text-sm transition-colors">
+            <button className="px-4 py-2 rounded-lg border border-red-500/30 hover:bg-red-500/20 text-red-600 text-sm transition-colors">
               Reset
             </button>
           </div>

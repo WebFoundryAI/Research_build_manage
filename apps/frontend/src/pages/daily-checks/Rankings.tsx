@@ -75,10 +75,10 @@ export default function RankingsPage() {
   }
 
   function getPositionBadge(position: number) {
-    let colorClass = "bg-red-500/20 text-red-400";
-    if (position <= 3) colorClass = "bg-emerald-500/20 text-emerald-400";
-    else if (position <= 10) colorClass = "bg-amber-500/20 text-amber-400";
-    else if (position <= 20) colorClass = "bg-orange-500/20 text-orange-400";
+    let colorClass = "bg-red-500/20 text-red-600";
+    if (position <= 3) colorClass = "bg-emerald-500/20 text-emerald-600";
+    else if (position <= 10) colorClass = "bg-amber-500/20 text-amber-600";
+    else if (position <= 20) colorClass = "bg-orange-500/20 text-orange-600";
 
     return (
       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${colorClass}`}>
@@ -136,12 +136,12 @@ export default function RankingsPage() {
       }`}>
         <div className="flex items-center gap-3">
           {gscStatus.connected ? (
-            <CheckCircle size={18} className="text-emerald-400" />
+            <CheckCircle size={18} className="text-emerald-600" />
           ) : (
-            <AlertTriangle size={18} className="text-amber-400" />
+            <AlertTriangle size={18} className="text-amber-600" />
           )}
           <div>
-            <div className={gscStatus.connected ? "text-emerald-400" : "text-amber-400"}>
+            <div className={gscStatus.connected ? "text-emerald-600" : "text-amber-600"}>
               Google Search Console: {gscStatus.connected ? "Connected" : "Not Connected"}
             </div>
             {gscStatus.lastSync && (
@@ -170,13 +170,13 @@ export default function RankingsPage() {
             placeholder="Search queries..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
           />
         </div>
         <select
           value={websiteFilter}
           onChange={(e) => setWebsiteFilter(e.target.value ? Number(e.target.value) : "")}
-          className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-emerald-500"
+          className="px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-emerald-500"
         >
           <option value="">All Websites</option>
           {websites.map(w => (
@@ -219,11 +219,11 @@ export default function RankingsPage() {
           </p>
         </div>
       ) : (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden">
+        <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-800 text-left">
+                <tr className="border-b border-slate-200 text-left">
                   <th className="px-4 py-3 font-medium text-slate-400">Query</th>
                   <th className="px-4 py-3 font-medium text-slate-400">Website</th>
                   <th className="px-4 py-3 font-medium text-slate-400 text-right">Clicks</th>
@@ -234,7 +234,7 @@ export default function RankingsPage() {
               </thead>
               <tbody>
                 {sortedRankings.map((ranking, idx) => (
-                  <tr key={idx} className="border-b border-slate-800/50 hover:bg-slate-800/30">
+                  <tr key={idx} className="border-b border-slate-200 hover:bg-slate-100/30">
                     <td className="px-4 py-3 font-medium">{ranking.query}</td>
                     <td className="px-4 py-3 text-slate-400">{ranking.website_name}</td>
                     <td className="px-4 py-3 text-right font-medium">{ranking.totalClicks.toLocaleString()}</td>
@@ -252,25 +252,25 @@ export default function RankingsPage() {
       {/* Summary Stats */}
       {sortedRankings.length > 0 && (
         <div className="grid md:grid-cols-4 gap-4">
-          <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+          <div className="rounded-xl border border-slate-200 bg-white p-4">
             <div className="text-2xl font-semibold">
               {sortedRankings.reduce((sum, r) => sum + r.totalClicks, 0).toLocaleString()}
             </div>
             <div className="text-xs text-slate-500 mt-1">Total Clicks</div>
           </div>
-          <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+          <div className="rounded-xl border border-slate-200 bg-white p-4">
             <div className="text-2xl font-semibold">
               {sortedRankings.reduce((sum, r) => sum + r.totalImpressions, 0).toLocaleString()}
             </div>
             <div className="text-xs text-slate-500 mt-1">Total Impressions</div>
           </div>
-          <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+          <div className="rounded-xl border border-slate-200 bg-white p-4">
             <div className="text-2xl font-semibold">
               {(sortedRankings.reduce((sum, r) => sum + r.ctr, 0) / sortedRankings.length).toFixed(2)}%
             </div>
             <div className="text-xs text-slate-500 mt-1">Avg CTR</div>
           </div>
-          <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+          <div className="rounded-xl border border-slate-200 bg-white p-4">
             <div className="text-2xl font-semibold">
               {(sortedRankings.reduce((sum, r) => sum + r.position, 0) / sortedRankings.length).toFixed(1)}
             </div>

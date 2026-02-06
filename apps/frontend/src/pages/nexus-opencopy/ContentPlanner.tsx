@@ -134,7 +134,7 @@ export default function NexusOpenCopyContentPlanner() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold flex items-center gap-3">
-            <CalendarDays className="text-purple-400" />
+            <CalendarDays className="text-purple-600" />
             Content Planner
           </h1>
           <p className="text-sm text-slate-400 mt-1">
@@ -156,10 +156,10 @@ export default function NexusOpenCopyContentPlanner() {
           <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-red-500/20">
-                <AlertCircle size={18} className="text-red-400" />
+                <AlertCircle size={18} className="text-red-600" />
               </div>
               <div>
-                <div className="text-2xl font-semibold text-red-400">{overdueCount}</div>
+                <div className="text-2xl font-semibold text-red-600">{overdueCount}</div>
                 <div className="text-xs text-slate-500">Overdue</div>
               </div>
             </div>
@@ -168,10 +168,10 @@ export default function NexusOpenCopyContentPlanner() {
         <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-blue-500/20">
-              <Clock size={18} className="text-blue-400" />
+              <Clock size={18} className="text-blue-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-blue-400">{inProgressCount}</div>
+              <div className="text-2xl font-semibold text-blue-600">{inProgressCount}</div>
               <div className="text-xs text-slate-500">In Progress</div>
             </div>
           </div>
@@ -179,10 +179,10 @@ export default function NexusOpenCopyContentPlanner() {
         <div className="rounded-xl border border-purple-500/20 bg-purple-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-purple-500/20">
-              <CalendarDays size={18} className="text-purple-400" />
+              <CalendarDays size={18} className="text-purple-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-purple-400">{plannedCount}</div>
+              <div className="text-2xl font-semibold text-purple-600">{plannedCount}</div>
               <div className="text-xs text-slate-500">Scheduled</div>
             </div>
           </div>
@@ -194,7 +194,7 @@ export default function NexusOpenCopyContentPlanner() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigateMonth(-1)}
-            className="p-2 rounded-lg hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
           >
             <ChevronLeft size={20} />
           </button>
@@ -203,7 +203,7 @@ export default function NexusOpenCopyContentPlanner() {
           </h2>
           <button
             onClick={() => navigateMonth(1)}
-            className="p-2 rounded-lg hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
           >
             <ChevronRight size={20} />
           </button>
@@ -212,7 +212,7 @@ export default function NexusOpenCopyContentPlanner() {
           <button
             onClick={() => setView("week")}
             className={`px-3 py-1.5 rounded-lg text-sm ${
-              view === "week" ? "bg-purple-500/20 text-purple-400" : "text-slate-400 hover:bg-slate-800"
+              view === "week" ? "bg-purple-500/20 text-purple-600" : "text-slate-400 hover:bg-slate-100"
             }`}
           >
             Week
@@ -220,7 +220,7 @@ export default function NexusOpenCopyContentPlanner() {
           <button
             onClick={() => setView("month")}
             className={`px-3 py-1.5 rounded-lg text-sm ${
-              view === "month" ? "bg-purple-500/20 text-purple-400" : "text-slate-400 hover:bg-slate-800"
+              view === "month" ? "bg-purple-500/20 text-purple-600" : "text-slate-400 hover:bg-slate-100"
             }`}
           >
             Month
@@ -229,9 +229,9 @@ export default function NexusOpenCopyContentPlanner() {
       </div>
 
       {/* Calendar Grid */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden">
+      <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
         {/* Day Headers */}
-        <div className="grid grid-cols-7 border-b border-slate-800 bg-slate-800/30">
+        <div className="grid grid-cols-7 border-b border-slate-200 bg-slate-100/30">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <div key={day} className="px-3 py-2 text-center text-sm font-medium text-slate-400">
               {day}
@@ -251,8 +251,8 @@ export default function NexusOpenCopyContentPlanner() {
               <div
                 key={i}
                 onClick={() => setSelectedDate(dateStr)}
-                className={`min-h-[100px] p-2 border-b border-r border-slate-800/50 cursor-pointer transition-colors ${
-                  isCurrentMonth ? "hover:bg-slate-800/30" : "bg-slate-900/20"
+                className={`min-h-[100px] p-2 border-b border-r border-slate-200 cursor-pointer transition-colors ${
+                  isCurrentMonth ? "hover:bg-slate-100/30" : "bg-white/20"
                 } ${selectedDate === dateStr ? "bg-purple-500/10" : ""}`}
               >
                 <div
@@ -286,7 +286,7 @@ export default function NexusOpenCopyContentPlanner() {
       </div>
 
       {/* Upcoming Content List */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
         <h3 className="font-semibold mb-4">Upcoming Content</h3>
         <div className="space-y-3">
           {plannedContent
@@ -295,7 +295,7 @@ export default function NexusOpenCopyContentPlanner() {
             .map((content) => (
               <div
                 key={content.id}
-                className="flex items-center justify-between p-3 rounded-lg bg-slate-800/30 hover:bg-slate-800/50 transition-colors"
+                className="flex items-center justify-between p-3 rounded-lg bg-slate-100/30 hover:bg-slate-100 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-2 h-2 rounded-full ${getStatusColor(content.status)}`} />

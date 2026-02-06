@@ -111,13 +111,13 @@ export default function NexusOpenCopyArticles() {
 
   function getScoreColor(score: number | null) {
     if (score === null) return "text-slate-500";
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-emerald-600";
+    if (score >= 60) return "text-amber-600";
+    return "text-red-600";
   }
 
   function getScoreBg(score: number | null) {
-    if (score === null) return "bg-slate-800";
+    if (score === null) return "bg-slate-100";
     if (score >= 80) return "bg-emerald-500/20";
     if (score >= 60) return "bg-amber-500/20";
     return "bg-red-500/20";
@@ -125,10 +125,10 @@ export default function NexusOpenCopyArticles() {
 
   function getStatusBadge(status: string) {
     const styles: Record<string, string> = {
-      published: "bg-emerald-500/20 text-emerald-400",
-      in_review: "bg-amber-500/20 text-amber-400",
-      generating: "bg-blue-500/20 text-blue-400",
-      draft: "bg-slate-700 text-slate-400",
+      published: "bg-emerald-500/20 text-emerald-600",
+      in_review: "bg-amber-500/20 text-amber-600",
+      generating: "bg-blue-500/20 text-blue-600",
+      draft: "bg-slate-200 text-slate-400",
     };
     const labels: Record<string, string> = {
       published: "Published",
@@ -158,7 +158,7 @@ export default function NexusOpenCopyArticles() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold flex items-center gap-3">
-            <FileText className="text-emerald-400" />
+            <FileText className="text-emerald-600" />
             Articles
           </h1>
           <p className="text-sm text-slate-400 mt-1">
@@ -179,7 +179,7 @@ export default function NexusOpenCopyArticles() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search articles..."
-            className="w-full pl-12 pr-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+            className="w-full pl-12 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
           />
         </div>
         <div className="flex gap-2 overflow-x-auto">
@@ -195,8 +195,8 @@ export default function NexusOpenCopyArticles() {
               onClick={() => setFilter(f.id)}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
                 filter === f.id
-                  ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800/50 border border-transparent"
+                  ? "bg-emerald-500/20 text-emerald-600 border border-emerald-500/30"
+                  : "text-slate-400 hover:text-slate-900 hover:bg-slate-100 border border-transparent"
               }`}
             >
               {f.label}
@@ -209,7 +209,7 @@ export default function NexusOpenCopyArticles() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading articles...</div>
       ) : filteredArticles.length === 0 ? (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-12 text-center">
+        <div className="rounded-xl border border-slate-200 bg-white p-12 text-center">
           <FileText size={48} className="mx-auto text-slate-600 mb-4" />
           <p className="text-slate-400">No articles found</p>
           <p className="text-sm text-slate-500 mt-1">
@@ -217,10 +217,10 @@ export default function NexusOpenCopyArticles() {
           </p>
         </div>
       ) : (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden">
+        <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-800 bg-slate-800/30">
+              <tr className="border-b border-slate-200 bg-slate-100/30">
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-400">Article</th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-400">Status</th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-400">SEO Score</th>
@@ -233,7 +233,7 @@ export default function NexusOpenCopyArticles() {
             </thead>
             <tbody>
               {filteredArticles.map((article) => (
-                <tr key={article.id} className="border-b border-slate-800/50 hover:bg-slate-800/20">
+                <tr key={article.id} className="border-b border-slate-200 hover:bg-slate-100/20">
                   <td className="px-4 py-3">
                     <div className="font-medium">{article.title}</div>
                     <div className="text-xs text-slate-500 mt-1">
@@ -292,19 +292,19 @@ export default function NexusOpenCopyArticles() {
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-1">
                       <button
-                        className="p-2 rounded-lg hover:bg-slate-800 text-slate-500 hover:text-white transition-colors"
+                        className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors"
                         title="View"
                       >
                         <Eye size={14} />
                       </button>
                       <button
-                        className="p-2 rounded-lg hover:bg-slate-800 text-slate-500 hover:text-white transition-colors"
+                        className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors"
                         title="Edit"
                       >
                         <Edit size={14} />
                       </button>
                       <button
-                        className="p-2 rounded-lg hover:bg-red-500/20 text-slate-500 hover:text-red-400 transition-colors"
+                        className="p-2 rounded-lg hover:bg-red-500/20 text-slate-500 hover:text-red-600 transition-colors"
                         title="Delete"
                       >
                         <Trash2 size={14} />
@@ -320,20 +320,20 @@ export default function NexusOpenCopyArticles() {
 
       {/* Summary Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-center">
-          <div className="text-2xl font-semibold text-emerald-400">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 text-center">
+          <div className="text-2xl font-semibold text-emerald-600">
             {articles.filter((a) => a.status === "published").length}
           </div>
           <div className="text-xs text-slate-500">Published</div>
         </div>
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-center">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 text-center">
           <div className="text-2xl font-semibold">
             {articles.reduce((sum, a) => sum + a.wordCount, 0).toLocaleString()}
           </div>
           <div className="text-xs text-slate-500">Total Words</div>
         </div>
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-center">
-          <div className="text-2xl font-semibold text-amber-400">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 text-center">
+          <div className="text-2xl font-semibold text-amber-600">
             {Math.round(
               articles.filter((a) => a.seoScore).reduce((sum, a) => sum + (a.seoScore || 0), 0) /
                 articles.filter((a) => a.seoScore).length || 0
@@ -341,7 +341,7 @@ export default function NexusOpenCopyArticles() {
           </div>
           <div className="text-xs text-slate-500">Avg SEO Score</div>
         </div>
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-center">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 text-center">
           <div className="text-2xl font-semibold">
             ${articles.reduce((sum, a) => sum + (a.cost || 0), 0).toFixed(2)}
           </div>

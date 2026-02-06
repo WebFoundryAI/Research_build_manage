@@ -82,7 +82,7 @@ export default function McpSettings() {
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
       {feedback && (
-        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
@@ -90,19 +90,19 @@ export default function McpSettings() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
-            <Settings className="h-6 w-6 text-blue-400" />
+            <Settings className="h-6 w-6 text-blue-600" />
             MCP Tools Settings
           </h1>
           <p className="text-slate-400">Configure default preferences for research tools</p>
         </div>
         <div className="flex gap-2">
-          <button onClick={resetToDefaults} className="px-4 py-2 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-lg transition-colors">
+          <button onClick={resetToDefaults} className="px-4 py-2 border border-slate-200 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
             Reset to Defaults
           </button>
           <button
             onClick={saveSettings}
             disabled={!hasChanges}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
           >
             <Save className="h-4 w-4" />
             Save Changes
@@ -111,8 +111,8 @@ export default function McpSettings() {
       </div>
 
       {/* Location & Language */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <Globe className="h-5 w-5" />
             Default Location & Language
@@ -122,11 +122,11 @@ export default function McpSettings() {
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Default Location</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Default Location</label>
               <select
                 value={settings.defaultLocation}
                 onChange={(e) => updateSetting("defaultLocation", Number(e.target.value))}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {LOCATION_OPTIONS.map((loc) => (
                   <option key={loc.code} value={loc.code}>{loc.name}</option>
@@ -134,11 +134,11 @@ export default function McpSettings() {
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Default Language</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Default Language</label>
               <select
                 value={settings.defaultLanguage}
                 onChange={(e) => updateSetting("defaultLanguage", e.target.value)}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {LANGUAGE_OPTIONS.map((lang) => (
                   <option key={lang.code} value={lang.code}>{lang.name}</option>
@@ -150,8 +150,8 @@ export default function McpSettings() {
       </div>
 
       {/* Research Defaults */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <Database className="h-5 w-5" />
             Research Defaults
@@ -161,11 +161,11 @@ export default function McpSettings() {
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Default Keyword Limit</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Default Keyword Limit</label>
               <select
                 value={settings.defaultKeywordLimit}
                 onChange={(e) => updateSetting("defaultKeywordLimit", Number(e.target.value))}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value={25}>25 keywords</option>
                 <option value={50}>50 keywords</option>
@@ -174,11 +174,11 @@ export default function McpSettings() {
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Default Export Format</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Default Export Format</label>
               <select
                 value={settings.defaultExportFormat}
                 onChange={(e) => updateSetting("defaultExportFormat", e.target.value as "csv" | "pdf")}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="csv">CSV (Spreadsheet)</option>
                 <option value="pdf">PDF (Report)</option>
@@ -186,15 +186,15 @@ export default function McpSettings() {
             </div>
           </div>
 
-          <div className="border-t border-slate-700 pt-4">
+          <div className="border-t border-slate-200 pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <label className="text-sm font-medium text-slate-300">Auto-save Results</label>
+                <label className="text-sm font-medium text-slate-600">Auto-save Results</label>
                 <p className="text-sm text-slate-500">Automatically save research results to history</p>
               </div>
               <button
                 onClick={() => updateSetting("autoSaveResults", !settings.autoSaveResults)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings.autoSaveResults ? "bg-blue-600" : "bg-slate-700"}`}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings.autoSaveResults ? "bg-blue-600" : "bg-slate-200"}`}
               >
                 <span
                   className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings.autoSaveResults ? "translate-x-6" : "translate-x-1"}`}
@@ -206,8 +206,8 @@ export default function McpSettings() {
       </div>
 
       {/* Notifications */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <Bell className="h-5 w-5" />
             Notifications & Warnings
@@ -217,12 +217,12 @@ export default function McpSettings() {
         <div className="p-6 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-sm font-medium text-slate-300">Show Credit Warnings</label>
+              <label className="text-sm font-medium text-slate-600">Show Credit Warnings</label>
               <p className="text-sm text-slate-500">Alert when credits are running low</p>
             </div>
             <button
               onClick={() => updateSetting("showCreditWarnings", !settings.showCreditWarnings)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings.showCreditWarnings ? "bg-blue-600" : "bg-slate-700"}`}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings.showCreditWarnings ? "bg-blue-600" : "bg-slate-200"}`}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings.showCreditWarnings ? "translate-x-6" : "translate-x-1"}`}
@@ -232,14 +232,14 @@ export default function McpSettings() {
 
           {settings.showCreditWarnings && (
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Credit Warning Threshold</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Credit Warning Threshold</label>
               <input
                 type="number"
                 value={settings.creditWarningThreshold}
                 onChange={(e) => updateSetting("creditWarningThreshold", Number(e.target.value) || 100)}
                 min={10}
                 max={1000}
-                className="w-full md:w-48 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full md:w-48 px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <p className="text-xs text-slate-500 mt-1">Show warning when credits fall below this amount</p>
             </div>
@@ -248,8 +248,8 @@ export default function McpSettings() {
       </div>
 
       {/* Export Settings */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <FileText className="h-5 w-5" />
             Export Settings

@@ -52,14 +52,14 @@ function StatCard({
   trend?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-slate-400">{title}</p>
           <p className="mt-2 text-3xl font-semibold">{value}</p>
           {trend && (
             <p className="mt-1 text-xs text-slate-500 flex items-center gap-1">
-              <TrendingUp size={12} className="text-emerald-400" />
+              <TrendingUp size={12} className="text-emerald-600" />
               {trend}
             </p>
           )}
@@ -164,10 +164,10 @@ export default function AdminPage() {
 
   if (mode === "demo" || !supabase) {
     return (
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-8">
+      <div className="rounded-2xl border border-slate-200 bg-white p-8">
         <div className="flex items-center gap-4 mb-4">
           <div className="p-3 rounded-xl bg-amber-500/20">
-            <AlertTriangle size={24} className="text-amber-400" />
+            <AlertTriangle size={24} className="text-amber-600" />
           </div>
           <div>
             <h1 className="text-xl font-semibold">Admin Panel</h1>
@@ -191,10 +191,10 @@ export default function AdminPage() {
 
   if (!isAdmin) {
     return (
-      <div className="rounded-2xl border border-red-900/50 bg-red-950/20 p-8">
+      <div className="rounded-2xl border border-red-900/50 bg-red-50 p-8">
         <div className="flex items-center gap-4">
           <div className="p-3 rounded-xl bg-red-500/20">
-            <Shield size={24} className="text-red-400" />
+            <Shield size={24} className="text-red-600" />
           </div>
           <div>
             <h1 className="text-xl font-semibold">Access Denied</h1>
@@ -214,7 +214,7 @@ export default function AdminPage() {
         <div>
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-indigo-500/20">
-              <Shield size={20} className="text-indigo-400" />
+              <Shield size={20} className="text-indigo-600" />
             </div>
             <h1 className="text-2xl font-semibold">Admin Panel</h1>
           </div>
@@ -224,7 +224,7 @@ export default function AdminPage() {
         </div>
         <button
           onClick={loadDashboardData}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm transition-colors"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-sm transition-colors"
         >
           <RefreshCw size={16} />
           Refresh
@@ -232,7 +232,7 @@ export default function AdminPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-slate-800 pb-2">
+      <div className="flex gap-2 border-b border-slate-200 pb-2">
         {[
           { id: "overview", label: "Overview", icon: Activity },
           { id: "users", label: "Users", icon: Users },
@@ -244,8 +244,8 @@ export default function AdminPage() {
             onClick={() => setActiveTab(tab.id as typeof activeTab)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition-colors ${
               activeTab === tab.id
-                ? "bg-slate-800 text-white"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                ? "bg-slate-100 text-white"
+                : "text-slate-400 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
             <tab.icon size={16} />
@@ -263,30 +263,30 @@ export default function AdminPage() {
               title="Total Users"
               value={stats.totalUsers}
               icon={Users}
-              color="bg-blue-500/20 text-blue-400"
+              color="bg-blue-500/20 text-blue-600"
             />
             <StatCard
               title="Active Today"
               value={stats.activeToday}
               icon={Activity}
-              color="bg-emerald-500/20 text-emerald-400"
+              color="bg-emerald-500/20 text-emerald-600"
             />
             <StatCard
               title="API Calls (Recent)"
               value={stats.totalApiCalls}
               icon={Database}
-              color="bg-purple-500/20 text-purple-400"
+              color="bg-purple-500/20 text-purple-600"
             />
             <StatCard
               title="Credits Used Today"
               value={stats.creditsUsedToday.toFixed(2)}
               icon={CreditCard}
-              color="bg-amber-500/20 text-amber-400"
+              color="bg-amber-500/20 text-amber-600"
             />
           </div>
 
           {/* Recent Activity */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
             <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
               <Activity size={16} className="text-slate-400" />
               Recent API Activity
@@ -310,13 +310,13 @@ export default function AdminPage() {
                     {recentLogs.slice(0, 10).map((log) => (
                       <tr key={log.id}>
                         <td className="py-3 pr-4">
-                          <code className="text-xs bg-slate-800 px-2 py-1 rounded">
+                          <code className="text-xs bg-slate-100 px-2 py-1 rounded">
                             {log.endpoint.split("/").pop()}
                           </code>
                         </td>
                         <td className="py-3 pr-4 text-slate-400">{log.provider}</td>
                         <td className="py-3 pr-4">
-                          <span className="text-amber-400">{log.credits_used}</span>
+                          <span className="text-amber-600">{log.credits_used}</span>
                         </td>
                         <td className="py-3 text-slate-500 text-xs">
                           {formatDate(log.created_at)}
@@ -333,7 +333,7 @@ export default function AdminPage() {
 
       {/* Users Tab */}
       {activeTab === "users" && (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
             <Users size={16} className="text-slate-400" />
             User Credits
@@ -357,12 +357,12 @@ export default function AdminPage() {
                   {userCredits.map((credit) => (
                     <tr key={credit.user_id}>
                       <td className="py-3 pr-4">
-                        <code className="text-xs bg-slate-800 px-2 py-1 rounded">
+                        <code className="text-xs bg-slate-100 px-2 py-1 rounded">
                           {credit.user_id.slice(0, 8)}...
                         </code>
                       </td>
                       <td className="py-3 pr-4">
-                        <span className="text-emerald-400">{credit.balance}</span>
+                        <span className="text-emerald-600">{credit.balance}</span>
                       </td>
                       <td className="py-3 pr-4 text-slate-400">
                         {credit.lifetime_used}
@@ -381,7 +381,7 @@ export default function AdminPage() {
 
       {/* Usage Tab */}
       {activeTab === "usage" && (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
             <Database size={16} className="text-slate-400" />
             Full API Usage Log
@@ -406,7 +406,7 @@ export default function AdminPage() {
                   {recentLogs.map((log) => (
                     <tr key={log.id}>
                       <td className="py-3 pr-4">
-                        <code className="text-xs bg-slate-800 px-2 py-1 rounded">
+                        <code className="text-xs bg-slate-100 px-2 py-1 rounded">
                           {log.user_id.slice(0, 8)}...
                         </code>
                       </td>
@@ -415,7 +415,7 @@ export default function AdminPage() {
                       </td>
                       <td className="py-3 pr-4 text-slate-400">{log.provider}</td>
                       <td className="py-3 pr-4">
-                        <span className="text-amber-400">{log.credits_used}</span>
+                        <span className="text-amber-600">{log.credits_used}</span>
                       </td>
                       <td className="py-3 text-slate-500 text-xs">
                         {formatDate(log.created_at)}
@@ -432,7 +432,7 @@ export default function AdminPage() {
       {/* Settings Tab */}
       {activeTab === "settings" && (
         <div className="space-y-4">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
             <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
               <Settings size={16} className="text-slate-400" />
               System Configuration
@@ -442,7 +442,7 @@ export default function AdminPage() {
             </p>
 
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-xl border border-slate-700 p-4">
+              <div className="rounded-xl border border-slate-200 p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Credit Pricing</p>
@@ -454,7 +454,7 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-slate-700 p-4">
+              <div className="rounded-xl border border-slate-200 p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Feature Flags</p>
@@ -466,7 +466,7 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-slate-700 p-4">
+              <div className="rounded-xl border border-slate-200 p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">User Roles</p>
@@ -478,7 +478,7 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-slate-700 p-4">
+              <div className="rounded-xl border border-slate-200 p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">API Rate Limits</p>

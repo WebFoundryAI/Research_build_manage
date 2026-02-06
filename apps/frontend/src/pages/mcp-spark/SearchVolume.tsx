@@ -100,7 +100,7 @@ export default function SearchVolume() {
 
   const getTrendIcon = (trend?: string) => {
     if (trend === "up") return <ArrowUp className="h-4 w-4 text-green-400" />;
-    if (trend === "down") return <ArrowDown className="h-4 w-4 text-red-400" />;
+    if (trend === "down") return <ArrowDown className="h-4 w-4 text-red-600" />;
     return <Minus className="h-4 w-4 text-slate-500" />;
   };
 
@@ -112,21 +112,21 @@ export default function SearchVolume() {
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
       {feedback && (
-        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
 
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
-          <TrendingUp className="h-6 w-6 text-blue-400" />
+          <TrendingUp className="h-6 w-6 text-blue-600" />
           Search Volume
         </h1>
         <p className="text-slate-400">Get search volume, CPC, and competition data for keywords</p>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white">Keyword Input</h2>
           <p className="text-sm text-slate-400">Enter keywords (one per line, max 100)</p>
         </div>
@@ -136,15 +136,15 @@ export default function SearchVolume() {
             value={keywords}
             onChange={(e) => setKeywords(e.target.value)}
             rows={6}
-            className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+            className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
           />
           <div className="flex gap-4 items-end">
             <div className="flex-1">
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Country</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Country</label>
               <select
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {COUNTRIES.map((c) => (
                   <option key={c.code} value={c.code}>{c.name}</option>
@@ -154,7 +154,7 @@ export default function SearchVolume() {
             <button
               onClick={handleSearch}
               disabled={isLoading}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
             >
               {isLoading ? (
                 <>
@@ -176,13 +176,13 @@ export default function SearchVolume() {
       </div>
 
       {results.length > 0 && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+          <div className="p-4 border-b border-slate-200 flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-white">Results</h2>
               <p className="text-sm text-slate-400">{results.length} keywords</p>
             </div>
-            <button onClick={handleExport} className="px-3 py-1.5 text-sm border border-slate-700 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center gap-1 transition-colors">
+            <button onClick={handleExport} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center gap-1 transition-colors">
               <Download className="h-4 w-4" />
               Export CSV
             </button>
@@ -190,7 +190,7 @@ export default function SearchVolume() {
           <div className="p-6 overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-700">
+                <tr className="border-b border-slate-200">
                   <th className="text-left p-3 text-slate-400 text-sm font-medium">Keyword</th>
                   <th className="text-right p-3 text-slate-400 text-sm font-medium">Volume</th>
                   <th className="text-right p-3 text-slate-400 text-sm font-medium">CPC</th>
@@ -200,13 +200,13 @@ export default function SearchVolume() {
               </thead>
               <tbody>
                 {results.map((r, i) => (
-                  <tr key={i} className="border-b border-slate-800">
+                  <tr key={i} className="border-b border-slate-200">
                     <td className="p-3 text-white font-medium">{r.keyword}</td>
-                    <td className="p-3 text-right text-slate-300">{formatNumber(r.search_volume)}</td>
-                    <td className="p-3 text-right text-slate-300">{r.cpc !== null ? `$${r.cpc.toFixed(2)}` : "-"}</td>
+                    <td className="p-3 text-right text-slate-600">{formatNumber(r.search_volume)}</td>
+                    <td className="p-3 text-right text-slate-600">{r.cpc !== null ? `$${r.cpc.toFixed(2)}` : "-"}</td>
                     <td className="p-3 text-right">
                       {r.competition !== null ? (
-                        <span className={`px-2 py-0.5 text-xs rounded ${r.competition > 0.7 ? "bg-red-500/20 text-red-400" : r.competition > 0.3 ? "bg-yellow-500/20 text-yellow-400" : "bg-green-500/20 text-green-400"}`}>
+                        <span className={`px-2 py-0.5 text-xs rounded ${r.competition > 0.7 ? "bg-red-500/20 text-red-600" : r.competition > 0.3 ? "bg-yellow-500/20 text-yellow-400" : "bg-green-500/20 text-green-400"}`}>
                           {(r.competition * 100).toFixed(0)}%
                         </span>
                       ) : (
@@ -223,7 +223,7 @@ export default function SearchVolume() {
       )}
 
       {results.length === 0 && !isLoading && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-12">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-12">
           <div className="text-center space-y-4">
             <TrendingUp className="h-12 w-12 mx-auto text-slate-600" />
             <p className="font-medium text-white">Get keyword metrics</p>

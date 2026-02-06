@@ -104,7 +104,7 @@ export default function KeywordIdeas() {
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
       {feedback && (
-        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
@@ -117,29 +117,29 @@ export default function KeywordIdeas() {
         <p className="text-slate-400">Generate keyword suggestions from a seed keyword</p>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white">Generate Ideas</h2>
           <p className="text-sm text-slate-400">Enter a seed keyword to discover related terms</p>
         </div>
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2">
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Seed Keyword</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Seed Keyword</label>
               <input
                 placeholder="e.g., seo tools, digital marketing..."
                 value={seedKeyword}
                 onChange={(e) => setSeedKeyword(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && !isLoading && handleSearch()}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Country</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Country</label>
               <select
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {COUNTRIES.map((c) => (
                   <option key={c.code} value={c.code}>{c.name}</option>
@@ -149,11 +149,11 @@ export default function KeywordIdeas() {
           </div>
           <div className="flex items-end gap-4">
             <div className="w-40">
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Max Results</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Max Results</label>
               <select
                 value={limit}
                 onChange={(e) => setLimit(Number(e.target.value))}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value={25}>25</option>
                 <option value={50}>50</option>
@@ -164,7 +164,7 @@ export default function KeywordIdeas() {
             <button
               onClick={handleSearch}
               disabled={isLoading || !seedKeyword.trim()}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
             >
               {isLoading ? (
                 <>
@@ -184,7 +184,7 @@ export default function KeywordIdeas() {
               <button
                 key={suggestion}
                 onClick={() => setSeedKeyword(suggestion)}
-                className="px-3 py-1.5 text-sm border border-slate-700 rounded-lg text-slate-400 hover:bg-slate-800 transition-colors"
+                className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg text-slate-400 hover:bg-slate-100 transition-colors"
               >
                 {suggestion}
               </button>
@@ -194,13 +194,13 @@ export default function KeywordIdeas() {
       </div>
 
       {results.length > 0 && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+          <div className="p-4 border-b border-slate-200 flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-white">Keyword Ideas</h2>
               <p className="text-sm text-slate-400">{results.length} suggestions for "{seedKeyword}"</p>
             </div>
-            <button onClick={handleExport} className="px-3 py-1.5 text-sm border border-slate-700 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center gap-1 transition-colors">
+            <button onClick={handleExport} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center gap-1 transition-colors">
               <Download className="h-4 w-4" />
               Export CSV
             </button>
@@ -208,7 +208,7 @@ export default function KeywordIdeas() {
           <div className="p-6 max-h-[500px] overflow-y-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-700">
+                <tr className="border-b border-slate-200">
                   <th className="text-left p-3 text-slate-400 text-sm font-medium">Keyword</th>
                   <th className="text-right p-3 text-slate-400 text-sm font-medium">Volume</th>
                   <th className="text-right p-3 text-slate-400 text-sm font-medium">CPC</th>
@@ -218,13 +218,13 @@ export default function KeywordIdeas() {
               </thead>
               <tbody>
                 {results.map((r, i) => (
-                  <tr key={i} className="border-b border-slate-800 hover:bg-slate-800/50 group">
+                  <tr key={i} className="border-b border-slate-200 hover:bg-slate-100 group">
                     <td className="p-3 text-white font-medium">{r.keyword}</td>
-                    <td className="p-3 text-right text-slate-300">{formatNumber(r.search_volume)}</td>
-                    <td className="p-3 text-right text-slate-300">{r.cpc !== null ? `$${r.cpc.toFixed(2)}` : "-"}</td>
+                    <td className="p-3 text-right text-slate-600">{formatNumber(r.search_volume)}</td>
+                    <td className="p-3 text-right text-slate-600">{r.cpc !== null ? `$${r.cpc.toFixed(2)}` : "-"}</td>
                     <td className="p-3 text-right">
                       {r.competition !== null ? (
-                        <span className={`px-2 py-0.5 text-xs rounded ${r.competition > 0.7 ? "bg-red-500/20 text-red-400" : r.competition > 0.3 ? "bg-yellow-500/20 text-yellow-400" : "bg-green-500/20 text-green-400"}`}>
+                        <span className={`px-2 py-0.5 text-xs rounded ${r.competition > 0.7 ? "bg-red-500/20 text-red-600" : r.competition > 0.3 ? "bg-yellow-500/20 text-yellow-400" : "bg-green-500/20 text-green-400"}`}>
                           {(r.competition * 100).toFixed(0)}%
                         </span>
                       ) : (
@@ -234,7 +234,7 @@ export default function KeywordIdeas() {
                     <td className="p-3">
                       <button
                         onClick={() => handleCopy(r.keyword, i)}
-                        className="p-1 opacity-0 group-hover:opacity-100 text-slate-400 hover:text-white transition-all"
+                        className="p-1 opacity-0 group-hover:opacity-100 text-slate-400 hover:text-slate-900 transition-all"
                       >
                         {copiedIndex === i ? <CheckCircle className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4" />}
                       </button>
@@ -248,7 +248,7 @@ export default function KeywordIdeas() {
       )}
 
       {results.length === 0 && !isLoading && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-12">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-12">
           <div className="text-center space-y-4">
             <Lightbulb className="h-12 w-12 mx-auto text-slate-600" />
             <p className="font-medium text-white">Generate keyword ideas</p>

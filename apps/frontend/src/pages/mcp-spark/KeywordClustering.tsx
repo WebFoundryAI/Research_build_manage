@@ -107,45 +107,45 @@ export default function KeywordClustering() {
   const getPriorityColor = (priority?: string) => {
     switch (priority?.toLowerCase()) {
       case "high":
-        return "bg-red-500/20 text-red-400";
+        return "bg-red-500/20 text-red-600";
       case "medium":
         return "bg-yellow-500/20 text-yellow-400";
       case "low":
-        return "bg-slate-700 text-slate-400";
+        return "bg-slate-200 text-slate-400";
       default:
-        return "bg-slate-700 text-slate-400";
+        return "bg-slate-200 text-slate-400";
     }
   };
 
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
       {feedback && (
-        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
 
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
-          <Layers className="h-6 w-6 text-blue-400" />
+          <Layers className="h-6 w-6 text-blue-600" />
           Keyword Clustering
         </h1>
         <p className="text-slate-400">Group keywords into themed clusters for content planning</p>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white">Keywords to Cluster</h2>
           <p className="text-sm text-slate-400">Enter keywords (one per line, minimum 5)</p>
         </div>
         <div className="p-6 space-y-4">
           <div>
-            <label className="text-sm font-medium text-slate-300 mb-2 block">Seed Keyword (optional)</label>
+            <label className="text-sm font-medium text-slate-600 mb-2 block">Seed Keyword (optional)</label>
             <input
               placeholder="Main topic (e.g., seo tools)"
               value={seedKeyword}
               onChange={(e) => setSeedKeyword(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <textarea
@@ -153,7 +153,7 @@ export default function KeywordClustering() {
             value={keywords}
             onChange={(e) => setKeywords(e.target.value)}
             rows={8}
-            className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+            className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
           />
           <div className="flex items-center justify-between">
             <p className="text-sm text-slate-500">
@@ -162,7 +162,7 @@ export default function KeywordClustering() {
             <button
               onClick={handleCluster}
               disabled={isLoading}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
             >
               {isLoading ? (
                 <>
@@ -181,23 +181,23 @@ export default function KeywordClustering() {
       </div>
 
       {clusters.length > 0 && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+          <div className="p-4 border-b border-slate-200 flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-white">Keyword Clusters</h2>
               <p className="text-sm text-slate-400">{clusters.length} clusters created</p>
             </div>
-            <button onClick={handleExport} className="px-3 py-1.5 text-sm border border-slate-700 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center gap-1 transition-colors">
+            <button onClick={handleExport} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center gap-1 transition-colors">
               <Download className="h-4 w-4" />
               Export
             </button>
           </div>
           <div className="p-6 max-h-[500px] overflow-y-auto space-y-4">
             {clusters.map((cluster, index) => (
-              <div key={index} className="rounded-lg border border-slate-700 overflow-hidden">
+              <div key={index} className="rounded-lg border border-slate-200 overflow-hidden">
                 <button
                   onClick={() => toggleCluster(index)}
-                  className="w-full p-4 flex items-start justify-between hover:bg-slate-800/50 transition-colors text-left"
+                  className="w-full p-4 flex items-start justify-between hover:bg-slate-100 transition-colors text-left"
                 >
                   <div className="flex items-center gap-2">
                     {openClusters.has(index) ? (
@@ -217,7 +217,7 @@ export default function KeywordClustering() {
                       </span>
                     )}
                     {cluster.estimatedVolume && (
-                      <span className="px-2 py-0.5 text-xs bg-slate-700 rounded text-slate-400">
+                      <span className="px-2 py-0.5 text-xs bg-slate-200 rounded text-slate-400">
                         ~{cluster.estimatedVolume.toLocaleString()} vol
                       </span>
                     )}
@@ -229,13 +229,13 @@ export default function KeywordClustering() {
                     <p className="text-sm text-slate-400 mb-3">{cluster.description}</p>
                     {cluster.contentOpportunity && (
                       <div className="mb-3 p-3 rounded bg-blue-500/10 border border-blue-500/20">
-                        <p className="text-xs font-medium text-blue-400 mb-1">Content Opportunity</p>
-                        <p className="text-sm text-slate-300">{cluster.contentOpportunity}</p>
+                        <p className="text-xs font-medium text-blue-600 mb-1">Content Opportunity</p>
+                        <p className="text-sm text-slate-600">{cluster.contentOpportunity}</p>
                       </div>
                     )}
                     <div className="flex flex-wrap gap-2">
                       {cluster.keywords.map((kw, ki) => (
-                        <span key={ki} className="px-2 py-1 text-xs bg-slate-800 rounded text-slate-300">
+                        <span key={ki} className="px-2 py-1 text-xs bg-slate-100 rounded text-slate-600">
                           {kw}
                         </span>
                       ))}
@@ -249,7 +249,7 @@ export default function KeywordClustering() {
       )}
 
       {clusters.length === 0 && !isLoading && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-12">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-12">
           <div className="text-center space-y-4">
             <Layers className="h-12 w-12 mx-auto text-slate-600" />
             <p className="font-medium text-white">Group keywords into clusters</p>

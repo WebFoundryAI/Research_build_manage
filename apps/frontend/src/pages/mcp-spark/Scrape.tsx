@@ -83,15 +83,15 @@ export default function Scrape() {
       <h1 className="text-3xl font-bold mb-6 text-white">Single URL Scrape</h1>
 
       {feedback && (
-        <div className={`mb-4 p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`mb-4 p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6 mb-6">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 mb-6">
         <form onSubmit={handleScrape} className="space-y-4">
           <div>
-            <label htmlFor="url" className="block text-sm font-medium text-slate-300 mb-2">URL to Scrape</label>
+            <label htmlFor="url" className="block text-sm font-medium text-slate-600 mb-2">URL to Scrape</label>
             <input
               id="url"
               type="url"
@@ -99,12 +99,12 @@ export default function Scrape() {
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://example.com"
               required
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-slate-300">Formats</label>
+            <label className="block text-sm font-medium text-slate-600">Formats</label>
             <div className="flex flex-wrap gap-4">
               {(["markdown", "html", "json"] as const).map((format) => (
                 <label key={format} className="flex items-center space-x-2 cursor-pointer">
@@ -112,9 +112,9 @@ export default function Scrape() {
                     type="checkbox"
                     checked={formats[format]}
                     onChange={(e) => setFormats({ ...formats, [format]: e.target.checked })}
-                    className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-blue-500 focus:ring-blue-500"
+                    className="w-4 h-4 rounded border-slate-300 bg-slate-100 text-blue-500 focus:ring-blue-500"
                   />
-                  <span className="text-sm text-slate-300 capitalize">{format}</span>
+                  <span className="text-sm text-slate-600 capitalize">{format}</span>
                 </label>
               ))}
             </div>
@@ -123,7 +123,7 @@ export default function Scrape() {
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             Scrape URL
@@ -132,18 +132,18 @@ export default function Scrape() {
       </div>
 
       {result && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-white">Results</h2>
             <div className="flex gap-2">
               {result.markdown && (
-                <button onClick={copyMarkdown} className="px-3 py-1.5 text-sm border border-slate-700 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center gap-2 transition-colors">
+                <button onClick={copyMarkdown} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center gap-2 transition-colors">
                   <Copy className="h-4 w-4" />
                   Copy Markdown
                 </button>
               )}
               {result.json && (
-                <button onClick={downloadJSON} className="px-3 py-1.5 text-sm border border-slate-700 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center gap-2 transition-colors">
+                <button onClick={downloadJSON} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center gap-2 transition-colors">
                   <Download className="h-4 w-4" />
                   Download JSON
                 </button>
@@ -152,22 +152,22 @@ export default function Scrape() {
           </div>
 
           {result.metadata && (
-            <div className="mb-4 p-3 bg-slate-800 rounded-lg">
-              <p className="text-sm text-slate-300">
+            <div className="mb-4 p-3 bg-slate-100 rounded-lg">
+              <p className="text-sm text-slate-600">
                 <strong>Title:</strong> {result.metadata.title || "N/A"}
               </p>
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-slate-600">
                 <strong>URL:</strong> {result.metadata.sourceURL || url}
               </p>
             </div>
           )}
 
-          <div className="border-b border-slate-700 mb-4">
+          <div className="border-b border-slate-200 mb-4">
             <div className="flex gap-2">
               {result.markdown && (
                 <button
                   onClick={() => setActiveTab("preview")}
-                  className={`px-4 py-2 border-b-2 transition-colors ${activeTab === "preview" ? "border-blue-500 text-blue-400" : "border-transparent text-slate-400 hover:text-slate-300"}`}
+                  className={`px-4 py-2 border-b-2 transition-colors ${activeTab === "preview" ? "border-blue-500 text-blue-600" : "border-transparent text-slate-400 hover:text-slate-600"}`}
                 >
                   Preview
                 </button>
@@ -175,7 +175,7 @@ export default function Scrape() {
               {result.html && (
                 <button
                   onClick={() => setActiveTab("html")}
-                  className={`px-4 py-2 border-b-2 transition-colors ${activeTab === "html" ? "border-blue-500 text-blue-400" : "border-transparent text-slate-400 hover:text-slate-300"}`}
+                  className={`px-4 py-2 border-b-2 transition-colors ${activeTab === "html" ? "border-blue-500 text-blue-600" : "border-transparent text-slate-400 hover:text-slate-600"}`}
                 >
                   HTML
                 </button>
@@ -183,7 +183,7 @@ export default function Scrape() {
               {result.json && (
                 <button
                   onClick={() => setActiveTab("json")}
-                  className={`px-4 py-2 border-b-2 transition-colors ${activeTab === "json" ? "border-blue-500 text-blue-400" : "border-transparent text-slate-400 hover:text-slate-300"}`}
+                  className={`px-4 py-2 border-b-2 transition-colors ${activeTab === "json" ? "border-blue-500 text-blue-600" : "border-transparent text-slate-400 hover:text-slate-600"}`}
                 >
                   JSON
                 </button>
@@ -193,16 +193,16 @@ export default function Scrape() {
 
           <div className="prose prose-sm prose-invert max-w-none">
             {activeTab === "preview" && result.markdown && (
-              <div className="text-slate-300 whitespace-pre-wrap">{result.markdown}</div>
+              <div className="text-slate-600 whitespace-pre-wrap">{result.markdown}</div>
             )}
             {activeTab === "html" && result.html && (
-              <pre className="bg-slate-800 p-4 rounded-lg overflow-auto max-h-96 text-sm">
-                <code className="text-slate-300">{result.html}</code>
+              <pre className="bg-slate-100 p-4 rounded-lg overflow-auto max-h-96 text-sm">
+                <code className="text-slate-600">{result.html}</code>
               </pre>
             )}
             {activeTab === "json" && result.json && (
-              <pre className="bg-slate-800 p-4 rounded-lg overflow-auto max-h-96 text-sm">
-                <code className="text-slate-300">{JSON.stringify(result.json, null, 2)}</code>
+              <pre className="bg-slate-100 p-4 rounded-lg overflow-auto max-h-96 text-sm">
+                <code className="text-slate-600">{JSON.stringify(result.json, null, 2)}</code>
               </pre>
             )}
           </div>

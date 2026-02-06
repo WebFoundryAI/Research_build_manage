@@ -118,11 +118,11 @@ export default function ResearchHistory() {
   const getTypeIcon = (type: string) => {
     switch (type) {
       case "search":
-        return <Search className="h-4 w-4 text-blue-400" />;
+        return <Search className="h-4 w-4 text-blue-600" />;
       case "audit":
         return <BarChart className="h-4 w-4 text-green-400" />;
       case "conversation":
-        return <MessageSquare className="h-4 w-4 text-purple-400" />;
+        return <MessageSquare className="h-4 w-4 text-purple-600" />;
       default:
         return <Globe className="h-4 w-4" />;
     }
@@ -131,13 +131,13 @@ export default function ResearchHistory() {
   const getTypeBadge = (type: string) => {
     switch (type) {
       case "search":
-        return <span className="px-2 py-0.5 text-xs bg-blue-500/20 text-blue-400 rounded">Keyword Search</span>;
+        return <span className="px-2 py-0.5 text-xs bg-blue-500/20 text-blue-600 rounded">Keyword Search</span>;
       case "audit":
         return <span className="px-2 py-0.5 text-xs bg-green-500/20 text-green-400 rounded">SEO Audit</span>;
       case "conversation":
-        return <span className="px-2 py-0.5 text-xs bg-purple-500/20 text-purple-400 rounded">Niche AI</span>;
+        return <span className="px-2 py-0.5 text-xs bg-purple-500/20 text-purple-600 rounded">Niche AI</span>;
       default:
-        return <span className="px-2 py-0.5 text-xs bg-slate-700 text-slate-400 rounded">{type}</span>;
+        return <span className="px-2 py-0.5 text-xs bg-slate-200 text-slate-400 rounded">{type}</span>;
     }
   };
 
@@ -156,21 +156,21 @@ export default function ResearchHistory() {
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
       {feedback && (
-        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
 
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
-          <History className="h-6 w-6 text-blue-400" />
+          <History className="h-6 w-6 text-blue-600" />
           Research History
         </h1>
         <p className="text-slate-400">View and restore your previous research sessions</p>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold text-white">Activity History</h2>
             <p className="text-sm text-slate-400">All your keyword searches, audits, and conversations</p>
@@ -180,7 +180,7 @@ export default function ResearchHistory() {
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${filter === f ? "bg-blue-600 text-white" : "border border-slate-700 text-slate-400 hover:bg-slate-800"}`}
+                className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${filter === f ? "bg-blue-600 text-white" : "border border-slate-200 text-slate-400 hover:bg-slate-100"}`}
               >
                 {f === "all" ? "All" : f === "search" ? "Searches" : f === "audit" ? "Audits" : "AI Chats"}
               </button>
@@ -193,7 +193,7 @@ export default function ResearchHistory() {
           ) : filteredHistory.length > 0 ? (
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-700">
+                <tr className="border-b border-slate-200">
                   <th className="text-left p-3 text-slate-400 text-sm font-medium">Type</th>
                   <th className="text-left p-3 text-slate-400 text-sm font-medium">Title</th>
                   <th className="text-left p-3 text-slate-400 text-sm font-medium">Details</th>
@@ -203,7 +203,7 @@ export default function ResearchHistory() {
               </thead>
               <tbody>
                 {filteredHistory.map((item) => (
-                  <tr key={`${item.type}-${item.id}`} className="border-b border-slate-800">
+                  <tr key={`${item.type}-${item.id}`} className="border-b border-slate-200">
                     <td className="p-3">{getTypeBadge(item.type)}</td>
                     <td className="p-3">
                       <div className="flex items-center gap-2">
@@ -215,7 +215,7 @@ export default function ResearchHistory() {
                     <td className="p-3 text-sm text-slate-400">{formatDate(item.created_at)}</td>
                     <td className="p-3 text-center">
                       {item.status && (
-                        <span className={`px-2 py-0.5 text-xs rounded ${item.status === "completed" ? "bg-green-500/20 text-green-400" : "bg-slate-700 text-slate-400"}`}>
+                        <span className={`px-2 py-0.5 text-xs rounded ${item.status === "completed" ? "bg-green-500/20 text-green-400" : "bg-slate-200 text-slate-400"}`}>
                           {item.status}
                         </span>
                       )}

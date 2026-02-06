@@ -271,7 +271,7 @@ export default function WebsitesPage() {
         </button>
         <button
           onClick={() => { resetForm(); setShowAddModal(true); }}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-white hover:bg-slate-100"
         >
           <Plus size={16} /> Add Website
         </button>
@@ -416,7 +416,7 @@ export default function WebsitesPage() {
             </button>
             <button
               onClick={handleAddOrEdit}
-              className="px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800"
+              className="px-4 py-2 rounded-xl bg-white text-white hover:bg-slate-100"
             >
               {editingId ? 'Save Changes' : 'Add Website'}
             </button>
@@ -439,7 +439,7 @@ export default function WebsitesPage() {
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap ${
-                    activeTab === tab ? 'bg-slate-900 text-white' : 'hover:bg-slate-100'
+                    activeTab === tab ? 'bg-white text-white' : 'hover:bg-slate-100'
                   }`}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -546,7 +546,7 @@ export default function WebsitesPage() {
                   </select>
                   <button
                     onClick={handleAddKeyword}
-                    className="px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800"
+                    className="px-4 py-2 rounded-xl bg-white text-white hover:bg-slate-100"
                   >
                     Add
                   </button>

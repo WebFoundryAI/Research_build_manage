@@ -358,7 +358,7 @@ export default function ProjectsPage() {
         </div>
         <button
           onClick={() => { resetForm(); setShowAddModal(true); }}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 text-sm"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-white hover:bg-slate-100 text-sm"
         >
           <Plus size={16} /> New Project
         </button>
@@ -386,7 +386,7 @@ export default function ProjectsPage() {
                   {/* Favourite star */}
                   <button
                     onClick={(e) => { e.stopPropagation(); handleToggleFavourite(project); }}
-                    className={`absolute top-3 right-3 p-1 rounded ${project.is_favourite ? 'text-amber-500' : 'text-slate-300 hover:text-slate-400'}`}
+                    className={`absolute top-3 right-3 p-1 rounded ${project.is_favourite ? 'text-amber-500' : 'text-slate-600 hover:text-slate-400'}`}
                   >
                     <Star size={18} fill={project.is_favourite ? 'currentColor' : 'none'} />
                   </button>
@@ -525,7 +525,7 @@ export default function ProjectsPage() {
             <button onClick={() => { setShowAddModal(false); resetForm(); }} className="px-4 py-2 rounded-xl border hover:bg-slate-50">
               Cancel
             </button>
-            <button onClick={handleSaveProject} className="px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800">
+            <button onClick={handleSaveProject} className="px-4 py-2 rounded-xl bg-white text-white hover:bg-slate-100">
               {editingId ? 'Save Changes' : 'Create Project'}
             </button>
           </div>
@@ -703,7 +703,7 @@ export default function ProjectsPage() {
             <button onClick={() => setShowTaskModal(false)} className="px-4 py-2 rounded-xl border hover:bg-slate-50">
               Cancel
             </button>
-            <button onClick={handleAddTask} className="px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800">
+            <button onClick={handleAddTask} className="px-4 py-2 rounded-xl bg-white text-white hover:bg-slate-100">
               Add Task
             </button>
           </div>

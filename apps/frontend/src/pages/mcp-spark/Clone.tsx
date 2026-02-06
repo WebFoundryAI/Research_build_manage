@@ -86,7 +86,7 @@ export default function Clone() {
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto">
       {feedback && (
-        <div className={`mb-4 p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`mb-4 p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
@@ -102,15 +102,15 @@ export default function Clone() {
       </div>
 
       <div className="grid gap-8">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-          <div className="p-4 border-b border-slate-800">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+          <div className="p-4 border-b border-slate-200">
             <h2 className="text-lg font-semibold text-white">Clone a Website</h2>
             <p className="text-sm text-slate-400">Enter a URL to crawl and generate code from</p>
           </div>
           <div className="p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="url" className="block text-sm font-medium text-slate-300">Source URL *</label>
+                <label htmlFor="url" className="block text-sm font-medium text-slate-600">Source URL *</label>
                 <input
                   id="url"
                   type="url"
@@ -120,15 +120,15 @@ export default function Clone() {
                     setUrl(e.target.value);
                     setErrors({ ...errors, url: undefined });
                   }}
-                  className={`w-full px-4 py-2 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.url ? "border-red-500" : "border-slate-700"}`}
+                  className={`w-full px-4 py-2 bg-slate-100 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.url ? "border-red-500" : "border-slate-200"}`}
                 />
                 {errors.url && (
-                  <p className="text-sm text-red-400">{errors.url}</p>
+                  <p className="text-sm text-red-600">{errors.url}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="limit" className="block text-sm font-medium text-slate-300">Max Pages (1-40)</label>
+                <label htmlFor="limit" className="block text-sm font-medium text-slate-600">Max Pages (1-40)</label>
                 <input
                   id="limit"
                   type="number"
@@ -139,10 +139,10 @@ export default function Clone() {
                     setLimit(parseInt(e.target.value) || 12);
                     setErrors({ ...errors, limit: undefined });
                   }}
-                  className={`w-full px-4 py-2 bg-slate-800 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.limit ? "border-red-500" : "border-slate-700"}`}
+                  className={`w-full px-4 py-2 bg-slate-100 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.limit ? "border-red-500" : "border-slate-200"}`}
                 />
                 {errors.limit && (
-                  <p className="text-sm text-red-400">{errors.limit}</p>
+                  <p className="text-sm text-red-600">{errors.limit}</p>
                 )}
                 <p className="text-xs text-slate-500">
                   Number of pages to crawl and include in code generation (default: 12)
@@ -152,7 +152,7 @@ export default function Clone() {
               <button
                 type="submit"
                 disabled={isCloning}
-                className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg flex items-center justify-center gap-2 transition-colors"
+                className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center justify-center gap-2 transition-colors"
               >
                 {isCloning ? (
                   <>
@@ -171,8 +171,8 @@ export default function Clone() {
         </div>
 
         {result && (
-          <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-            <div className="p-4 border-b border-slate-800 flex items-start justify-between">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+            <div className="p-4 border-b border-slate-200 flex items-start justify-between">
               <div>
                 <h2 className="text-lg font-semibold text-white">Generated Code</h2>
                 <p className="text-sm text-slate-400">
@@ -182,7 +182,7 @@ export default function Clone() {
               </div>
               <button
                 onClick={handleCopyCode}
-                className="px-3 py-1.5 text-sm border border-slate-700 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center gap-2 transition-colors"
+                className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center gap-2 transition-colors"
               >
                 {copied ? (
                   <>
@@ -198,8 +198,8 @@ export default function Clone() {
               </button>
             </div>
             <div className="p-6">
-              <pre className="bg-slate-800 p-4 rounded-lg overflow-x-auto max-h-[600px] overflow-y-auto">
-                <code className="text-sm font-mono text-slate-300">{result.code}</code>
+              <pre className="bg-slate-100 p-4 rounded-lg overflow-x-auto max-h-[600px] overflow-y-auto">
+                <code className="text-sm font-mono text-slate-600">{result.code}</code>
               </pre>
             </div>
           </div>

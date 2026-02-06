@@ -95,9 +95,9 @@ export default function HealthPage() {
   }
 
   function getScoreColor(score: number) {
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-emerald-600";
+    if (score >= 60) return "text-amber-600";
+    return "text-red-600";
   }
 
   function getScoreBgColor(score: number) {
@@ -136,7 +136,7 @@ export default function HealthPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+        <div className="rounded-xl border border-slate-200 bg-white p-4">
           <div className="flex items-center gap-3">
             <div className={`p-2 rounded-lg ${getScoreBgColor(avgScore)}`}>
               <Activity size={18} className={getScoreColor(avgScore)} />
@@ -151,10 +151,10 @@ export default function HealthPage() {
         <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-emerald-500/20">
-              <CheckCircle size={18} className="text-emerald-400" />
+              <CheckCircle size={18} className="text-emerald-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-emerald-400">{healthySites}</div>
+              <div className="text-2xl font-semibold text-emerald-600">{healthySites}</div>
               <div className="text-xs text-slate-500">Healthy</div>
             </div>
           </div>
@@ -163,10 +163,10 @@ export default function HealthPage() {
         <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-amber-500/20">
-              <AlertTriangle size={18} className="text-amber-400" />
+              <AlertTriangle size={18} className="text-amber-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-amber-400">{warningsCount}</div>
+              <div className="text-2xl font-semibold text-amber-600">{warningsCount}</div>
               <div className="text-xs text-slate-500">Warnings</div>
             </div>
           </div>
@@ -175,10 +175,10 @@ export default function HealthPage() {
         <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-red-500/20">
-              <XCircle size={18} className="text-red-400" />
+              <XCircle size={18} className="text-red-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-red-400">{criticalCount}</div>
+              <div className="text-2xl font-semibold text-red-600">{criticalCount}</div>
               <div className="text-xs text-slate-500">Critical</div>
             </div>
           </div>
@@ -199,7 +199,7 @@ export default function HealthPage() {
           {healthChecks.map((check) => (
             <div
               key={check.id}
-              className="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden"
+              className="rounded-xl border border-slate-200 bg-white overflow-hidden"
             >
               <div className="p-4">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
@@ -215,7 +215,7 @@ export default function HealthPage() {
                         href={`https://${check.domain}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-slate-400 hover:text-blue-400 flex items-center gap-1"
+                        className="text-sm text-slate-400 hover:text-blue-600 flex items-center gap-1"
                       >
                         {check.domain}
                         <ExternalLink size={12} />
@@ -230,7 +230,7 @@ export default function HealthPage() {
 
                 {/* Score Breakdown */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <div className="rounded-lg border border-slate-800 bg-slate-800/30 p-3">
+                  <div className="rounded-lg border border-slate-200 bg-slate-100/30 p-3">
                     <div className="flex items-center gap-2 mb-1">
                       <Shield size={14} className="text-slate-400" />
                       <span className="text-xs text-slate-400">Uptime</span>
@@ -239,7 +239,7 @@ export default function HealthPage() {
                       {check.uptime_score}%
                     </div>
                   </div>
-                  <div className="rounded-lg border border-slate-800 bg-slate-800/30 p-3">
+                  <div className="rounded-lg border border-slate-200 bg-slate-100/30 p-3">
                     <div className="flex items-center gap-2 mb-1">
                       <Shield size={14} className="text-slate-400" />
                       <span className="text-xs text-slate-400">SSL</span>
@@ -248,7 +248,7 @@ export default function HealthPage() {
                       {check.ssl_score}%
                     </div>
                   </div>
-                  <div className="rounded-lg border border-slate-800 bg-slate-800/30 p-3">
+                  <div className="rounded-lg border border-slate-200 bg-slate-100/30 p-3">
                     <div className="flex items-center gap-2 mb-1">
                       <TrendingUp size={14} className="text-slate-400" />
                       <span className="text-xs text-slate-400">Performance</span>
@@ -257,7 +257,7 @@ export default function HealthPage() {
                       {check.performance_score}%
                     </div>
                   </div>
-                  <div className="rounded-lg border border-slate-800 bg-slate-800/30 p-3">
+                  <div className="rounded-lg border border-slate-200 bg-slate-100/30 p-3">
                     <div className="flex items-center gap-2 mb-1">
                       <FileText size={14} className="text-slate-400" />
                       <span className="text-xs text-slate-400">SEO</span>
@@ -270,8 +270,8 @@ export default function HealthPage() {
 
                 {/* Issues */}
                 {check.issues.length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-slate-800">
-                    <h4 className="text-sm font-medium text-amber-400 mb-2 flex items-center gap-2">
+                  <div className="mt-4 pt-4 border-t border-slate-200">
+                    <h4 className="text-sm font-medium text-amber-600 mb-2 flex items-center gap-2">
                       <AlertTriangle size={14} />
                       Issues ({check.issues.length})
                     </h4>

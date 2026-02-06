@@ -103,7 +103,7 @@ export default function NexusOpenCopyKeywords() {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className={`h-2 w-2 rounded-sm ${i <= level ? color : "bg-slate-700"}`}
+            className={`h-2 w-2 rounded-sm ${i <= level ? color : "bg-slate-200"}`}
           />
         ))}
       </div>
@@ -120,7 +120,7 @@ export default function NexusOpenCopyKeywords() {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className={`h-2 w-2 rounded-sm ${i <= level ? "bg-blue-500" : "bg-slate-700"}`}
+            className={`h-2 w-2 rounded-sm ${i <= level ? "bg-blue-500" : "bg-slate-200"}`}
           />
         ))}
       </div>
@@ -184,7 +184,7 @@ export default function NexusOpenCopyKeywords() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold flex items-center gap-3">
-            <Search className="text-blue-400" />
+            <Search className="text-blue-600" />
             Keywords
           </h1>
           <p className="text-sm text-slate-400 mt-1">
@@ -195,7 +195,7 @@ export default function NexusOpenCopyKeywords() {
           {needsAnalysis.length > 0 && (
             <button
               onClick={analyzeKeywords}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-sm transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-sm transition-colors"
             >
               <BarChart3 size={16} />
               Analyze ({needsAnalysis.length})
@@ -223,8 +223,8 @@ export default function NexusOpenCopyKeywords() {
             onClick={() => setFilter(f.id)}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
               filter === f.id
-                ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/50 border border-transparent"
+                ? "bg-blue-500/20 text-blue-600 border border-blue-500/30"
+                : "text-slate-400 hover:text-slate-900 hover:bg-slate-100 border border-transparent"
             }`}
           >
             {f.label}
@@ -236,16 +236,16 @@ export default function NexusOpenCopyKeywords() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading keywords...</div>
       ) : keywords.length === 0 ? (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-12 text-center">
+        <div className="rounded-xl border border-slate-200 bg-white p-12 text-center">
           <Search size={48} className="mx-auto text-slate-600 mb-4" />
           <p className="text-slate-400">No keywords yet</p>
           <p className="text-sm text-slate-500 mt-1">Add your first keyword to get started</p>
         </div>
       ) : (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden">
+        <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-800 bg-slate-800/30">
+              <tr className="border-b border-slate-200 bg-slate-100/30">
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-400">Keyword</th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-400">Project</th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-400">Difficulty</th>
@@ -262,7 +262,7 @@ export default function NexusOpenCopyKeywords() {
                   return true;
                 })
                 .map((keyword) => (
-                  <tr key={keyword.id} className="border-b border-slate-800/50 hover:bg-slate-800/20">
+                  <tr key={keyword.id} className="border-b border-slate-200 hover:bg-slate-100/20">
                     <td className="px-4 py-3">
                       <div className="font-medium">{keyword.keyword}</div>
                       {keyword.secondaryKeywords.length > 0 && (
@@ -288,7 +288,7 @@ export default function NexusOpenCopyKeywords() {
                         <button
                           onClick={() => generateArticle(keyword.id)}
                           disabled={generatingIds.includes(keyword.id)}
-                          className="p-2 rounded-lg bg-pink-500/20 hover:bg-pink-500/30 text-pink-400 transition-colors disabled:opacity-50"
+                          className="p-2 rounded-lg bg-pink-500/20 hover:bg-pink-500/30 text-pink-600 transition-colors disabled:opacity-50"
                           title="Generate Article"
                         >
                           {generatingIds.includes(keyword.id) ? (
@@ -298,7 +298,7 @@ export default function NexusOpenCopyKeywords() {
                           )}
                         </button>
                         <button
-                          className="p-2 rounded-lg hover:bg-red-500/20 text-slate-500 hover:text-red-400 transition-colors"
+                          className="p-2 rounded-lg hover:bg-red-500/20 text-slate-500 hover:text-red-600 transition-colors"
                           title="Delete"
                         >
                           <Trash2 size={16} />
@@ -319,7 +319,7 @@ export default function NexusOpenCopyKeywords() {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setShowAddModal(false)}
           />
-          <div className="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <div className="relative w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6">
             <h2 className="text-lg font-semibold mb-4">Add Keyword</h2>
 
             <div className="space-y-4">
@@ -332,7 +332,7 @@ export default function NexusOpenCopyKeywords() {
                   value={newKeyword.keyword}
                   onChange={(e) => setNewKeyword({ ...newKeyword, keyword: e.target.value })}
                   placeholder="e.g., react hooks tutorial"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
                 />
               </div>
 
@@ -347,7 +347,7 @@ export default function NexusOpenCopyKeywords() {
                     setNewKeyword({ ...newKeyword, secondaryKeywords: e.target.value })
                   }
                   placeholder="Comma-separated: usestate, useeffect"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
                 />
               </div>
 
@@ -358,7 +358,7 @@ export default function NexusOpenCopyKeywords() {
                 <select
                   value={newKeyword.project}
                   onChange={(e) => setNewKeyword({ ...newKeyword, project: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-blue-500"
                 >
                   <option value="1">Tech Blog</option>
                   <option value="2">Marketing Site</option>
@@ -370,7 +370,7 @@ export default function NexusOpenCopyKeywords() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setShowAddModal(false)}
-                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-sm font-medium transition-colors"
+                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-sm font-medium transition-colors"
               >
                 Cancel
               </button>

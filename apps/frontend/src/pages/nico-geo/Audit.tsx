@@ -81,9 +81,9 @@ export default function NicoGeoAudit() {
   }
 
   function getScoreColor(score: number) {
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-emerald-600";
+    if (score >= 60) return "text-amber-600";
+    return "text-red-600";
   }
 
   function getScoreBg(score: number) {
@@ -93,9 +93,9 @@ export default function NicoGeoAudit() {
   }
 
   function getIssueIcon(type: string) {
-    if (type === "critical") return <XCircle size={16} className="text-red-400" />;
-    if (type === "warning") return <AlertTriangle size={16} className="text-amber-400" />;
-    return <CheckCircle size={16} className="text-blue-400" />;
+    if (type === "critical") return <XCircle size={16} className="text-red-600" />;
+    if (type === "warning") return <AlertTriangle size={16} className="text-amber-600" />;
+    return <CheckCircle size={16} className="text-blue-600" />;
   }
 
   return (
@@ -103,7 +103,7 @@ export default function NicoGeoAudit() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-semibold flex items-center gap-3">
-          <Search className="text-blue-400" />
+          <Search className="text-blue-600" />
           Audit Content
         </h1>
         <p className="text-sm text-slate-400 mt-1">
@@ -112,7 +112,7 @@ export default function NicoGeoAudit() {
       </div>
 
       {/* URL Input */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
         <label className="block text-sm font-medium text-slate-400 mb-2">
           Website URL
         </label>
@@ -124,7 +124,7 @@ export default function NicoGeoAudit() {
               value={siteUrl}
               onChange={(e) => setSiteUrl(e.target.value)}
               placeholder="https://example.com"
-              className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
             />
           </div>
           <button
@@ -134,7 +134,7 @@ export default function NicoGeoAudit() {
           >
             {auditing ? (
               <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-slate-200/30 border-t-white rounded-full animate-spin" />
                 Auditing...
               </>
             ) : (
@@ -158,7 +158,7 @@ export default function NicoGeoAudit() {
                   href={result.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-slate-400 hover:text-white"
+                  className="flex items-center gap-2 text-sm text-slate-400 hover:text-slate-900"
                 >
                   {result.url}
                   <ExternalLink size={14} />
@@ -175,50 +175,50 @@ export default function NicoGeoAudit() {
 
           {/* Metrics Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-center">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 text-center">
               <div className="mb-2">
                 {result.metrics.titleOptimized ? (
-                  <CheckCircle size={24} className="mx-auto text-emerald-400" />
+                  <CheckCircle size={24} className="mx-auto text-emerald-600" />
                 ) : (
-                  <XCircle size={24} className="mx-auto text-red-400" />
+                  <XCircle size={24} className="mx-auto text-red-600" />
                 )}
               </div>
               <div className="text-xs text-slate-500">Title Optimized</div>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-center">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 text-center">
               <div className="mb-2">
                 {result.metrics.metaDescriptionPresent ? (
-                  <CheckCircle size={24} className="mx-auto text-emerald-400" />
+                  <CheckCircle size={24} className="mx-auto text-emerald-600" />
                 ) : (
-                  <XCircle size={24} className="mx-auto text-red-400" />
+                  <XCircle size={24} className="mx-auto text-red-600" />
                 )}
               </div>
               <div className="text-xs text-slate-500">Meta Description</div>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-center">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 text-center">
               <div className="mb-2">
                 {result.metrics.schemaMarkup ? (
-                  <CheckCircle size={24} className="mx-auto text-emerald-400" />
+                  <CheckCircle size={24} className="mx-auto text-emerald-600" />
                 ) : (
-                  <XCircle size={24} className="mx-auto text-red-400" />
+                  <XCircle size={24} className="mx-auto text-red-600" />
                 )}
               </div>
               <div className="text-xs text-slate-500">Schema Markup</div>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-center">
-              <div className="text-2xl font-semibold text-blue-400 mb-1">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 text-center">
+              <div className="text-2xl font-semibold text-blue-600 mb-1">
                 {result.metrics.answerCapsules}
               </div>
               <div className="text-xs text-slate-500">Answer Capsules</div>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-center">
-              <div className="text-2xl font-semibold text-purple-400 mb-1">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 text-center">
+              <div className="text-2xl font-semibold text-purple-600 mb-1">
                 {result.metrics.faqsDetected}
               </div>
               <div className="text-xs text-slate-500">FAQs Detected</div>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-center">
-              <div className="text-2xl font-semibold text-amber-400 mb-1">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 text-center">
+              <div className="text-2xl font-semibold text-amber-600 mb-1">
                 {result.metrics.readabilityScore}
               </div>
               <div className="text-xs text-slate-500">Readability</div>
@@ -226,7 +226,7 @@ export default function NicoGeoAudit() {
           </div>
 
           {/* Issues List */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+          <div className="rounded-xl border border-slate-200 bg-white p-6">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <BarChart3 size={20} />
               Issues Found ({result.issues.length})
@@ -248,7 +248,7 @@ export default function NicoGeoAudit() {
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-medium">{issue.message}</span>
-                        <span className="px-2 py-0.5 rounded text-xs bg-slate-800 text-slate-400">
+                        <span className="px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-400">
                           {issue.category}
                         </span>
                       </div>
@@ -263,7 +263,7 @@ export default function NicoGeoAudit() {
       )}
 
       {!result && !auditing && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-12 text-center">
+        <div className="rounded-xl border border-slate-200 bg-white p-12 text-center">
           <Search size={48} className="mx-auto text-slate-600 mb-4" />
           <p className="text-slate-400">Enter a URL to audit for GEO optimization</p>
           <p className="text-sm text-slate-500 mt-1">

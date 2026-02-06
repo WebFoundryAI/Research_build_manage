@@ -113,11 +113,11 @@ export default function CompetitorKeywords() {
   };
 
   const getRankBadge = (rank: number | undefined) => {
-    if (!rank) return <span className="px-2 py-0.5 text-xs bg-slate-700 rounded text-slate-400">N/A</span>;
+    if (!rank) return <span className="px-2 py-0.5 text-xs bg-slate-200 rounded text-slate-400">N/A</span>;
     if (rank <= 3) return <span className="px-2 py-0.5 text-xs bg-green-500/20 rounded text-green-400">{rank}</span>;
-    if (rank <= 10) return <span className="px-2 py-0.5 text-xs bg-blue-500/20 rounded text-blue-400">{rank}</span>;
+    if (rank <= 10) return <span className="px-2 py-0.5 text-xs bg-blue-500/20 rounded text-blue-600">{rank}</span>;
     if (rank <= 20) return <span className="px-2 py-0.5 text-xs bg-yellow-500/20 rounded text-yellow-400">{rank}</span>;
-    return <span className="px-2 py-0.5 text-xs bg-slate-700 rounded text-slate-400">{rank}</span>;
+    return <span className="px-2 py-0.5 text-xs bg-slate-200 rounded text-slate-400">{rank}</span>;
   };
 
   const getDifferenceBadge = (diff: number | undefined) => {
@@ -128,11 +128,11 @@ export default function CompetitorKeywords() {
       </span>
     );
     if (diff < 0) return (
-      <span className="px-2 py-0.5 text-xs bg-red-500/20 rounded text-red-400 flex items-center gap-1">
+      <span className="px-2 py-0.5 text-xs bg-red-500/20 rounded text-red-600 flex items-center gap-1">
         <TrendingDown className="h-3 w-3" />{diff}
       </span>
     );
-    return <span className="px-2 py-0.5 text-xs bg-slate-700 rounded text-slate-400"><Minus className="h-3 w-3" /></span>;
+    return <span className="px-2 py-0.5 text-xs bg-slate-200 rounded text-slate-400"><Minus className="h-3 w-3" /></span>;
   };
 
   const handleExport = () => {
@@ -155,21 +155,21 @@ export default function CompetitorKeywords() {
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
       {feedback && (
-        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
 
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
-          <Users className="h-6 w-6 text-blue-400" />
+          <Users className="h-6 w-6 text-blue-600" />
           Competitor Keywords
         </h1>
         <p className="text-slate-400">Compare keyword rankings between your domain and competitors</p>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <ArrowRightLeft className="h-5 w-5" />
             Domain Comparison
@@ -179,26 +179,26 @@ export default function CompetitorKeywords() {
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Your Domain</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Your Domain</label>
               <div className="relative">
                 <Globe className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
                 <input
                   placeholder="yourdomain.com"
                   value={yourDomain}
                   onChange={(e) => setYourDomain(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-9 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Competitor Domain</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Competitor Domain</label>
               <div className="relative">
                 <Globe className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
                 <input
                   placeholder="competitor.com"
                   value={competitorDomain}
                   onChange={(e) => setCompetitorDomain(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-9 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -206,11 +206,11 @@ export default function CompetitorKeywords() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Location</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Location</label>
               <select
                 value={locationCode}
                 onChange={(e) => setLocationCode(Number(e.target.value))}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {LOCATION_OPTIONS.map((loc) => (
                   <option key={loc.code} value={loc.code}>{loc.name}</option>
@@ -218,11 +218,11 @@ export default function CompetitorKeywords() {
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Language</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Language</label>
               <select
                 value={languageCode}
                 onChange={(e) => setLanguageCode(e.target.value)}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {LANGUAGE_OPTIONS.map((lang) => (
                   <option key={lang.code} value={lang.code}>{lang.name}</option>
@@ -230,11 +230,11 @@ export default function CompetitorKeywords() {
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Keyword Limit</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Keyword Limit</label>
               <select
                 value={limit}
                 onChange={(e) => setLimit(Number(e.target.value))}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value={100}>100 keywords</option>
                 <option value={200}>200 keywords</option>
@@ -247,7 +247,7 @@ export default function CompetitorKeywords() {
           <button
             onClick={handleAnalyze}
             disabled={isLoading}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
           >
             {isLoading ? (
               <>
@@ -267,7 +267,7 @@ export default function CompetitorKeywords() {
       {data && (
         <>
           <div className="flex justify-end">
-            <button onClick={handleExport} className="px-3 py-1.5 text-sm border border-slate-700 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center gap-1 transition-colors">
+            <button onClick={handleExport} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center gap-1 transition-colors">
               <Download className="h-4 w-4" />
               Export CSV
             </button>
@@ -275,31 +275,31 @@ export default function CompetitorKeywords() {
 
           {/* Summary Stats */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-center">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
               <div className="text-2xl font-bold text-white">{data.summary.your_total_keywords}</div>
               <p className="text-xs text-slate-400">Your Keywords</p>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-center">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
               <div className="text-2xl font-bold text-white">{data.summary.competitor_total_keywords}</div>
               <p className="text-xs text-slate-400">Competitor Keywords</p>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-center">
-              <div className="text-2xl font-bold text-red-400">{data.summary.keyword_gaps_count}</div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
+              <div className="text-2xl font-bold text-red-600">{data.summary.keyword_gaps_count}</div>
               <p className="text-xs text-slate-400">Keyword Gaps</p>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-center">
-              <div className="text-2xl font-bold text-blue-400">{data.summary.overlapping_count}</div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
+              <div className="text-2xl font-bold text-blue-600">{data.summary.overlapping_count}</div>
               <p className="text-xs text-slate-400">Overlapping</p>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-center">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
               <div className="text-2xl font-bold text-green-400">{data.summary.unique_to_you_count}</div>
               <p className="text-xs text-slate-400">Unique to You</p>
             </div>
           </div>
 
           {/* Backlinks Comparison */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-            <div className="p-4 border-b border-slate-800">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+            <div className="p-4 border-b border-slate-200">
               <h2 className="text-lg font-semibold text-white flex items-center gap-2">
                 <LinkIcon className="h-5 w-5" />
                 Backlinks Comparison
@@ -326,24 +326,24 @@ export default function CompetitorKeywords() {
           </div>
 
           {/* Keywords Table */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-            <div className="p-4 border-b border-slate-800">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+            <div className="p-4 border-b border-slate-200">
               <div className="flex gap-2">
                 <button
                   onClick={() => setActiveTab("gaps")}
-                  className={`px-4 py-2 text-sm rounded-lg transition-colors ${activeTab === "gaps" ? "bg-blue-600 text-white" : "text-slate-400 hover:bg-slate-800"}`}
+                  className={`px-4 py-2 text-sm rounded-lg transition-colors ${activeTab === "gaps" ? "bg-blue-600 text-white" : "text-slate-400 hover:bg-slate-100"}`}
                 >
                   Keyword Gaps ({data.keyword_gaps.length})
                 </button>
                 <button
                   onClick={() => setActiveTab("overlapping")}
-                  className={`px-4 py-2 text-sm rounded-lg transition-colors ${activeTab === "overlapping" ? "bg-blue-600 text-white" : "text-slate-400 hover:bg-slate-800"}`}
+                  className={`px-4 py-2 text-sm rounded-lg transition-colors ${activeTab === "overlapping" ? "bg-blue-600 text-white" : "text-slate-400 hover:bg-slate-100"}`}
                 >
                   Overlapping ({data.overlapping_keywords.length})
                 </button>
                 <button
                   onClick={() => setActiveTab("unique")}
-                  className={`px-4 py-2 text-sm rounded-lg transition-colors ${activeTab === "unique" ? "bg-blue-600 text-white" : "text-slate-400 hover:bg-slate-800"}`}
+                  className={`px-4 py-2 text-sm rounded-lg transition-colors ${activeTab === "unique" ? "bg-blue-600 text-white" : "text-slate-400 hover:bg-slate-100"}`}
                 >
                   Unique to You ({data.unique_keywords.length})
                 </button>
@@ -352,7 +352,7 @@ export default function CompetitorKeywords() {
             <div className="p-6 max-h-96 overflow-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-slate-700">
+                  <tr className="border-b border-slate-200">
                     <th className="text-left p-3 text-slate-400 text-sm font-medium">Keyword</th>
                     {activeTab !== "gaps" && <th className="text-center p-3 text-slate-400 text-sm font-medium">Your Rank</th>}
                     {activeTab !== "unique" && <th className="text-center p-3 text-slate-400 text-sm font-medium">Competitor Rank</th>}
@@ -362,11 +362,11 @@ export default function CompetitorKeywords() {
                 </thead>
                 <tbody>
                   {(activeTab === "gaps" ? data.keyword_gaps : activeTab === "overlapping" ? data.overlapping_keywords : data.unique_keywords).slice(0, 100).map((kw, idx) => (
-                    <tr key={idx} className="border-b border-slate-800">
+                    <tr key={idx} className="border-b border-slate-200">
                       <td className="p-3 text-white">{kw.keyword}</td>
                       {activeTab !== "gaps" && <td className="p-3 text-center">{getRankBadge(kw.your_rank)}</td>}
                       {activeTab !== "unique" && <td className="p-3 text-center">{getRankBadge(kw.competitor_rank)}</td>}
-                      <td className="p-3 text-right text-slate-300">{formatNumber(kw.search_volume)}</td>
+                      <td className="p-3 text-right text-slate-600">{formatNumber(kw.search_volume)}</td>
                       {activeTab === "overlapping" && <td className="p-3 text-center">{getDifferenceBadge(kw.rank_difference)}</td>}
                     </tr>
                   ))}

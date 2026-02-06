@@ -107,7 +107,7 @@ export default function KeywordDashboard() {
     <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
-          <LayoutDashboard className="h-6 w-6 text-blue-400" />
+          <LayoutDashboard className="h-6 w-6 text-blue-600" />
           Dashboard
         </h1>
         <p className="text-slate-400">Overview of your SEO research activity</p>
@@ -115,30 +115,30 @@ export default function KeywordDashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Search className="h-4 w-4 text-blue-400" />
+            <Search className="h-4 w-4 text-blue-600" />
             <span className="text-sm text-slate-400">Total Searches</span>
           </div>
           <div className="text-2xl font-bold text-white">{stats.totalSearches}</div>
         </div>
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
           <div className="flex items-center gap-2 mb-2">
             <BarChart3 className="h-4 w-4 text-green-400" />
             <span className="text-sm text-slate-400">Total Audits</span>
           </div>
           <div className="text-2xl font-bold text-white">{stats.totalAudits}</div>
         </div>
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
           <div className="flex items-center gap-2 mb-2">
             <Coins className="h-4 w-4 text-yellow-400" />
             <span className="text-sm text-slate-400">Credits Used</span>
           </div>
           <div className="text-2xl font-bold text-white">{stats.creditsUsed}</div>
         </div>
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Coins className="h-4 w-4 text-emerald-400" />
+            <Coins className="h-4 w-4 text-emerald-600" />
             <span className="text-sm text-slate-400">Credits Remaining</span>
           </div>
           <div className="text-2xl font-bold text-white">{stats.creditsRemaining}</div>
@@ -147,8 +147,8 @@ export default function KeywordDashboard() {
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Quick Actions */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-          <div className="p-4 border-b border-slate-800">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+          <div className="p-4 border-b border-slate-200">
             <h2 className="text-lg font-semibold text-white flex items-center gap-2">
               <Zap className="h-5 w-5 text-yellow-400" />
               Quick Actions
@@ -160,13 +160,13 @@ export default function KeywordDashboard() {
               <Link
                 key={action.url}
                 to={action.url}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition-colors group"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 transition-colors group"
               >
-                <div className="p-2 rounded-lg bg-slate-800 group-hover:bg-slate-700 transition-colors">
-                  <action.icon className="h-4 w-4 text-blue-400" />
+                <div className="p-2 rounded-lg bg-slate-100 group-hover:bg-slate-200 transition-colors">
+                  <action.icon className="h-4 w-4 text-blue-600" />
                 </div>
                 <div>
-                  <div className="font-medium text-white group-hover:text-blue-400 transition-colors">{action.title}</div>
+                  <div className="font-medium text-white group-hover:text-blue-600 transition-colors">{action.title}</div>
                   <div className="text-xs text-slate-500">{action.description}</div>
                 </div>
               </Link>
@@ -175,8 +175,8 @@ export default function KeywordDashboard() {
         </div>
 
         {/* Recent Activity */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-          <div className="p-4 border-b border-slate-800">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+          <div className="p-4 border-b border-slate-200">
             <h2 className="text-lg font-semibold text-white flex items-center gap-2">
               <Activity className="h-5 w-5 text-green-400" />
               Recent Activity
@@ -189,9 +189,9 @@ export default function KeywordDashboard() {
             ) : recentSearches.length > 0 ? (
               <div className="space-y-2">
                 {recentSearches.map((activity) => (
-                  <div key={activity.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50">
+                  <div key={activity.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-100">
                     <div className="flex items-center gap-3">
-                      <Search className="h-4 w-4 text-blue-400" />
+                      <Search className="h-4 w-4 text-blue-600" />
                       <span className="text-sm text-white">{activity.title}</span>
                     </div>
                     <span className="text-xs text-slate-500">{formatDate(activity.created_at)}</span>
