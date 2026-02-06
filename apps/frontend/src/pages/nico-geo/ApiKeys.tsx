@@ -113,7 +113,7 @@ export default function NicoGeoApiKeys() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold flex items-center gap-3">
-            <Key className="text-amber-400" />
+            <Key className="text-amber-600" />
             API Keys
           </h1>
           <p className="text-sm text-slate-400 mt-1">
@@ -132,9 +132,9 @@ export default function NicoGeoApiKeys() {
       {/* Warning */}
       <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-4">
         <div className="flex items-start gap-3">
-          <AlertTriangle size={18} className="text-amber-400 mt-0.5" />
+          <AlertTriangle size={18} className="text-amber-600 mt-0.5" />
           <div>
-            <h3 className="font-medium text-amber-400">Keep your keys secure</h3>
+            <h3 className="font-medium text-amber-600">Keep your keys secure</h3>
             <p className="text-sm text-slate-400 mt-1">
               API keys provide full access to your account. Never share them publicly or commit them to version control.
             </p>
@@ -144,10 +144,10 @@ export default function NicoGeoApiKeys() {
 
       {/* Plan Limits */}
       <div className="grid md:grid-cols-2 gap-4">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+        <div className="rounded-xl border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-medium">Free Plan</h3>
-            <span className="px-2 py-1 rounded text-xs bg-slate-800">Default</span>
+            <span className="px-2 py-1 rounded text-xs bg-slate-100">Default</span>
           </div>
           <div className="space-y-2 text-sm text-slate-400">
             <div className="flex justify-between">
@@ -167,8 +167,8 @@ export default function NicoGeoApiKeys() {
 
         <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium text-amber-400">Pro Plan</h3>
-            <span className="px-2 py-1 rounded text-xs bg-amber-500/20 text-amber-400">Recommended</span>
+            <h3 className="font-medium text-amber-600">Pro Plan</h3>
+            <span className="px-2 py-1 rounded text-xs bg-amber-500/20 text-amber-600">Recommended</span>
           </div>
           <div className="space-y-2 text-sm text-slate-400">
             <div className="flex justify-between">
@@ -191,7 +191,7 @@ export default function NicoGeoApiKeys() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading keys...</div>
       ) : keys.length === 0 ? (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-12 text-center">
+        <div className="rounded-xl border border-slate-200 bg-white p-12 text-center">
           <Key size={48} className="mx-auto text-slate-600 mb-4" />
           <p className="text-slate-400">No API keys yet</p>
           <p className="text-sm text-slate-500 mt-1">Create your first key to get started</p>
@@ -203,25 +203,25 @@ export default function NicoGeoApiKeys() {
               key={key.id}
               className={`rounded-xl border p-4 ${
                 key.status === "active"
-                  ? "border-slate-800 bg-slate-900/40"
+                  ? "border-slate-200 bg-white"
                   : "border-red-500/20 bg-red-500/5"
               }`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className={`p-2 rounded-lg ${key.plan === "pro" ? "bg-amber-500/20" : "bg-slate-800"}`}>
-                    <Key size={18} className={key.plan === "pro" ? "text-amber-400" : "text-slate-400"} />
+                  <div className={`p-2 rounded-lg ${key.plan === "pro" ? "bg-amber-500/20" : "bg-slate-100"}`}>
+                    <Key size={18} className={key.plan === "pro" ? "text-amber-600" : "text-slate-400"} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-medium font-mono">{key.maskedKey}</span>
                       <span className={`px-2 py-0.5 rounded text-xs ${
-                        key.plan === "pro" ? "bg-amber-500/20 text-amber-400" : "bg-slate-800 text-slate-400"
+                        key.plan === "pro" ? "bg-amber-500/20 text-amber-600" : "bg-slate-100 text-slate-400"
                       }`}>
                         {key.plan}
                       </span>
                       <span className={`px-2 py-0.5 rounded text-xs ${
-                        key.status === "active" ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"
+                        key.status === "active" ? "bg-emerald-500/20 text-emerald-600" : "bg-red-500/20 text-red-600"
                       }`}>
                         {key.status}
                       </span>
@@ -243,7 +243,7 @@ export default function NicoGeoApiKeys() {
                       <span className="font-medium">{key.requestsToday}</span>
                       <span className="text-slate-500">/{key.dailyLimit}</span>
                     </div>
-                    <div className="w-24 h-1.5 rounded-full bg-slate-800 mt-1">
+                    <div className="w-24 h-1.5 rounded-full bg-slate-100 mt-1">
                       <div
                         className="h-full rounded-full bg-amber-500"
                         style={{ width: `${(key.requestsToday / key.dailyLimit) * 100}%` }}
@@ -255,14 +255,14 @@ export default function NicoGeoApiKeys() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => toggleKeyStatus(key.id)}
-                      className="p-2 rounded-lg hover:bg-slate-800 text-slate-500 hover:text-white transition-colors"
+                      className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors"
                       title={key.status === "active" ? "Disable" : "Enable"}
                     >
                       {key.status === "active" ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                     <button
                       onClick={() => deleteKey(key.id)}
-                      className="p-2 rounded-lg hover:bg-red-500/20 text-slate-500 hover:text-red-400 transition-colors"
+                      className="p-2 rounded-lg hover:bg-red-500/20 text-slate-500 hover:text-red-600 transition-colors"
                       title="Delete"
                     >
                       <Trash2 size={16} />
@@ -286,7 +286,7 @@ export default function NicoGeoApiKeys() {
               setNewKeyNote("");
             }}
           />
-          <div className="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <div className="relative w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6">
             {!newKey ? (
               <>
                 <h2 className="text-lg font-semibold mb-4">Create API Key</h2>
@@ -299,7 +299,7 @@ export default function NicoGeoApiKeys() {
                       className={`p-3 rounded-xl border text-left transition-colors ${
                         newKeyPlan === "free"
                           ? "border-blue-500 bg-blue-500/10"
-                          : "border-slate-700 hover:border-slate-600"
+                          : "border-slate-200 hover:border-slate-300"
                       }`}
                     >
                       <div className="font-medium">Free</div>
@@ -310,10 +310,10 @@ export default function NicoGeoApiKeys() {
                       className={`p-3 rounded-xl border text-left transition-colors ${
                         newKeyPlan === "pro"
                           ? "border-amber-500 bg-amber-500/10"
-                          : "border-slate-700 hover:border-slate-600"
+                          : "border-slate-200 hover:border-slate-300"
                       }`}
                     >
-                      <div className="font-medium text-amber-400">Pro</div>
+                      <div className="font-medium text-amber-600">Pro</div>
                       <div className="text-xs text-slate-500">500 requests/day</div>
                     </button>
                   </div>
@@ -326,7 +326,7 @@ export default function NicoGeoApiKeys() {
                     value={newKeyNote}
                     onChange={(e) => setNewKeyNote(e.target.value)}
                     placeholder="e.g., Production server"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
@@ -336,7 +336,7 @@ export default function NicoGeoApiKeys() {
                       setShowCreateModal(false);
                       setNewKeyNote("");
                     }}
-                    className="flex-1 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-sm font-medium transition-colors"
+                    className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-sm font-medium transition-colors"
                   >
                     Cancel
                   </button>
@@ -352,27 +352,27 @@ export default function NicoGeoApiKeys() {
               <>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 rounded-lg bg-emerald-500/20">
-                    <CheckCircle size={20} className="text-emerald-400" />
+                    <CheckCircle size={20} className="text-emerald-600" />
                   </div>
                   <h2 className="text-lg font-semibold">Key Created!</h2>
                 </div>
 
                 <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-4 mb-4">
                   <div className="flex items-start gap-3">
-                    <AlertTriangle size={16} className="text-amber-400 mt-0.5" />
-                    <p className="text-sm text-amber-400">
+                    <AlertTriangle size={16} className="text-amber-600 mt-0.5" />
+                    <p className="text-sm text-amber-600">
                       Copy this key now. You won't be able to see it again.
                     </p>
                   </div>
                 </div>
 
-                <div className="p-3 rounded-lg bg-slate-800 font-mono text-sm mb-4 flex items-center justify-between">
+                <div className="p-3 rounded-lg bg-slate-100 font-mono text-sm mb-4 flex items-center justify-between">
                   <span className="break-all">{newKey}</span>
                   <button
                     onClick={() => copyKey(newKey, "new")}
-                    className="ml-2 p-2 rounded hover:bg-slate-700"
+                    className="ml-2 p-2 rounded hover:bg-slate-200"
                   >
-                    {copied === "new" ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
+                    {copied === "new" ? <Check size={16} className="text-emerald-600" /> : <Copy size={16} />}
                   </button>
                 </div>
 
@@ -382,7 +382,7 @@ export default function NicoGeoApiKeys() {
                     setNewKey(null);
                     setNewKeyNote("");
                   }}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm font-medium transition-colors"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-sm font-medium transition-colors"
                 >
                   Done
                 </button>

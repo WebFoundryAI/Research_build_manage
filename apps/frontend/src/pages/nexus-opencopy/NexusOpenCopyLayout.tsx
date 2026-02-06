@@ -33,18 +33,18 @@ export default function NexusOpenCopyLayout() {
       <aside
         className={`${
           sidebarOpen ? "w-64" : "w-0 md:w-16"
-        } flex-shrink-0 border-r border-slate-800 bg-slate-900/50 transition-all duration-300 overflow-hidden`}
+        } flex-shrink-0 border-r border-slate-200 bg-slate-50 transition-all duration-300 overflow-hidden`}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="p-4 border-b border-slate-800">
+          <div className="p-4 border-b border-slate-200">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/20 border border-pink-500/30">
-                <FileEdit size={20} className="text-pink-400" />
+                <FileEdit size={20} className="text-pink-600" />
               </div>
               {sidebarOpen && (
                 <div>
-                  <h2 className="font-semibold text-white">Nexus OpenCopy</h2>
+                  <h2 className="font-semibold text-slate-900">Nexus OpenCopy</h2>
                   <p className="text-xs text-slate-500">AI Content Studio</p>
                 </div>
               )}
@@ -61,8 +61,8 @@ export default function NexusOpenCopyLayout() {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     isActive
-                      ? "bg-pink-500/20 text-pink-400 border border-pink-500/30"
-                      : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                      ? "bg-pink-500/20 text-pink-700 border border-pink-500/30"
+                      : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
                   }`
                 }
               >
@@ -73,10 +73,10 @@ export default function NexusOpenCopyLayout() {
           </nav>
 
           {/* Back to main */}
-          <div className="p-3 border-t border-slate-800">
+          <div className="p-3 border-t border-slate-200">
             <NavLink
               to="/"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all"
             >
               <ChevronLeft size={18} />
               {sidebarOpen && <span>Back to Main</span>}
@@ -88,10 +88,10 @@ export default function NexusOpenCopyLayout() {
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
         {/* Mobile Header */}
-        <div className="md:hidden flex items-center gap-3 p-4 border-b border-slate-800">
+        <div className="md:hidden flex items-center gap-3 p-4 border-b border-slate-200">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 rounded-lg hover:bg-slate-800"
+            className="p-2 rounded-lg hover:bg-slate-100"
           >
             <Menu size={20} />
           </button>

@@ -86,9 +86,9 @@ export default function NexusOpenCopyProjects() {
   }
 
   function getScoreColor(score: number) {
-    if (score >= 80) return "text-emerald-400 bg-emerald-500/20";
-    if (score >= 60) return "text-amber-400 bg-amber-500/20";
-    return "text-red-400 bg-red-500/20";
+    if (score >= 80) return "text-emerald-600 bg-emerald-500/20";
+    if (score >= 60) return "text-amber-600 bg-amber-500/20";
+    return "text-red-600 bg-red-500/20";
   }
 
   async function createProject() {
@@ -117,7 +117,7 @@ export default function NexusOpenCopyProjects() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold flex items-center gap-3">
-            <FolderKanban className="text-pink-400" />
+            <FolderKanban className="text-pink-600" />
             Projects
           </h1>
           <p className="text-sm text-slate-400 mt-1">
@@ -137,7 +137,7 @@ export default function NexusOpenCopyProjects() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading projects...</div>
       ) : projects.length === 0 ? (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-12 text-center">
+        <div className="rounded-xl border border-slate-200 bg-white p-12 text-center">
           <FolderKanban size={48} className="mx-auto text-slate-600 mb-4" />
           <p className="text-slate-400">No projects yet</p>
           <p className="text-sm text-slate-500 mt-1">Create your first project to get started</p>
@@ -147,12 +147,12 @@ export default function NexusOpenCopyProjects() {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="rounded-xl border border-slate-800 bg-slate-900/40 p-5 hover:border-slate-700 transition-colors"
+              className="rounded-xl border border-slate-200 bg-white p-5 hover:border-slate-200 transition-colors"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-pink-500/20">
-                    <FolderKanban size={20} className="text-pink-400" />
+                    <FolderKanban size={20} className="text-pink-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold">{project.name}</h3>
@@ -172,13 +172,13 @@ export default function NexusOpenCopyProjects() {
                   <span
                     className={`px-2 py-1 rounded text-xs ${
                       project.status === "active"
-                        ? "bg-emerald-500/20 text-emerald-400"
-                        : "bg-slate-700 text-slate-400"
+                        ? "bg-emerald-500/20 text-emerald-600"
+                        : "bg-slate-200 text-slate-400"
                     }`}
                   >
                     {project.status}
                   </span>
-                  <button className="p-1 rounded hover:bg-slate-800 text-slate-500">
+                  <button className="p-1 rounded hover:bg-slate-100 text-slate-500">
                     <MoreVertical size={16} />
                   </button>
                 </div>
@@ -189,11 +189,11 @@ export default function NexusOpenCopyProjects() {
               </p>
 
               <div className="grid grid-cols-3 gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-slate-800/50 text-center">
+                <div className="p-2 rounded-lg bg-slate-100 text-center">
                   <div className="text-lg font-semibold">{project.keywordsCount}</div>
                   <div className="text-xs text-slate-500">Keywords</div>
                 </div>
-                <div className="p-2 rounded-lg bg-slate-800/50 text-center">
+                <div className="p-2 rounded-lg bg-slate-100 text-center">
                   <div className="text-lg font-semibold">{project.articlesCount}</div>
                   <div className="text-xs text-slate-500">Articles</div>
                 </div>
@@ -203,19 +203,19 @@ export default function NexusOpenCopyProjects() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-slate-800">
+              <div className="flex items-center justify-between pt-3 border-t border-slate-200">
                 <span className="text-xs text-slate-500 flex items-center gap-1">
                   <Calendar size={12} />
                   Created {new Date(project.createdAt).toLocaleDateString()}
                 </span>
                 <div className="flex gap-2">
-                  <button className="p-2 rounded-lg hover:bg-slate-800 text-slate-500 hover:text-white">
+                  <button className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900">
                     <Search size={14} />
                   </button>
-                  <button className="p-2 rounded-lg hover:bg-slate-800 text-slate-500 hover:text-white">
+                  <button className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900">
                     <FileText size={14} />
                   </button>
-                  <button className="p-2 rounded-lg hover:bg-slate-800 text-slate-500 hover:text-white">
+                  <button className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900">
                     <Settings size={14} />
                   </button>
                 </div>
@@ -232,7 +232,7 @@ export default function NexusOpenCopyProjects() {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setShowCreateModal(false)}
           />
-          <div className="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <div className="relative w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6">
             <h2 className="text-lg font-semibold mb-4">Create New Project</h2>
 
             <div className="space-y-4">
@@ -245,7 +245,7 @@ export default function NexusOpenCopyProjects() {
                   value={newProject.name}
                   onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
                   placeholder="My Blog"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-pink-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-pink-500"
                 />
               </div>
 
@@ -258,7 +258,7 @@ export default function NexusOpenCopyProjects() {
                   value={newProject.domain}
                   onChange={(e) => setNewProject({ ...newProject, domain: e.target.value })}
                   placeholder="blog.example.com"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-pink-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-pink-500"
                 />
               </div>
 
@@ -271,7 +271,7 @@ export default function NexusOpenCopyProjects() {
                   onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
                   placeholder="What is this project about?"
                   rows={3}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-pink-500 resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-pink-500 resize-none"
                 />
               </div>
             </div>
@@ -279,7 +279,7 @@ export default function NexusOpenCopyProjects() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-sm font-medium transition-colors"
+                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-sm font-medium transition-colors"
               >
                 Cancel
               </button>

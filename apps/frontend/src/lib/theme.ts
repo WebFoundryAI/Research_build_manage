@@ -14,10 +14,6 @@ function applyTheme(theme: Theme) {
 }
 
 export function getTheme(): Theme {
-  const stored = localStorage.getItem(THEME_STORAGE_KEY);
-  if (isTheme(stored)) return stored;
-
-  // Default to light mode
   return "light";
 }
 

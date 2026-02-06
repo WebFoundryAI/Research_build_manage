@@ -53,14 +53,14 @@ export default function ReportsPage() {
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value as TimeRange)}
-            className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-blue-500"
+            className="px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-blue-500"
           >
             <option value="7d">Last 7 days</option>
             <option value="30d">Last 30 days</option>
             <option value="90d">Last 90 days</option>
             <option value="12m">Last 12 months</option>
           </select>
-          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-white font-medium text-sm transition-colors">
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-white font-medium text-sm transition-colors">
             <Download size={16} />
             Export
           </button>
@@ -69,12 +69,12 @@ export default function ReportsPage() {
 
       {/* Summary Cards */}
       <div className="grid md:grid-cols-3 gap-4">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-5">
+        <div className="rounded-xl border border-slate-200 bg-white p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="p-2 rounded-lg bg-blue-500/20">
-              <Users size={20} className="text-blue-400" />
+              <Users size={20} className="text-blue-600" />
             </div>
-            <div className={`flex items-center gap-1 text-sm ${trafficData.trend === "up" ? "text-emerald-400" : "text-red-400"}`}>
+            <div className={`flex items-center gap-1 text-sm ${trafficData.trend === "up" ? "text-emerald-600" : "text-red-600"}`}>
               {trafficData.trend === "up" ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
               {trafficData.change}%
             </div>
@@ -83,12 +83,12 @@ export default function ReportsPage() {
           <div className="text-sm text-slate-400 mt-1">Total Traffic</div>
         </div>
 
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-5">
+        <div className="rounded-xl border border-slate-200 bg-white p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="p-2 rounded-lg bg-emerald-500/20">
-              <DollarSign size={20} className="text-emerald-400" />
+              <DollarSign size={20} className="text-emerald-600" />
             </div>
-            <div className={`flex items-center gap-1 text-sm ${revenueData.trend === "up" ? "text-emerald-400" : "text-red-400"}`}>
+            <div className={`flex items-center gap-1 text-sm ${revenueData.trend === "up" ? "text-emerald-600" : "text-red-600"}`}>
               {revenueData.trend === "up" ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
               {revenueData.change}%
             </div>
@@ -97,12 +97,12 @@ export default function ReportsPage() {
           <div className="text-sm text-slate-400 mt-1">Total Revenue</div>
         </div>
 
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-5">
+        <div className="rounded-xl border border-slate-200 bg-white p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="p-2 rounded-lg bg-purple-500/20">
-              <Activity size={20} className="text-purple-400" />
+              <Activity size={20} className="text-purple-600" />
             </div>
-            <div className={`flex items-center gap-1 text-sm ${healthData.trend === "up" ? "text-emerald-400" : "text-red-400"}`}>
+            <div className={`flex items-center gap-1 text-sm ${healthData.trend === "up" ? "text-emerald-600" : "text-red-600"}`}>
               {healthData.trend === "up" ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
               {Math.abs(healthData.change)}%
             </div>
@@ -113,9 +113,9 @@ export default function ReportsPage() {
       </div>
 
       {/* Traffic Chart Placeholder */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
         <h2 className="font-semibold mb-4">Traffic Trend</h2>
-        <div className="h-64 flex items-center justify-center border border-dashed border-slate-700 rounded-lg">
+        <div className="h-64 flex items-center justify-center border border-dashed border-slate-200 rounded-lg">
           <div className="text-center text-slate-500">
             <FileBarChart size={40} className="mx-auto mb-2" />
             <p className="text-sm">Traffic chart will be displayed here</p>
@@ -125,9 +125,9 @@ export default function ReportsPage() {
       </div>
 
       {/* Revenue Chart Placeholder */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
         <h2 className="font-semibold mb-4">Revenue Trend</h2>
-        <div className="h-64 flex items-center justify-center border border-dashed border-slate-700 rounded-lg">
+        <div className="h-64 flex items-center justify-center border border-dashed border-slate-200 rounded-lg">
           <div className="text-center text-slate-500">
             <DollarSign size={40} className="mx-auto mb-2" />
             <p className="text-sm">Revenue chart will be displayed here</p>
@@ -137,14 +137,14 @@ export default function ReportsPage() {
       </div>
 
       {/* Project Breakdown */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden">
-        <div className="px-4 py-3 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+        <div className="px-4 py-3 border-b border-slate-200">
           <h2 className="font-semibold">Project Breakdown</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-800 text-left">
+              <tr className="border-b border-slate-200 text-left">
                 <th className="px-4 py-3 font-medium text-slate-400">Project</th>
                 <th className="px-4 py-3 font-medium text-slate-400 text-right">Traffic</th>
                 <th className="px-4 py-3 font-medium text-slate-400 text-right">Revenue</th>
@@ -153,12 +153,12 @@ export default function ReportsPage() {
             </thead>
             <tbody>
               {projectsData.map((project, i) => (
-                <tr key={i} className="border-b border-slate-800/50 hover:bg-slate-800/30">
+                <tr key={i} className="border-b border-slate-200 hover:bg-slate-100/30">
                   <td className="px-4 py-3 font-medium">{project.name}</td>
                   <td className="px-4 py-3 text-right">{project.traffic.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-right text-emerald-400">${project.revenue.toLocaleString()}</td>
+                  <td className="px-4 py-3 text-right text-emerald-600">${project.revenue.toLocaleString()}</td>
                   <td className="px-4 py-3 text-right">
-                    <span className={`${project.health >= 80 ? "text-emerald-400" : project.health >= 60 ? "text-amber-400" : "text-red-400"}`}>
+                    <span className={`${project.health >= 80 ? "text-emerald-600" : project.health >= 60 ? "text-amber-600" : "text-red-600"}`}>
                       {project.health}
                     </span>
                   </td>

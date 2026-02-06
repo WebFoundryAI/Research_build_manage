@@ -14,10 +14,10 @@ import { Link } from "react-router-dom";
 
 export default function NicoGeoIndex() {
   const stats = [
-    { label: "Content Generated", value: "127", icon: Sparkles, color: "text-teal-400" },
-    { label: "Audits Completed", value: "84", icon: Search, color: "text-blue-400" },
-    { label: "Improvements Made", value: "56", icon: FileText, color: "text-purple-400" },
-    { label: "Active Reviews", value: "3", icon: ClipboardCheck, color: "text-amber-400" },
+    { label: "Content Generated", value: "127", icon: Sparkles, color: "text-teal-600" },
+    { label: "Audits Completed", value: "84", icon: Search, color: "text-blue-600" },
+    { label: "Improvements Made", value: "56", icon: FileText, color: "text-purple-600" },
+    { label: "Active Reviews", value: "3", icon: ClipboardCheck, color: "text-amber-600" },
   ];
 
   const features = [
@@ -63,7 +63,7 @@ export default function NicoGeoIndex() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-semibold flex items-center gap-3">
-          <Globe2 className="text-teal-400" />
+          <Globe2 className="text-teal-600" />
           Nico GEO Content Engine
         </h1>
         <p className="text-sm text-slate-400 mt-1">
@@ -76,10 +76,10 @@ export default function NicoGeoIndex() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-xl border border-slate-800 bg-slate-900/40 p-4"
+            className="rounded-xl border border-slate-200 bg-white p-4"
           >
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-slate-800/50">
+              <div className="p-2 rounded-lg bg-slate-100">
                 <stat.icon size={18} className={stat.color} />
               </div>
               <div>
@@ -100,10 +100,10 @@ export default function NicoGeoIndex() {
             className={`group rounded-xl border bg-gradient-to-br ${feature.color} p-5 transition-all hover:scale-[1.02]`}
           >
             <div className="flex items-start justify-between">
-              <div className="p-2 rounded-lg bg-slate-800/50">
+              <div className="p-2 rounded-lg bg-slate-100">
                 <feature.icon size={20} className="text-white" />
               </div>
-              <ArrowRight size={18} className="text-slate-500 group-hover:text-white group-hover:translate-x-1 transition-all" />
+              <ArrowRight size={18} className="text-slate-500 group-hover:text-slate-900 group-hover:translate-x-1 transition-all" />
             </div>
             <h3 className="font-semibold mt-4">{feature.title}</h3>
             <p className="text-sm text-slate-400 mt-1">{feature.description}</p>
@@ -112,13 +112,13 @@ export default function NicoGeoIndex() {
       </div>
 
       {/* Capabilities */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
         <h2 className="text-lg font-semibold mb-4">Engine Capabilities</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
           {capabilities.map((cap) => (
             <div key={cap.label} className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-slate-800/50 mt-0.5">
-                <cap.icon size={16} className="text-teal-400" />
+              <div className="p-2 rounded-lg bg-slate-100 mt-0.5">
+                <cap.icon size={16} className="text-teal-600" />
               </div>
               <div>
                 <div className="font-medium text-sm">{cap.label}</div>
@@ -130,30 +130,30 @@ export default function NicoGeoIndex() {
       </div>
 
       {/* API Info */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
         <h2 className="text-lg font-semibold mb-2">API Endpoints</h2>
         <p className="text-sm text-slate-400 mb-4">
           Access the GEO engine via Cloudflare Worker API
         </p>
         <div className="space-y-2 font-mono text-sm">
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-800/50">
-            <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs">POST</span>
-            <span className="text-slate-300">/run</span>
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-100">
+            <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-600 text-xs">POST</span>
+            <span className="text-slate-600">/run</span>
             <span className="text-slate-500 ml-auto">Generate, audit, or improve content</span>
           </div>
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-800/50">
-            <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs">POST</span>
-            <span className="text-slate-300">/review/create</span>
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-100">
+            <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-600 text-xs">POST</span>
+            <span className="text-slate-600">/review/create</span>
             <span className="text-slate-500 ml-auto">Create review session</span>
           </div>
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-800/50">
-            <span className="px-2 py-1 rounded bg-blue-500/20 text-blue-400 text-xs">GET</span>
-            <span className="text-slate-300">/review/:sessionId</span>
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-100">
+            <span className="px-2 py-1 rounded bg-blue-500/20 text-blue-600 text-xs">GET</span>
+            <span className="text-slate-600">/review/:sessionId</span>
             <span className="text-slate-500 ml-auto">Get session details</span>
           </div>
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-800/50">
-            <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs">POST</span>
-            <span className="text-slate-300">/review/:sessionId/approve</span>
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-100">
+            <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-600 text-xs">POST</span>
+            <span className="text-slate-600">/review/:sessionId/approve</span>
             <span className="text-slate-500 ml-auto">Approve session (Pro)</span>
           </div>
         </div>

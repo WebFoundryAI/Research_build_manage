@@ -65,9 +65,9 @@ export default function BoardPage() {
 
   function getHealthColor(score: number | null) {
     if (score === null) return "text-slate-500";
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-emerald-600";
+    if (score >= 60) return "text-amber-600";
+    return "text-red-600";
   }
 
   return (
@@ -90,16 +90,16 @@ export default function BoardPage() {
             return (
               <div
                 key={column.id}
-                className={`flex-shrink-0 w-72 rounded-xl border-t-2 ${column.color} bg-slate-900/40 border border-t-0 border-slate-800`}
+                className={`flex-shrink-0 w-72 rounded-xl border-t-2 ${column.color} bg-white border border-t-0 border-slate-200`}
               >
-                <div className="p-3 border-b border-slate-800 flex items-center justify-between">
+                <div className="p-3 border-b border-slate-200 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <h3 className="font-medium text-sm">{column.title}</h3>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-400">
                       {columnProjects.length}
                     </span>
                   </div>
-                  <button className="p-1 rounded hover:bg-slate-800 text-slate-500">
+                  <button className="p-1 rounded hover:bg-slate-100 text-slate-500">
                     <Plus size={16} />
                   </button>
                 </div>
@@ -108,27 +108,27 @@ export default function BoardPage() {
                   {columnProjects.map(project => (
                     <div
                       key={project.id}
-                      className="rounded-lg border border-slate-800 bg-slate-900 p-3 cursor-grab hover:border-slate-700 transition-colors group"
+                      className="rounded-lg border border-slate-200 bg-white p-3 cursor-grab hover:border-slate-200 transition-colors group"
                     >
                       <div className="flex items-start gap-2">
                         <GripVertical size={14} className="text-slate-600 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             {project.is_favourite && (
-                              <Star size={12} className="text-amber-400 fill-amber-400" />
+                              <Star size={12} className="text-amber-600 fill-amber-400" />
                             )}
                             <span className="font-medium text-sm truncate">{project.name}</span>
                           </div>
                           <div className="text-xs text-slate-500 truncate">{project.domain}</div>
 
-                          <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-800">
+                          <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-200">
                             <div className="flex items-center gap-1 text-xs text-slate-500">
                               <Globe size={12} />
                               <span className={getHealthColor(project.health_score)}>
                                 {project.health_score ?? "-"}
                               </span>
                             </div>
-                            <button className="p-1 rounded hover:bg-slate-800 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button className="p-1 rounded hover:bg-slate-100 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">
                               <MoreVertical size={14} />
                             </button>
                           </div>
@@ -150,7 +150,7 @@ export default function BoardPage() {
       )}
 
       {/* Legend */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+      <div className="rounded-xl border border-slate-200 bg-white p-4">
         <h3 className="text-sm font-medium mb-3">Workflow Stages</h3>
         <div className="flex flex-wrap gap-4">
           {columns.map(column => (

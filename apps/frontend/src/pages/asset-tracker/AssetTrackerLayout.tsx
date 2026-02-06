@@ -64,15 +64,15 @@ export default function AssetTrackerLayout() {
   return (
     <div className="flex min-h-[calc(100vh-120px)] -m-6">
       {/* Mobile Header */}
-      <div className="md:hidden fixed top-[73px] left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-xl border-b border-slate-800 px-4 py-3">
+      <div className="md:hidden fixed top-[73px] left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-b border-slate-200 px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Package size={18} className="text-blue-400" />
+            <Package size={18} className="text-blue-600" />
             <span className="font-medium text-sm">{currentPage?.label || "Asset Tracker"}</span>
           </div>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 rounded-lg hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
           >
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -89,16 +89,16 @@ export default function AssetTrackerLayout() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:sticky top-0 left-0 z-50 md:z-auto h-screen md:h-[calc(100vh-120px)] w-64 bg-slate-900/95 md:bg-slate-900/60 backdrop-blur-xl border-r border-slate-800 transform transition-transform duration-300 md:transform-none ${
+        className={`fixed md:sticky top-0 left-0 z-50 md:z-auto h-screen md:h-[calc(100vh-120px)] w-64 bg-white md:bg-slate-50 backdrop-blur-xl border-r border-slate-200 transform transition-transform duration-300 md:transform-none ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="p-4 border-b border-slate-800">
+          <div className="p-4 border-b border-slate-200">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-blue-500/20">
-                <Package size={20} className="text-blue-400" />
+                <Package size={20} className="text-blue-600" />
               </div>
               <div>
                 <h2 className="font-semibold text-sm">Asset Tracker</h2>
@@ -123,8 +123,8 @@ export default function AssetTrackerLayout() {
                     className={({ isActive }) =>
                       `group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200 ${
                         isActive
-                          ? "bg-gradient-to-r from-blue-500/20 to-cyan-500/10 text-white"
-                          : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                          ? "bg-gradient-to-r from-blue-500/20 to-cyan-500/10 text-slate-900"
+                          : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
                       }`
                     }
                   >
@@ -133,8 +133,8 @@ export default function AssetTrackerLayout() {
                         <div
                           className={`p-1.5 rounded-lg transition-colors ${
                             isActive
-                              ? "bg-blue-500/20 text-blue-400"
-                              : "bg-slate-800/50 text-slate-500 group-hover:text-slate-300"
+                              ? "bg-blue-500/20 text-blue-600"
+                              : "bg-slate-100 text-slate-500 group-hover:text-slate-600"
                           }`}
                         >
                           <Icon size={16} />
@@ -149,10 +149,10 @@ export default function AssetTrackerLayout() {
           </nav>
 
           {/* Footer */}
-          <div className="p-4 border-t border-slate-800">
+          <div className="p-4 border-t border-slate-200">
             <NavLink
               to="/dashboard"
-              className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+              className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors"
             >
               <ArrowLeft size={16} />
               Back to Dashboard

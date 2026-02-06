@@ -118,7 +118,7 @@ export default function NicoGeoGenerate() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-semibold flex items-center gap-3">
-          <Sparkles className="text-teal-400" />
+          <Sparkles className="text-teal-600" />
           Generate GEO Content
         </h1>
         <p className="text-sm text-slate-400 mt-1">
@@ -129,7 +129,7 @@ export default function NicoGeoGenerate() {
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Input Form */}
         <div className="space-y-4">
-          <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+          <div className="rounded-xl border border-slate-200 bg-white p-6">
             <h2 className="text-lg font-semibold mb-4">Business Input</h2>
 
             {/* Business Name */}
@@ -147,7 +147,7 @@ export default function NicoGeoGenerate() {
                   })
                 }
                 placeholder="Acme Services LLC"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-teal-500"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-teal-500"
               />
             </div>
 
@@ -166,7 +166,7 @@ export default function NicoGeoGenerate() {
                   })
                 }
                 placeholder="Austin"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-teal-500"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-teal-500"
               />
             </div>
 
@@ -184,7 +184,7 @@ export default function NicoGeoGenerate() {
                   })
                 }
                 placeholder="USA"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-teal-500"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-teal-500"
               />
             </div>
 
@@ -200,12 +200,12 @@ export default function NicoGeoGenerate() {
                   value={area}
                   onChange={(e) => updateServiceArea(i, e.target.value)}
                   placeholder="e.g., Austin, Round Rock"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-teal-500 mb-2"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-teal-500 mb-2"
                 />
               ))}
               <button
                 onClick={addServiceArea}
-                className="text-sm text-teal-400 hover:text-teal-300"
+                className="text-sm text-teal-600 hover:text-teal-300"
               >
                 + Add service area
               </button>
@@ -223,12 +223,12 @@ export default function NicoGeoGenerate() {
                   value={service}
                   onChange={(e) => updatePrimaryService(i, e.target.value)}
                   placeholder="e.g., Consulting, Web Design"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-teal-500 mb-2"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-teal-500 mb-2"
                 />
               ))}
               <button
                 onClick={addPrimaryService}
-                className="text-sm text-teal-400 hover:text-teal-300"
+                className="text-sm text-teal-600 hover:text-teal-300"
               >
                 + Add service
               </button>
@@ -236,8 +236,8 @@ export default function NicoGeoGenerate() {
 
             {/* Constraints */}
             <div className="flex items-center gap-3 p-3 rounded-lg bg-teal-500/10 border border-teal-500/20">
-              <AlertCircle size={16} className="text-teal-400" />
-              <span className="text-sm text-teal-400">
+              <AlertCircle size={16} className="text-teal-600" />
+              <span className="text-sm text-teal-600">
                 Anti-hallucination mode enabled - output derived solely from input
               </span>
             </div>
@@ -249,7 +249,7 @@ export default function NicoGeoGenerate() {
             >
               {generating ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-slate-200/30 border-t-white rounded-full animate-spin" />
                   Generating...
                 </>
               ) : (
@@ -264,19 +264,19 @@ export default function NicoGeoGenerate() {
 
         {/* Output */}
         <div className="space-y-4">
-          <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6 min-h-[400px]">
+          <div className="rounded-xl border border-slate-200 bg-white p-6 min-h-[400px]">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold">Output</h2>
               {result && (
                 <div className="flex gap-2">
                   <button
                     onClick={copyToClipboard}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm"
                   >
                     {copied ? <Check size={14} /> : <Copy size={14} />}
                     {copied ? "Copied" : "Copy"}
                   </button>
-                  <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm">
+                  <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">
                     <Download size={14} />
                     Export
                   </button>
@@ -298,8 +298,8 @@ export default function NicoGeoGenerate() {
                       onClick={() => setActiveTab(tab.id as typeof activeTab)}
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
                         activeTab === tab.id
-                          ? "bg-teal-500/20 text-teal-400"
-                          : "text-slate-400 hover:text-white hover:bg-slate-800"
+                          ? "bg-teal-500/20 text-teal-600"
+                          : "text-slate-400 hover:text-slate-900 hover:bg-slate-100"
                       }`}
                     >
                       <tab.icon size={14} />
@@ -309,8 +309,8 @@ export default function NicoGeoGenerate() {
                 </div>
 
                 {/* Content */}
-                <div className="rounded-lg bg-slate-800/50 p-4 overflow-auto max-h-[500px]">
-                  <pre className="text-sm text-slate-300 font-mono whitespace-pre-wrap">
+                <div className="rounded-lg bg-slate-100 p-4 overflow-auto max-h-[500px]">
+                  <pre className="text-sm text-slate-600 font-mono whitespace-pre-wrap">
                     {JSON.stringify(result.results, null, 2)}
                   </pre>
                 </div>
@@ -318,19 +318,19 @@ export default function NicoGeoGenerate() {
                 {/* Summary */}
                 <div className="mt-4 grid grid-cols-3 gap-3">
                   <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-center">
-                    <div className="text-lg font-semibold text-emerald-400">
+                    <div className="text-lg font-semibold text-emerald-600">
                       {result.summary.answerCapsulesCount}
                     </div>
                     <div className="text-xs text-slate-500">Answer Capsules</div>
                   </div>
                   <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20 text-center">
-                    <div className="text-lg font-semibold text-blue-400">
+                    <div className="text-lg font-semibold text-blue-600">
                       {result.summary.faqsCount}
                     </div>
                     <div className="text-xs text-slate-500">FAQs Generated</div>
                   </div>
                   <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/20 text-center">
-                    <div className="text-lg font-semibold text-purple-400">
+                    <div className="text-lg font-semibold text-purple-600">
                       {result.summary.schemaGenerated ? "Yes" : "No"}
                     </div>
                     <div className="text-xs text-slate-500">Schema.org</div>

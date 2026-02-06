@@ -81,11 +81,11 @@ export default function DifficultyAnalysis() {
   };
 
   const getDifficultyColor = (difficulty: number | null) => {
-    if (difficulty === null) return "bg-slate-700 text-slate-400";
+    if (difficulty === null) return "bg-slate-200 text-slate-400";
     if (difficulty <= 30) return "bg-green-500/20 text-green-400";
     if (difficulty <= 50) return "bg-yellow-500/20 text-yellow-400";
-    if (difficulty <= 70) return "bg-orange-500/20 text-orange-400";
-    return "bg-red-500/20 text-red-400";
+    if (difficulty <= 70) return "bg-orange-500/20 text-orange-600";
+    return "bg-red-500/20 text-red-600";
   };
 
   const getDifficultyLabel = (difficulty: number | null) => {
@@ -104,21 +104,21 @@ export default function DifficultyAnalysis() {
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
       {feedback && (
-        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
 
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
-          <Target className="h-6 w-6 text-blue-400" />
+          <Target className="h-6 w-6 text-blue-600" />
           Keyword Difficulty
         </h1>
         <p className="text-slate-400">Analyze how hard it is to rank for specific keywords</p>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white">Analyze Keywords</h2>
           <p className="text-sm text-slate-400">Enter keywords to check their ranking difficulty</p>
         </div>
@@ -128,15 +128,15 @@ export default function DifficultyAnalysis() {
             value={keywords}
             onChange={(e) => setKeywords(e.target.value)}
             rows={5}
-            className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+            className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
           />
           <div className="flex gap-4 items-end">
             <div className="w-40">
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Country</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Country</label>
               <select
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {COUNTRIES.map((c) => (
                   <option key={c.code} value={c.code}>{c.name}</option>
@@ -146,7 +146,7 @@ export default function DifficultyAnalysis() {
             <button
               onClick={handleAnalyze}
               disabled={isLoading}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
             >
               {isLoading ? (
                 <>
@@ -168,13 +168,13 @@ export default function DifficultyAnalysis() {
       </div>
 
       {results.length > 0 && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+          <div className="p-4 border-b border-slate-200 flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-white">Difficulty Results</h2>
               <p className="text-sm text-slate-400">{results.length} keywords analyzed</p>
             </div>
-            <button onClick={handleExport} className="px-3 py-1.5 text-sm border border-slate-700 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center gap-1 transition-colors">
+            <button onClick={handleExport} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center gap-1 transition-colors">
               <Download className="h-4 w-4" />
               Export CSV
             </button>
@@ -182,7 +182,7 @@ export default function DifficultyAnalysis() {
           <div className="p-6 overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-700">
+                <tr className="border-b border-slate-200">
                   <th className="text-left p-3 text-slate-400 text-sm font-medium">Keyword</th>
                   <th className="text-center p-3 text-slate-400 text-sm font-medium">Difficulty</th>
                   <th className="text-right p-3 text-slate-400 text-sm font-medium">Volume</th>
@@ -192,11 +192,11 @@ export default function DifficultyAnalysis() {
               </thead>
               <tbody>
                 {results.map((r, i) => (
-                  <tr key={i} className="border-b border-slate-800">
+                  <tr key={i} className="border-b border-slate-200">
                     <td className="p-3 text-white font-medium">{r.keyword}</td>
                     <td className="p-3 text-center">
                       <div className="flex items-center justify-center gap-2">
-                        <div className="w-20 h-2 bg-slate-700 rounded-full overflow-hidden">
+                        <div className="w-20 h-2 bg-slate-200 rounded-full overflow-hidden">
                           <div
                             className={`h-full ${r.difficulty !== null && r.difficulty <= 30 ? "bg-green-500" : r.difficulty !== null && r.difficulty <= 50 ? "bg-yellow-500" : r.difficulty !== null && r.difficulty <= 70 ? "bg-orange-500" : "bg-red-500"}`}
                             style={{ width: `${r.difficulty || 0}%` }}
@@ -207,8 +207,8 @@ export default function DifficultyAnalysis() {
                         </span>
                       </div>
                     </td>
-                    <td className="p-3 text-right text-slate-300">{formatNumber(r.search_volume)}</td>
-                    <td className="p-3 text-right text-slate-300">{r.cpc !== null ? `$${r.cpc.toFixed(2)}` : "-"}</td>
+                    <td className="p-3 text-right text-slate-600">{formatNumber(r.search_volume)}</td>
+                    <td className="p-3 text-right text-slate-600">{r.cpc !== null ? `$${r.cpc.toFixed(2)}` : "-"}</td>
                     <td className="p-3 text-center">
                       <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded ${getDifficultyColor(r.difficulty)}`}>
                         {r.difficulty !== null && r.difficulty <= 50 ? (
@@ -228,7 +228,7 @@ export default function DifficultyAnalysis() {
       )}
 
       {/* Legend */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
         <h3 className="text-sm font-medium text-white mb-3">Difficulty Scale</h3>
         <div className="flex flex-wrap gap-4">
           {[
@@ -246,7 +246,7 @@ export default function DifficultyAnalysis() {
       </div>
 
       {results.length === 0 && !isLoading && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-12">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-12">
           <div className="text-center space-y-4">
             <Target className="h-12 w-12 mx-auto text-slate-600" />
             <p className="font-medium text-white">Analyze keyword difficulty</p>

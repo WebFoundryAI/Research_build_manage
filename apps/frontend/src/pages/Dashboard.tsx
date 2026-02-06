@@ -12,7 +12,7 @@ const COLORS = {
 
 function Card({ title, value, sub, color }: { title: string; value: string | number; sub: string; color?: string }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
+    <div className="rounded-2xl border border-slate-200 bg-white p-4">
       <div className="text-xs opacity-70">{title}</div>
       <div className={`mt-2 text-2xl font-semibold ${color || ""}`}>{value}</div>
       <div className="mt-1 text-xs opacity-60">{sub}</div>
@@ -22,17 +22,17 @@ function Card({ title, value, sub, color }: { title: string; value: string | num
 
 function StatusBadge({ isLive }: { isLive?: boolean }) {
   if (isLive === undefined) {
-    return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-slate-700 text-slate-300">Unknown</span>;
+    return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-slate-200 text-slate-600">Unknown</span>;
   }
   if (isLive) {
-    return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-emerald-900/50 text-emerald-400">Live</span>;
+    return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-emerald-50 text-emerald-600">Live</span>;
   }
-  return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-red-900/50 text-red-400">Down</span>;
+  return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-red-50 text-red-600">Down</span>;
 }
 
 function SeoScoreBadge({ score }: { score?: number }) {
   if (score === undefined) return <span className="text-slate-500">—</span>;
-  const color = score >= 80 ? "text-emerald-400" : score >= 50 ? "text-amber-400" : "text-red-400";
+  const color = score >= 80 ? "text-emerald-600" : score >= 50 ? "text-amber-600" : "text-red-600";
   return <span className={`font-semibold ${color}`}>{score}</span>;
 }
 
@@ -129,7 +129,7 @@ export default function Dashboard() {
         <button
           onClick={loadData}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-sm"
         >
           <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
           Refresh
@@ -137,7 +137,7 @@ export default function Dashboard() {
       </div>
 
       {error && (
-        <div className="rounded-xl bg-red-900/20 border border-red-800 p-4 text-red-400">
+        <div className="rounded-xl bg-red-50 border border-red-800 p-4 text-red-600">
           {error}
         </div>
       )}
@@ -145,15 +145,15 @@ export default function Dashboard() {
       {/* Summary Cards */}
       <div className="grid gap-3 md:grid-cols-4">
         <Card title="Total Sites" value={summary.total} sub="in your portfolio" />
-        <Card title="Live" value={summary.live} sub="passing uptime checks" color="text-emerald-400" />
-        <Card title="Down" value={summary.down} sub="need attention" color="text-red-400" />
-        <Card title="Avg SEO Score" value={summary.avgSeoScore || "—"} sub="across all sites" color="text-blue-400" />
+        <Card title="Live" value={summary.live} sub="passing uptime checks" color="text-emerald-600" />
+        <Card title="Down" value={summary.down} sub="need attention" color="text-red-600" />
+        <Card title="Avg SEO Score" value={summary.avgSeoScore || "—"} sub="across all sites" color="text-blue-600" />
       </div>
 
       {/* Charts Row */}
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Fleet Status Pie Chart */}
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4">
           <div className="text-sm font-semibold mb-4">Fleet Status</div>
           {summary.total === 0 ? (
             <div className="h-64 flex items-center justify-center text-slate-500">
@@ -185,7 +185,7 @@ export default function Dashboard() {
         </div>
 
         {/* SEO Score Distribution */}
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4">
           <div className="text-sm font-semibold mb-4">SEO Score Distribution</div>
           {summary.total === 0 ? (
             <div className="h-64 flex items-center justify-center text-slate-500">
@@ -208,10 +208,10 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Websites Table */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
+      <div className="rounded-2xl border border-slate-200 bg-white p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="text-sm font-semibold">Recent Activity</div>
-          <a href="/websites" className="text-xs text-blue-400 hover:underline">View all websites →</a>
+          <a href="/websites" className="text-xs text-blue-600 hover:underline">View all websites →</a>
         </div>
 
         {loading ? (
@@ -220,7 +220,7 @@ export default function Dashboard() {
           <div className="py-8 text-center text-slate-500">
             <Globe size={32} className="mx-auto mb-2 opacity-50" />
             <p>No websites monitored yet.</p>
-            <a href="/websites" className="text-blue-400 hover:underline text-sm">Add your first website →</a>
+            <a href="/websites" className="text-blue-600 hover:underline text-sm">Add your first website →</a>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -239,9 +239,9 @@ export default function Dashboard() {
                   const latestStatus = website.status_checks?.[0];
                   const latestSeo = website.seo_health_checks?.[0];
                   return (
-                    <tr key={website.id} className="border-t border-slate-800/60">
+                    <tr key={website.id} className="border-t border-slate-200">
                       <td className="py-3 pr-4">
-                        <a href="/websites" className="hover:text-blue-400">
+                        <a href="/websites" className="hover:text-blue-600">
                           <div className="font-medium">{website.name || website.url}</div>
                           {website.name && <div className="text-xs opacity-60">{website.url}</div>}
                         </a>
@@ -271,11 +271,11 @@ export default function Dashboard() {
       <div className="grid gap-4 md:grid-cols-3">
         <a
           href="/websites"
-          className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4 hover:bg-slate-800/60 transition-colors"
+          className="rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-100 transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-900/50">
-              <Globe size={20} className="text-blue-400" />
+            <div className="p-2 rounded-lg bg-blue-50">
+              <Globe size={20} className="text-blue-600" />
             </div>
             <div>
               <div className="font-medium">Website Monitor</div>
@@ -285,11 +285,11 @@ export default function Dashboard() {
         </a>
         <a
           href="/research"
-          className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4 hover:bg-slate-800/60 transition-colors"
+          className="rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-100 transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-900/50">
-              <TrendingUp size={20} className="text-emerald-400" />
+            <div className="p-2 rounded-lg bg-emerald-50">
+              <TrendingUp size={20} className="text-emerald-600" />
             </div>
             <div>
               <div className="font-medium">Research Tools</div>
@@ -299,11 +299,11 @@ export default function Dashboard() {
         </a>
         <a
           href="/settings"
-          className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4 hover:bg-slate-800/60 transition-colors"
+          className="rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-100 transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-purple-900/50">
-              <Shield size={20} className="text-purple-400" />
+            <div className="p-2 rounded-lg bg-purple-50">
+              <Shield size={20} className="text-purple-600" />
             </div>
             <div>
               <div className="font-medium">Settings</div>

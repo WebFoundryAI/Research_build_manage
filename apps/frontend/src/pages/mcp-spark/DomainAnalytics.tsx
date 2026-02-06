@@ -80,28 +80,28 @@ export default function DomainAnalytics() {
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
       {feedback && (
-        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
 
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
-          <BarChart className="h-6 w-6 text-blue-400" />
+          <BarChart className="h-6 w-6 text-blue-600" />
           Domain Analytics
         </h1>
         <p className="text-slate-400">Get comprehensive SEO metrics for any domain</p>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white">Domain Analysis</h2>
           <p className="text-sm text-slate-400">Analyze traffic, rankings, backlinks, and top keywords</p>
         </div>
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2">
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Domain</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Domain</label>
               <div className="relative">
                 <Globe className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
                 <input
@@ -109,16 +109,16 @@ export default function DomainAnalytics() {
                   value={domain}
                   onChange={(e) => setDomain(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleAnalyze()}
-                  className="w-full pl-9 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-9 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Location</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Location</label>
               <select
                 value={locationCode}
                 onChange={(e) => setLocationCode(Number(e.target.value))}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {LOCATION_OPTIONS.map((loc) => (
                   <option key={loc.code} value={loc.code}>{loc.name}</option>
@@ -130,7 +130,7 @@ export default function DomainAnalytics() {
           <button
             onClick={handleAnalyze}
             disabled={isLoading}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
           >
             {isLoading ? (
               <>
@@ -151,30 +151,30 @@ export default function DomainAnalytics() {
         <>
           {/* Overview Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Award className="h-4 w-4 text-blue-400" />
+                <Award className="h-4 w-4 text-blue-600" />
                 <span className="text-sm text-slate-400">Domain Rank</span>
               </div>
               <div className="text-2xl font-bold text-white">{formatNumber(metrics.domain_rank)}</div>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <div className="flex items-center gap-2 mb-2">
                 <TrendingUp className="h-4 w-4 text-green-400" />
                 <span className="text-sm text-slate-400">Organic Traffic</span>
               </div>
               <div className="text-2xl font-bold text-white">{formatNumber(metrics.organic_traffic)}</div>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Target className="h-4 w-4 text-blue-400" />
+                <Target className="h-4 w-4 text-blue-600" />
                 <span className="text-sm text-slate-400">Organic Keywords</span>
               </div>
               <div className="text-2xl font-bold text-white">{formatNumber(metrics.organic_keywords)}</div>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Link2 className="h-4 w-4 text-purple-400" />
+                <Link2 className="h-4 w-4 text-purple-600" />
                 <span className="text-sm text-slate-400">Backlinks</span>
               </div>
               <div className="text-2xl font-bold text-white">{formatNumber(metrics.backlinks)}</div>
@@ -182,15 +182,15 @@ export default function DomainAnalytics() {
           </div>
 
           {/* Top Keywords */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-            <div className="p-4 border-b border-slate-800">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+            <div className="p-4 border-b border-slate-200">
               <h2 className="text-lg font-semibold text-white">Top Ranking Keywords</h2>
               <p className="text-sm text-slate-400">Keywords driving the most traffic to this domain</p>
             </div>
             <div className="p-6 space-y-4">
               {metrics.top_keywords.slice(0, 10).map((kw, idx) => (
                 <div key={idx} className="flex items-center gap-4">
-                  <span className={`w-10 text-center px-2 py-0.5 text-xs rounded ${kw.position <= 3 ? "bg-green-500/20 text-green-400" : "bg-slate-700 text-slate-400"}`}>
+                  <span className={`w-10 text-center px-2 py-0.5 text-xs rounded ${kw.position <= 3 ? "bg-green-500/20 text-green-400" : "bg-slate-200 text-slate-400"}`}>
                     {kw.position}
                   </span>
                   <div className="flex-1">
@@ -200,8 +200,8 @@ export default function DomainAnalytics() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-medium text-slate-300">{kw.traffic_share.toFixed(1)}%</div>
-                    <div className="w-20 h-1 bg-slate-700 rounded-full overflow-hidden">
+                    <div className="text-sm font-medium text-slate-600">{kw.traffic_share.toFixed(1)}%</div>
+                    <div className="w-20 h-1 bg-slate-200 rounded-full overflow-hidden">
                       <div className="h-full bg-blue-500" style={{ width: `${Math.min(kw.traffic_share, 100)}%` }} />
                     </div>
                   </div>
@@ -216,7 +216,7 @@ export default function DomainAnalytics() {
       )}
 
       {!metrics && !isLoading && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-12">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-12">
           <div className="text-center space-y-4">
             <BarChart className="h-12 w-12 mx-auto text-slate-600" />
             <p className="font-medium text-white">Analyze any domain</p>

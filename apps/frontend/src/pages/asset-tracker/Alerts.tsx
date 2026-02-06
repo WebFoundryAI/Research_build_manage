@@ -106,13 +106,13 @@ export default function AlertsPage() {
   }
 
   function getAlertIcon(type: string) {
-    if (type === "critical") return <XCircle size={18} className="text-red-400" />;
-    if (type === "warning") return <AlertTriangle size={18} className="text-amber-400" />;
-    return <CheckCircle size={18} className="text-blue-400" />;
+    if (type === "critical") return <XCircle size={18} className="text-red-600" />;
+    if (type === "warning") return <AlertTriangle size={18} className="text-amber-600" />;
+    return <CheckCircle size={18} className="text-blue-600" />;
   }
 
   function getAlertBg(type: string, read: boolean) {
-    if (read) return "bg-slate-900/40 border-slate-800";
+    if (read) return "bg-white border-slate-200";
     if (type === "critical") return "bg-red-500/5 border-red-500/20";
     if (type === "warning") return "bg-amber-500/5 border-amber-500/20";
     return "bg-blue-500/5 border-blue-500/20";
@@ -134,7 +134,7 @@ export default function AlertsPage() {
           <h1 className="text-2xl font-semibold flex items-center gap-3">
             Alerts
             {unreadCount > 0 && (
-              <span className="px-2 py-0.5 text-sm rounded-full bg-red-500/20 text-red-400">
+              <span className="px-2 py-0.5 text-sm rounded-full bg-red-500/20 text-red-600">
                 {unreadCount} new
               </span>
             )}
@@ -146,7 +146,7 @@ export default function AlertsPage() {
         {unreadCount > 0 && (
           <button
             onClick={markAllAsRead}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-white font-medium text-sm transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-white font-medium text-sm transition-colors"
           >
             <Check size={16} />
             Mark All Read
@@ -168,8 +168,8 @@ export default function AlertsPage() {
             onClick={() => setFilter(f.id)}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
               filter === f.id
-                ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/50 border border-transparent"
+                ? "bg-blue-500/20 text-blue-600 border border-blue-500/30"
+                : "text-slate-400 hover:text-slate-900 hover:bg-slate-100 border border-transparent"
             }`}
           >
             {f.label}
@@ -221,7 +221,7 @@ export default function AlertsPage() {
                       {!alert.read && (
                         <button
                           onClick={() => markAsRead(alert.id)}
-                          className="p-2 rounded-lg hover:bg-slate-800 text-slate-500 hover:text-white transition-colors"
+                          className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors"
                           title="Mark as read"
                         >
                           <Check size={16} />
@@ -229,7 +229,7 @@ export default function AlertsPage() {
                       )}
                       <button
                         onClick={() => deleteAlert(alert.id)}
-                        className="p-2 rounded-lg hover:bg-red-500/20 text-slate-500 hover:text-red-400 transition-colors"
+                        className="p-2 rounded-lg hover:bg-red-500/20 text-slate-500 hover:text-red-600 transition-colors"
                         title="Delete"
                       >
                         <Trash2 size={16} />

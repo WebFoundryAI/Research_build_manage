@@ -129,7 +129,7 @@ function SidebarSection({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full flex items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors ${
-          hasActiveItem ? "text-indigo-400 bg-indigo-500/10" : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/50"
+          hasActiveItem ? "text-indigo-600 bg-indigo-500/10" : "text-slate-500 hover:text-slate-600 hover:bg-slate-100"
         }`}
       >
         {title}
@@ -145,8 +145,8 @@ function SidebarSection({
               className={({ isActive }) =>
                 `flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors ${
                   isActive
-                    ? "bg-indigo-500/20 text-indigo-400"
-                    : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                    ? "bg-indigo-500/20 text-indigo-600"
+                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
                 }`
               }
             >
@@ -176,13 +176,13 @@ export default function McpSparkLayout() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-slate-900/95 border-r border-slate-800 transform transition-transform lg:translate-x-0 ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 transform transition-transform lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="p-4 border-b border-slate-800">
+          <div className="p-4 border-b border-slate-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="p-2 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
@@ -195,7 +195,7 @@ export default function McpSparkLayout() {
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="lg:hidden p-1 rounded hover:bg-slate-800"
+                className="lg:hidden p-1 rounded hover:bg-slate-100"
               >
                 <X size={18} />
               </button>
@@ -215,10 +215,10 @@ export default function McpSparkLayout() {
           </nav>
 
           {/* Footer */}
-          <div className="p-4 border-t border-slate-800">
+          <div className="p-4 border-t border-slate-200">
             <button
               onClick={() => navigate("/dashboard")}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-700 text-sm hover:bg-slate-800 transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-sm hover:bg-slate-100 transition-colors"
             >
               <ArrowLeft size={16} />
               Back to Dashboard
@@ -230,10 +230,10 @@ export default function McpSparkLayout() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile Header */}
-        <div className="lg:hidden flex items-center gap-3 p-4 border-b border-slate-800 bg-slate-900/50">
+        <div className="lg:hidden flex items-center gap-3 p-4 border-b border-slate-200 bg-slate-50">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-lg hover:bg-slate-800"
+            className="p-2 rounded-lg hover:bg-slate-100"
           >
             <Menu size={20} />
           </button>

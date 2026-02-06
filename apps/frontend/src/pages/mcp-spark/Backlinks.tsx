@@ -77,28 +77,28 @@ export default function Backlinks() {
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
       {feedback && (
-        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
 
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
-          <Link2 className="h-6 w-6 text-blue-400" />
+          <Link2 className="h-6 w-6 text-blue-600" />
           Backlink Analysis
         </h1>
         <p className="text-slate-400">Analyze backlinks and referring domains for any website</p>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white">Domain Backlinks</h2>
           <p className="text-sm text-slate-400">Enter a domain to analyze its backlink profile</p>
         </div>
         <div className="p-6 space-y-4">
           <div className="flex gap-4">
             <div className="flex-1">
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Domain</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Domain</label>
               <div className="relative">
                 <Globe className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
                 <input
@@ -106,7 +106,7 @@ export default function Backlinks() {
                   value={domain}
                   onChange={(e) => setDomain(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleAnalyze()}
-                  className="w-full pl-9 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-9 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -115,7 +115,7 @@ export default function Backlinks() {
           <button
             onClick={handleAnalyze}
             disabled={isLoading}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
           >
             {isLoading ? (
               <>
@@ -136,31 +136,31 @@ export default function Backlinks() {
         <>
           {/* Summary Cards */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-center">
-              <div className="text-2xl font-bold text-blue-400">{formatNumber(summary.total_backlinks)}</div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
+              <div className="text-2xl font-bold text-blue-600">{formatNumber(summary.total_backlinks)}</div>
               <p className="text-xs text-slate-400">Total Backlinks</p>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-center">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
               <div className="text-2xl font-bold text-white">{formatNumber(summary.referring_domains)}</div>
               <p className="text-xs text-slate-400">Referring Domains</p>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-center">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
               <div className="text-2xl font-bold text-white">{formatNumber(summary.referring_ips)}</div>
               <p className="text-xs text-slate-400">Referring IPs</p>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-center">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
               <div className="text-2xl font-bold text-green-400">{formatNumber(summary.dofollow_links)}</div>
               <p className="text-xs text-slate-400">Dofollow Links</p>
             </div>
-            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-center">
-              <div className="text-2xl font-bold text-orange-400">{formatNumber(summary.nofollow_links)}</div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
+              <div className="text-2xl font-bold text-orange-600">{formatNumber(summary.nofollow_links)}</div>
               <p className="text-xs text-slate-400">Nofollow Links</p>
             </div>
           </div>
 
           {/* Backlinks Table */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-            <div className="p-4 border-b border-slate-800">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+            <div className="p-4 border-b border-slate-200">
               <h2 className="text-lg font-semibold text-white flex items-center gap-2">
                 <ArrowUpRight className="h-5 w-5" />
                 Top Backlinks
@@ -169,7 +169,7 @@ export default function Backlinks() {
             <div className="p-6 max-h-96 overflow-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-slate-700">
+                  <tr className="border-b border-slate-200">
                     <th className="text-left p-3 text-slate-400 text-sm font-medium">Source Domain</th>
                     <th className="text-left p-3 text-slate-400 text-sm font-medium">Anchor Text</th>
                     <th className="text-center p-3 text-slate-400 text-sm font-medium">Domain Rank</th>
@@ -180,7 +180,7 @@ export default function Backlinks() {
                 </thead>
                 <tbody>
                   {backlinks.slice(0, 50).map((link, idx) => (
-                    <tr key={idx} className="border-b border-slate-800">
+                    <tr key={idx} className="border-b border-slate-200">
                       <td className="p-3">
                         <div className="flex items-center gap-2">
                           <Globe className="h-4 w-4 text-slate-500" />
@@ -188,10 +188,10 @@ export default function Backlinks() {
                         </div>
                       </td>
                       <td className="p-3">
-                        <span className="text-slate-300 line-clamp-1 max-w-xs">{link.anchor_text || "-"}</span>
+                        <span className="text-slate-600 line-clamp-1 max-w-xs">{link.anchor_text || "-"}</span>
                       </td>
                       <td className="p-3 text-center">
-                        <span className="px-2 py-0.5 text-xs bg-slate-700 rounded text-slate-300">{link.domain_rank || "N/A"}</span>
+                        <span className="px-2 py-0.5 text-xs bg-slate-200 rounded text-slate-600">{link.domain_rank || "N/A"}</span>
                       </td>
                       <td className="p-3 text-center">
                         {link.is_dofollow ? (
@@ -200,7 +200,7 @@ export default function Backlinks() {
                             Dofollow
                           </span>
                         ) : (
-                          <span className="px-2 py-0.5 text-xs bg-slate-700 text-slate-400 rounded">Nofollow</span>
+                          <span className="px-2 py-0.5 text-xs bg-slate-200 text-slate-400 rounded">Nofollow</span>
                         )}
                       </td>
                       <td className="p-3 text-sm text-slate-500">
@@ -211,7 +211,7 @@ export default function Backlinks() {
                           href={link.source_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-400 hover:text-blue-300"
+                          className="text-blue-600 hover:text-blue-300"
                         >
                           <ExternalLink className="h-4 w-4" />
                         </a>
@@ -229,7 +229,7 @@ export default function Backlinks() {
       )}
 
       {!summary && !isLoading && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-12">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-12">
           <div className="text-center space-y-4">
             <Link2 className="h-12 w-12 mx-auto text-slate-600" />
             <p className="font-medium text-white">Analyze backlink profile</p>

@@ -64,15 +64,15 @@ export default function MapTool() {
       <h1 className="text-3xl font-bold mb-6 text-white">URL Map</h1>
 
       {feedback && (
-        <div className={`mb-4 p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`mb-4 p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6 mb-6">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 mb-6">
         <form onSubmit={handleMap} className="space-y-4">
           <div>
-            <label htmlFor="url" className="block text-sm font-medium text-slate-300 mb-2">Website URL</label>
+            <label htmlFor="url" className="block text-sm font-medium text-slate-600 mb-2">Website URL</label>
             <input
               id="url"
               type="url"
@@ -80,14 +80,14 @@ export default function MapTool() {
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://example.com"
               required
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             Map Site
@@ -96,18 +96,18 @@ export default function MapTool() {
       </div>
 
       {urls.length > 0 && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
             <h2 className="text-xl font-semibold text-white">
               Found {filteredUrls.length} URLs
               {filter && ` (filtered from ${urls.length})`}
             </h2>
             <div className="flex gap-2">
-              <button onClick={copyURLs} className="px-3 py-1.5 text-sm border border-slate-700 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center gap-2 transition-colors">
+              <button onClick={copyURLs} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center gap-2 transition-colors">
                 <Copy className="h-4 w-4" />
                 Copy URLs
               </button>
-              <button onClick={exportCSV} className="px-3 py-1.5 text-sm border border-slate-700 rounded-lg text-slate-300 hover:bg-slate-800 flex items-center gap-2 transition-colors">
+              <button onClick={exportCSV} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center gap-2 transition-colors">
                 <Download className="h-4 w-4" />
                 Export CSV
               </button>
@@ -120,13 +120,13 @@ export default function MapTool() {
               placeholder="Filter URLs..."
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="border-b border-slate-700">
+              <thead className="border-b border-slate-200">
                 <tr>
                   <th className="text-left p-2 text-slate-400 text-sm">#</th>
                   <th className="text-left p-2 text-slate-400 text-sm">URL</th>
@@ -135,10 +135,10 @@ export default function MapTool() {
               </thead>
               <tbody>
                 {filteredUrls.map((urlItem, idx) => (
-                  <tr key={idx} className="border-b border-slate-800 hover:bg-slate-800/50">
+                  <tr key={idx} className="border-b border-slate-200 hover:bg-slate-100">
                     <td className="p-2 text-slate-500">{idx + 1}</td>
                     <td className="p-2">
-                      <a href={urlItem} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline flex items-center gap-1 break-all">
+                      <a href={urlItem} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-1 break-all">
                         {urlItem}
                         <ExternalLink className="h-3 w-3 flex-shrink-0" />
                       </a>
@@ -149,7 +149,7 @@ export default function MapTool() {
                           navigator.clipboard.writeText(urlItem);
                           showFeedback("success", "URL copied to clipboard");
                         }}
-                        className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded transition-colors"
+                        className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-200 rounded transition-colors"
                       >
                         <Copy className="h-4 w-4" />
                       </button>

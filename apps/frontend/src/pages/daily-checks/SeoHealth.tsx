@@ -103,9 +103,9 @@ export default function SeoHealthPage() {
   }
 
   function getScoreColor(score: number) {
-    if (score >= 70) return "text-emerald-400";
-    if (score >= 40) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 70) return "text-emerald-600";
+    if (score >= 40) return "text-amber-600";
+    return "text-red-600";
   }
 
   function getScoreBg(score: number) {
@@ -118,11 +118,11 @@ export default function SeoHealthPage() {
     return (
       <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${passed ? "bg-emerald-500/10" : "bg-red-500/10"}`}>
         {passed ? (
-          <CheckCircle size={16} className="text-emerald-400" />
+          <CheckCircle size={16} className="text-emerald-600" />
         ) : (
-          <XCircle size={16} className="text-red-400" />
+          <XCircle size={16} className="text-red-600" />
         )}
-        <span className={passed ? "text-emerald-400" : "text-red-400"}>{label}</span>
+        <span className={passed ? "text-emerald-600" : "text-red-600"}>{label}</span>
       </div>
     );
   }
@@ -178,7 +178,7 @@ export default function SeoHealthPage() {
             <div
               key={site.id}
               onClick={() => setSelectedSite(site)}
-              className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 hover:border-slate-700 transition-colors cursor-pointer"
+              className="rounded-xl border border-slate-200 bg-white p-4 hover:border-slate-200 transition-colors cursor-pointer"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
@@ -188,7 +188,7 @@ export default function SeoHealthPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="text-xs text-slate-500 hover:text-slate-300 flex items-center gap-1"
+                    className="text-xs text-slate-500 hover:text-slate-600 flex items-center gap-1"
                   >
                     {site.website_url}
                     <ExternalLink size={10} />
@@ -202,16 +202,16 @@ export default function SeoHealthPage() {
               </div>
 
               <div className="grid grid-cols-3 gap-2 mb-4">
-                <div className="text-center p-2 rounded-lg bg-slate-800/50">
-                  <FileText size={16} className={`mx-auto mb-1 ${site.robots_txt_exists ? "text-emerald-400" : "text-red-400"}`} />
+                <div className="text-center p-2 rounded-lg bg-slate-100">
+                  <FileText size={16} className={`mx-auto mb-1 ${site.robots_txt_exists ? "text-emerald-600" : "text-red-600"}`} />
                   <span className="text-[10px] text-slate-500">robots.txt</span>
                 </div>
-                <div className="text-center p-2 rounded-lg bg-slate-800/50">
-                  <Map size={16} className={`mx-auto mb-1 ${site.sitemap_exists ? "text-emerald-400" : "text-red-400"}`} />
+                <div className="text-center p-2 rounded-lg bg-slate-100">
+                  <Map size={16} className={`mx-auto mb-1 ${site.sitemap_exists ? "text-emerald-600" : "text-red-600"}`} />
                   <span className="text-[10px] text-slate-500">sitemap</span>
                 </div>
-                <div className="text-center p-2 rounded-lg bg-slate-800/50">
-                  <Lock size={16} className={`mx-auto mb-1 ${site.ssl_valid ? "text-emerald-400" : "text-red-400"}`} />
+                <div className="text-center p-2 rounded-lg bg-slate-100">
+                  <Lock size={16} className={`mx-auto mb-1 ${site.ssl_valid ? "text-emerald-600" : "text-red-600"}`} />
                   <span className="text-[10px] text-slate-500">SSL</span>
                 </div>
               </div>
@@ -231,10 +231,10 @@ export default function SeoHealthPage() {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setSelectedSite(null)}
           />
-          <div className="relative w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <div className="relative w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6">
             <button
               onClick={() => setSelectedSite(null)}
-              className="absolute right-4 top-4 p-1 rounded-lg hover:bg-slate-800"
+              className="absolute right-4 top-4 p-1 rounded-lg hover:bg-slate-100"
             >
               <XCircle size={20} />
             </button>
@@ -251,7 +251,7 @@ export default function SeoHealthPage() {
                   href={selectedSite.website_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-slate-400 hover:text-white flex items-center gap-1"
+                  className="text-sm text-slate-400 hover:text-slate-900 flex items-center gap-1"
                 >
                   {selectedSite.website_url}
                   <ExternalLink size={12} />
@@ -261,7 +261,7 @@ export default function SeoHealthPage() {
 
             <div className="space-y-6">
               {/* Robots.txt */}
-              <div className="rounded-xl border border-slate-800 p-4">
+              <div className="rounded-xl border border-slate-200 p-4">
                 <h3 className="font-medium flex items-center gap-2 mb-3">
                   <FileText size={18} className="text-slate-400" />
                   Robots.txt
@@ -274,7 +274,7 @@ export default function SeoHealthPage() {
               </div>
 
               {/* Sitemap */}
-              <div className="rounded-xl border border-slate-800 p-4">
+              <div className="rounded-xl border border-slate-200 p-4">
                 <h3 className="font-medium flex items-center gap-2 mb-3">
                   <Map size={18} className="text-slate-400" />
                   Sitemap.xml
@@ -282,7 +282,7 @@ export default function SeoHealthPage() {
                 <div className="space-y-2">
                   <CheckItem passed={selectedSite.sitemap_exists} label="File exists" />
                   <CheckItem passed={selectedSite.sitemap_valid} label="Valid XML" />
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/50">
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-100">
                     <span className="text-slate-400">URL Count:</span>
                     <span className="font-medium">{selectedSite.sitemap_url_count}</span>
                   </div>
@@ -291,7 +291,7 @@ export default function SeoHealthPage() {
                       href={selectedSite.sitemap_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-3 py-2 rounded-lg bg-slate-800/50 text-sm text-slate-400 hover:text-white"
+                      className="flex items-center gap-1 px-3 py-2 rounded-lg bg-slate-100 text-sm text-slate-400 hover:text-slate-900"
                     >
                       {selectedSite.sitemap_url}
                       <ExternalLink size={12} />
@@ -301,7 +301,7 @@ export default function SeoHealthPage() {
               </div>
 
               {/* SSL */}
-              <div className="rounded-xl border border-slate-800 p-4">
+              <div className="rounded-xl border border-slate-200 p-4">
                 <h3 className="font-medium flex items-center gap-2 mb-3">
                   <Lock size={18} className="text-slate-400" />
                   SSL Certificate

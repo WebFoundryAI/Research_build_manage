@@ -78,9 +78,9 @@ export default function TrashPage() {
   }
 
   function getTypeIcon(type: string) {
-    if (type === "project") return <Globe size={18} className="text-blue-400" />;
-    if (type === "task") return <CheckSquare size={18} className="text-emerald-400" />;
-    return <FileText size={18} className="text-purple-400" />;
+    if (type === "project") return <Globe size={18} className="text-blue-600" />;
+    if (type === "task") return <CheckSquare size={18} className="text-emerald-600" />;
+    return <FileText size={18} className="text-purple-600" />;
   }
 
   function getDaysUntilExpiry(date: string) {
@@ -101,7 +101,7 @@ export default function TrashPage() {
         {items.length > 0 && (
           <button
             onClick={emptyTrash}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-400 font-medium text-sm transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-600 font-medium text-sm transition-colors"
           >
             <Trash2 size={16} />
             Empty Trash
@@ -112,9 +112,9 @@ export default function TrashPage() {
       {/* Warning */}
       <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-4">
         <div className="flex items-start gap-3">
-          <AlertTriangle size={18} className="text-amber-400 mt-0.5" />
+          <AlertTriangle size={18} className="text-amber-600 mt-0.5" />
           <div>
-            <h3 className="font-medium text-amber-400">Auto-deletion enabled</h3>
+            <h3 className="font-medium text-amber-600">Auto-deletion enabled</h3>
             <p className="text-sm text-slate-400 mt-1">
               Items in trash will be permanently deleted after 30 days. Restore items to keep them.
             </p>
@@ -139,10 +139,10 @@ export default function TrashPage() {
             return (
               <div
                 key={item.id}
-                className="rounded-xl border border-slate-800 bg-slate-900/40 p-4"
+                className="rounded-xl border border-slate-200 bg-white p-4"
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-2 rounded-lg bg-slate-800/50">
+                  <div className="p-2 rounded-lg bg-slate-100">
                     {getTypeIcon(item.type)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -154,7 +154,7 @@ export default function TrashPage() {
                     </div>
                     <div className="flex items-center gap-1 mt-2 text-xs">
                       <Clock size={12} className="text-slate-500" />
-                      <span className={daysLeft <= 7 ? "text-red-400" : "text-slate-500"}>
+                      <span className={daysLeft <= 7 ? "text-red-600" : "text-slate-500"}>
                         {daysLeft} days until permanent deletion
                       </span>
                     </div>
@@ -162,14 +162,14 @@ export default function TrashPage() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => restoreItem(item.id)}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm transition-colors"
                     >
                       <RotateCcw size={14} />
                       Restore
                     </button>
                     <button
                       onClick={() => setConfirmDelete(item.id)}
-                      className="p-2 rounded-lg hover:bg-red-500/20 text-slate-500 hover:text-red-400 transition-colors"
+                      className="p-2 rounded-lg hover:bg-red-500/20 text-slate-500 hover:text-red-600 transition-colors"
                     >
                       <X size={16} />
                     </button>
@@ -183,7 +183,7 @@ export default function TrashPage() {
 
       {/* Summary */}
       {items.length > 0 && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+        <div className="rounded-xl border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between text-sm">
             <span className="text-slate-400">
               {items.length} item{items.length !== 1 ? "s" : ""} in trash
@@ -203,7 +203,7 @@ export default function TrashPage() {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setConfirmDelete(null)}
           />
-          <div className="relative w-full max-w-sm rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <div className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6">
             <h2 className="text-lg font-semibold mb-2">Delete Permanently?</h2>
             <p className="text-sm text-slate-400 mb-6">
               This action cannot be undone. The item will be permanently deleted.
@@ -211,7 +211,7 @@ export default function TrashPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => setConfirmDelete(null)}
-                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-sm font-medium transition-colors"
+                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-sm font-medium transition-colors"
               >
                 Cancel
               </button>

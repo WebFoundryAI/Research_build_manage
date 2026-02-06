@@ -91,24 +91,24 @@ export default function AssetTrackerDashboard() {
   }
 
   function getStatusColor(status: string) {
-    if (status === "Live – Stable") return "text-emerald-400 bg-emerald-500/20";
-    if (status === "Live – Needs Improving") return "text-amber-400 bg-amber-500/20";
-    if (status === "In Build" || status === "Pre-Launch QA") return "text-blue-400 bg-blue-500/20";
+    if (status === "Live – Stable") return "text-emerald-600 bg-emerald-500/20";
+    if (status === "Live – Needs Improving") return "text-amber-600 bg-amber-500/20";
+    if (status === "In Build" || status === "Pre-Launch QA") return "text-blue-600 bg-blue-500/20";
     if (status === "On Hold" || status === "Archived") return "text-slate-400 bg-slate-500/20";
     return "text-slate-400 bg-slate-500/20";
   }
 
   function getHealthColor(score: number | null) {
     if (score === null) return "text-slate-500";
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-emerald-600";
+    if (score >= 60) return "text-amber-600";
+    return "text-red-600";
   }
 
   function getPriorityColor(priority: string) {
-    if (priority === "Critical") return "text-red-400 bg-red-500/20";
-    if (priority === "High") return "text-amber-400 bg-amber-500/20";
-    if (priority === "Medium") return "text-blue-400 bg-blue-500/20";
+    if (priority === "Critical") return "text-red-600 bg-red-500/20";
+    if (priority === "High") return "text-amber-600 bg-amber-500/20";
+    if (priority === "Medium") return "text-blue-600 bg-blue-500/20";
     return "text-slate-400 bg-slate-500/20";
   }
 
@@ -125,7 +125,7 @@ export default function AssetTrackerDashboard() {
         <div className="flex gap-3">
           <button
             onClick={loadData}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-white font-medium text-sm transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-white font-medium text-sm transition-colors"
           >
             <RefreshCw size={16} />
             Refresh
@@ -142,9 +142,9 @@ export default function AssetTrackerDashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+        <div className="rounded-xl border border-slate-200 bg-white p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-slate-800/50">
+            <div className="p-2 rounded-lg bg-slate-100">
               <Globe size={18} className="text-slate-400" />
             </div>
             <div>
@@ -157,10 +157,10 @@ export default function AssetTrackerDashboard() {
         <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-emerald-500/20">
-              <CheckCircle size={18} className="text-emerald-400" />
+              <CheckCircle size={18} className="text-emerald-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-emerald-400">{stats.liveProjects}</div>
+              <div className="text-2xl font-semibold text-emerald-600">{stats.liveProjects}</div>
               <div className="text-xs text-slate-500">Live Sites</div>
             </div>
           </div>
@@ -169,10 +169,10 @@ export default function AssetTrackerDashboard() {
         <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-blue-500/20">
-              <Users size={18} className="text-blue-400" />
+              <Users size={18} className="text-blue-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-blue-400">
+              <div className="text-2xl font-semibold text-blue-600">
                 {stats.totalTraffic.toLocaleString()}
               </div>
               <div className="text-xs text-slate-500">Monthly Traffic</div>
@@ -183,10 +183,10 @@ export default function AssetTrackerDashboard() {
         <div className="rounded-xl border border-purple-500/20 bg-purple-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-purple-500/20">
-              <DollarSign size={18} className="text-purple-400" />
+              <DollarSign size={18} className="text-purple-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-purple-400">
+              <div className="text-2xl font-semibold text-purple-600">
                 ${stats.totalRevenue.toLocaleString()}
               </div>
               <div className="text-xs text-slate-500">Monthly Revenue</div>
@@ -197,10 +197,10 @@ export default function AssetTrackerDashboard() {
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Projects List */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden">
-          <div className="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+        <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+          <div className="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
             <h2 className="font-semibold">Projects</h2>
-            <Link to="/asset-tracker/projects" className="text-xs text-blue-400 hover:underline flex items-center gap-1">
+            <Link to="/asset-tracker/projects" className="text-xs text-blue-600 hover:underline flex items-center gap-1">
               View All <ArrowRight size={12} />
             </Link>
           </div>
@@ -218,12 +218,12 @@ export default function AssetTrackerDashboard() {
                 <Link
                   key={project.id}
                   to={`/asset-tracker/projects/${project.id}`}
-                  className="block px-4 py-3 hover:bg-slate-800/30 transition-colors"
+                  className="block px-4 py-3 hover:bg-slate-100/30 transition-colors"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       {project.is_favourite && (
-                        <Star size={14} className="text-amber-400 fill-amber-400" />
+                        <Star size={14} className="text-amber-600 fill-amber-400" />
                       )}
                       <div>
                         <div className="font-medium flex items-center gap-2">
@@ -249,10 +249,10 @@ export default function AssetTrackerDashboard() {
         </div>
 
         {/* Tasks List */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden">
-          <div className="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+        <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+          <div className="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
             <h2 className="font-semibold">Upcoming Tasks</h2>
-            <Link to="/asset-tracker/tasks" className="text-xs text-blue-400 hover:underline flex items-center gap-1">
+            <Link to="/asset-tracker/tasks" className="text-xs text-blue-600 hover:underline flex items-center gap-1">
               View All <ArrowRight size={12} />
             </Link>
           </div>
@@ -267,7 +267,7 @@ export default function AssetTrackerDashboard() {
           ) : (
             <div className="divide-y divide-slate-800/50">
               {tasks.slice(0, 5).map((task) => (
-                <div key={task.id} className="px-4 py-3 hover:bg-slate-800/30 transition-colors">
+                <div key={task.id} className="px-4 py-3 hover:bg-slate-100/30 transition-colors">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="font-medium truncate">{task.title}</div>
@@ -296,14 +296,14 @@ export default function AssetTrackerDashboard() {
       <div className="grid md:grid-cols-4 gap-4">
         <Link
           to="/asset-tracker/board"
-          className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 hover:border-slate-700 transition-colors group"
+          className="rounded-xl border border-slate-200 bg-white p-4 hover:border-slate-200 transition-colors group"
         >
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-blue-500/20">
-              <TrendingUp size={18} className="text-blue-400" />
+              <TrendingUp size={18} className="text-blue-600" />
             </div>
             <div>
-              <h3 className="font-medium group-hover:text-blue-400 transition-colors">Board View</h3>
+              <h3 className="font-medium group-hover:text-blue-600 transition-colors">Board View</h3>
               <p className="text-xs text-slate-500">Kanban workflow</p>
             </div>
           </div>
@@ -311,14 +311,14 @@ export default function AssetTrackerDashboard() {
 
         <Link
           to="/asset-tracker/health"
-          className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 hover:border-slate-700 transition-colors group"
+          className="rounded-xl border border-slate-200 bg-white p-4 hover:border-slate-200 transition-colors group"
         >
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-emerald-500/20">
-              <CheckCircle size={18} className="text-emerald-400" />
+              <CheckCircle size={18} className="text-emerald-600" />
             </div>
             <div>
-              <h3 className="font-medium group-hover:text-emerald-400 transition-colors">Health Monitor</h3>
+              <h3 className="font-medium group-hover:text-emerald-600 transition-colors">Health Monitor</h3>
               <p className="text-xs text-slate-500">Site health checks</p>
             </div>
           </div>
@@ -326,14 +326,14 @@ export default function AssetTrackerDashboard() {
 
         <Link
           to="/asset-tracker/reports"
-          className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 hover:border-slate-700 transition-colors group"
+          className="rounded-xl border border-slate-200 bg-white p-4 hover:border-slate-200 transition-colors group"
         >
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-purple-500/20">
-              <TrendingUp size={18} className="text-purple-400" />
+              <TrendingUp size={18} className="text-purple-600" />
             </div>
             <div>
-              <h3 className="font-medium group-hover:text-purple-400 transition-colors">Reports</h3>
+              <h3 className="font-medium group-hover:text-purple-600 transition-colors">Reports</h3>
               <p className="text-xs text-slate-500">Analytics & insights</p>
             </div>
           </div>
@@ -341,14 +341,14 @@ export default function AssetTrackerDashboard() {
 
         <Link
           to="/asset-tracker/ops-review"
-          className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 hover:border-slate-700 transition-colors group"
+          className="rounded-xl border border-slate-200 bg-white p-4 hover:border-slate-200 transition-colors group"
         >
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-amber-500/20">
-              <AlertTriangle size={18} className="text-amber-400" />
+              <AlertTriangle size={18} className="text-amber-600" />
             </div>
             <div>
-              <h3 className="font-medium group-hover:text-amber-400 transition-colors">Ops Review</h3>
+              <h3 className="font-medium group-hover:text-amber-600 transition-colors">Ops Review</h3>
               <p className="text-xs text-slate-500">Operations overview</p>
             </div>
           </div>

@@ -21,22 +21,18 @@ export default function AuthPage() {
     placeItems: "center",
     padding: 24,
     fontFamily: 'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"',
-    background:
-      "radial-gradient(1200px 600px at 20% 10%, rgba(99,102,241,.18), transparent 60%)," +
-      "radial-gradient(900px 500px at 80% 20%, rgba(16,185,129,.12), transparent 55%)," +
-      "linear-gradient(180deg, #0b1020 0%, #070a13 100%)",
-    color: "#e5e7eb",
+    background: "#f8f9fb",
+    color: "#0f172a",
   };
 
   const card: React.CSSProperties = {
     width: "100%",
     maxWidth: 440,
     borderRadius: 20,
-    padding: 22,
-    background: "rgba(255,255,255,0.06)",
-    border: "1px solid rgba(255,255,255,0.12)",
-    boxShadow: "0 20px 60px rgba(0,0,0,.45)",
-    backdropFilter: "blur(10px)",
+    padding: 32,
+    background: "#ffffff",
+    border: "1px solid #e2e8f0",
+    boxShadow: "0 10px 40px rgba(0,0,0,0.08)",
   };
 
   const brand: React.CSSProperties = {
@@ -44,15 +40,14 @@ export default function AuthPage() {
     alignItems: "center",
     gap: 10,
     marginBottom: 16,
-    opacity: 0.95,
   };
 
   const dot: React.CSSProperties = {
     width: 10,
     height: 10,
     borderRadius: 999,
-    background: "linear-gradient(135deg, #60a5fa, #34d399)",
-    boxShadow: "0 0 0 4px rgba(255,255,255,0.06)",
+    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+    boxShadow: "0 0 0 4px rgba(99,102,241,0.1)",
   };
 
   const title: React.CSSProperties = {
@@ -60,13 +55,14 @@ export default function AuthPage() {
     margin: "2px 0 6px",
     letterSpacing: "-0.02em",
     fontWeight: 700,
+    color: "#0f172a",
   };
 
   const sub: React.CSSProperties = {
     margin: 0,
     lineHeight: 1.5,
     fontSize: 14,
-    color: "rgba(229,231,235,0.78)",
+    color: "#64748b",
   };
 
   const btn: React.CSSProperties = {
@@ -78,29 +74,29 @@ export default function AuthPage() {
     gap: 10,
     borderRadius: 14,
     padding: "12px 14px",
-    border: "1px solid rgba(255,255,255,0.22)",
-    background: "rgba(255,255,255,0.92)",
-    color: "#0b1020",
+    border: "none",
+    background: "#4f46e5",
+    color: "#ffffff",
     fontWeight: 700,
     fontSize: 14,
     cursor: "pointer",
-    boxShadow: "0 10px 30px rgba(0,0,0,.25)",
+    boxShadow: "0 4px 12px rgba(79,70,229,0.25)",
   };
 
   const fine: React.CSSProperties = {
     marginTop: 14,
     fontSize: 12,
-    color: "rgba(148,163,184,0.9)",
+    color: "#94a3b8",
   };
 
   const warn: React.CSSProperties = {
     marginTop: 14,
     borderRadius: 14,
-    border: "1px solid rgba(245,158,11,0.45)",
-    background: "rgba(245,158,11,0.12)",
+    border: "1px solid rgba(245,158,11,0.3)",
+    background: "#fffbeb",
     padding: 12,
     fontSize: 13,
-    color: "#fde68a",
+    color: "#92400e",
     whiteSpace: "pre-wrap",
   };
 
@@ -112,7 +108,7 @@ export default function AuthPage() {
             <span style={dot} />
             <div style={{ fontWeight: 700 }}>Super SEO</div>
           </div>
-          <div style={{ marginTop: 10, fontSize: 14, opacity: 0.8 }}>Loading…</div>
+          <div style={{ marginTop: 10, fontSize: 14, color: "#64748b" }}>Loading…</div>
         </div>
       </div>
     );
@@ -127,7 +123,7 @@ export default function AuthPage() {
             <div style={{ fontWeight: 700 }}>Super SEO</div>
           </div>
           <div style={{ fontSize: 14, fontWeight: 700 }}>Signed in</div>
-          <div style={{ marginTop: 6, fontSize: 12, color: "rgba(229,231,235,0.78)" }}>
+          <div style={{ marginTop: 6, fontSize: 12, color: "#64748b" }}>
             {user.email ?? user.id}
           </div>
           <div style={fine}>Use the sidebar to navigate.</div>
@@ -142,7 +138,7 @@ export default function AuthPage() {
         <div style={brand}>
           <span style={dot} />
           <div style={{ fontWeight: 700 }}>Super SEO</div>
-          <div style={{ marginLeft: "auto", fontSize: 12, color: "rgba(148,163,184,0.9)" }}>
+          <div style={{ marginLeft: "auto", fontSize: 12, color: "#94a3b8" }}>
             {mode === "demo" ? "Demo" : "Production"}
           </div>
         </div>
@@ -150,7 +146,7 @@ export default function AuthPage() {
         <h1 style={title}>Sign in</h1>
         <p style={sub}>
           {mode === "demo"
-            ? "Supabase isn’t configured, so the app is running in Demo Mode."
+            ? "Supabase isn't configured, so the app is running in Demo Mode."
             : "Continue with Google to access the dashboard."}
         </p>
 
@@ -159,8 +155,8 @@ export default function AuthPage() {
         <button
           style={btn}
           onClick={() => signInWithGoogle()}
-          onMouseEnter={(e) => ((e.currentTarget.style.transform = "translateY(-1px)"), (e.currentTarget.style.background = "white"))}
-          onMouseLeave={(e) => ((e.currentTarget.style.transform = "translateY(0px)"), (e.currentTarget.style.background = "rgba(255,255,255,0.92)"))}
+          onMouseEnter={(e) => ((e.currentTarget.style.transform = "translateY(-1px)"), (e.currentTarget.style.background = "#4338ca"))}
+          onMouseLeave={(e) => ((e.currentTarget.style.transform = "translateY(0px)"), (e.currentTarget.style.background = "#4f46e5"))}
         >
           {mode === "demo" ? null : <GoogleIcon />}
           {mode === "demo" ? "Enter Demo" : "Continue with Google"}

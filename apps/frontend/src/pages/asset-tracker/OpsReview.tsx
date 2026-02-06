@@ -88,9 +88,9 @@ export default function OpsReviewPage() {
   }
 
   function getStatusIcon(status: string) {
-    if (status === "ok") return <CheckCircle size={16} className="text-emerald-400" />;
-    if (status === "warning") return <AlertTriangle size={16} className="text-amber-400" />;
-    return <AlertTriangle size={16} className="text-red-400" />;
+    if (status === "ok") return <CheckCircle size={16} className="text-emerald-600" />;
+    if (status === "warning") return <AlertTriangle size={16} className="text-amber-600" />;
+    return <AlertTriangle size={16} className="text-red-600" />;
   }
 
   function getStatusBg(status: string) {
@@ -127,10 +127,10 @@ export default function OpsReviewPage() {
         <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-emerald-500/20">
-              <CheckCircle size={18} className="text-emerald-400" />
+              <CheckCircle size={18} className="text-emerald-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-emerald-400">{okCount}</div>
+              <div className="text-2xl font-semibold text-emerald-600">{okCount}</div>
               <div className="text-xs text-slate-500">All Clear</div>
             </div>
           </div>
@@ -139,10 +139,10 @@ export default function OpsReviewPage() {
         <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-amber-500/20">
-              <AlertTriangle size={18} className="text-amber-400" />
+              <AlertTriangle size={18} className="text-amber-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-amber-400">{warningCount}</div>
+              <div className="text-2xl font-semibold text-amber-600">{warningCount}</div>
               <div className="text-xs text-slate-500">Warnings</div>
             </div>
           </div>
@@ -151,10 +151,10 @@ export default function OpsReviewPage() {
         <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-red-500/20">
-              <AlertTriangle size={18} className="text-red-400" />
+              <AlertTriangle size={18} className="text-red-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-red-400">{criticalCount}</div>
+              <div className="text-2xl font-semibold text-red-600">{criticalCount}</div>
               <div className="text-xs text-slate-500">Critical</div>
             </div>
           </div>
@@ -178,7 +178,7 @@ export default function OpsReviewPage() {
             >
               <button
                 onClick={() => setExpandedId(expandedId === review.id ? null : review.id)}
-                className="w-full px-4 py-4 flex items-center justify-between hover:bg-slate-800/20 transition-colors"
+                className="w-full px-4 py-4 flex items-center justify-between hover:bg-slate-100/20 transition-colors"
               >
                 <div className="flex items-center gap-4">
                   {getStatusIcon(review.status)}
@@ -200,11 +200,11 @@ export default function OpsReviewPage() {
 
               {expandedId === review.id && (
                 <div className="px-4 pb-4 pt-0">
-                  <div className="border-t border-slate-700/50 pt-4 space-y-2">
+                  <div className="border-t border-slate-200/50 pt-4 space-y-2">
                     {review.items.map((item, i) => (
                       <div
                         key={i}
-                        className="flex items-center justify-between py-2 px-3 rounded-lg bg-slate-800/30"
+                        className="flex items-center justify-between py-2 px-3 rounded-lg bg-slate-100/30"
                       >
                         <div className="flex items-center gap-3">
                           {getStatusIcon(item.status)}
@@ -222,7 +222,7 @@ export default function OpsReviewPage() {
       )}
 
       {/* Legend */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+      <div className="rounded-xl border border-slate-200 bg-white p-4">
         <h3 className="text-sm font-medium mb-3">Review Checklist Items</h3>
         <div className="grid md:grid-cols-2 gap-2 text-sm text-slate-400">
           <div className="flex items-center gap-2">

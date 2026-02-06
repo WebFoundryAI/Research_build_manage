@@ -84,42 +84,42 @@ export default function SerpCompetitors() {
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
       {feedback && (
-        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
+        <div className={`p-3 rounded-lg ${feedback.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-600"}`}>
           {feedback.message}
         </div>
       )}
 
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
-          <Search className="h-6 w-6 text-blue-400" />
+          <Search className="h-6 w-6 text-blue-600" />
           SERP Competitors
         </h1>
         <p className="text-slate-400">Analyze who ranks for your target keywords</p>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-        <div className="p-4 border-b border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+        <div className="p-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-white">Keyword Analysis</h2>
           <p className="text-sm text-slate-400">Enter a keyword to see which domains are competing in the SERPs</p>
         </div>
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="md:col-span-2">
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Target Keyword</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Target Keyword</label>
               <input
                 placeholder="Enter your target keyword..."
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Location</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Location</label>
               <select
                 value={locationCode}
                 onChange={(e) => setLocationCode(Number(e.target.value))}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {LOCATION_OPTIONS.map((loc) => (
                   <option key={loc.code} value={loc.code}>{loc.name}</option>
@@ -127,11 +127,11 @@ export default function SerpCompetitors() {
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-300 mb-2 block">Language</label>
+              <label className="text-sm font-medium text-slate-600 mb-2 block">Language</label>
               <select
                 value={languageCode}
                 onChange={(e) => setLanguageCode(e.target.value)}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {LANGUAGE_OPTIONS.map((lang) => (
                   <option key={lang.code} value={lang.code}>{lang.name}</option>
@@ -143,7 +143,7 @@ export default function SerpCompetitors() {
           <button
             onClick={handleSearch}
             disabled={isLoading}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white rounded-lg flex items-center gap-2 transition-colors"
           >
             {isLoading ? (
               <>
@@ -161,8 +161,8 @@ export default function SerpCompetitors() {
       </div>
 
       {competitors.length > 0 && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-          <div className="p-4 border-b border-slate-800">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+          <div className="p-4 border-b border-slate-200">
             <h2 className="text-lg font-semibold text-white flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
               SERP Results for "{keyword}"
@@ -172,7 +172,7 @@ export default function SerpCompetitors() {
           <div className="p-6 overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-700">
+                <tr className="border-b border-slate-200">
                   <th className="text-left p-3 w-16 text-slate-400 text-sm font-medium">Rank</th>
                   <th className="text-left p-3 text-slate-400 text-sm font-medium">Domain</th>
                   <th className="text-left p-3 text-slate-400 text-sm font-medium">Title</th>
@@ -183,9 +183,9 @@ export default function SerpCompetitors() {
               </thead>
               <tbody>
                 {competitors.map((comp, idx) => (
-                  <tr key={idx} className="border-b border-slate-800">
+                  <tr key={idx} className="border-b border-slate-200">
                     <td className="p-3">
-                      <span className={`px-2 py-0.5 text-xs rounded ${comp.rank <= 3 ? "bg-green-500/20 text-green-400" : comp.rank <= 10 ? "bg-blue-500/20 text-blue-400" : "bg-slate-700 text-slate-400"}`}>
+                      <span className={`px-2 py-0.5 text-xs rounded ${comp.rank <= 3 ? "bg-green-500/20 text-green-400" : comp.rank <= 10 ? "bg-blue-500/20 text-blue-600" : "bg-slate-200 text-slate-400"}`}>
                         {comp.rank}
                       </span>
                     </td>
@@ -196,7 +196,7 @@ export default function SerpCompetitors() {
                       </div>
                     </td>
                     <td className="p-3">
-                      <span className="text-slate-300 line-clamp-1 max-w-xs">{comp.title}</span>
+                      <span className="text-slate-600 line-clamp-1 max-w-xs">{comp.title}</span>
                     </td>
                     <td className="p-3 text-right text-slate-400">{formatNumber(comp.domain_rank)}</td>
                     <td className="p-3 text-right text-slate-400">{formatNumber(comp.organic_count)}</td>
@@ -205,7 +205,7 @@ export default function SerpCompetitors() {
                         href={comp.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-400 hover:text-blue-300"
+                        className="text-blue-600 hover:text-blue-300"
                       >
                         <ExternalLink className="h-4 w-4" />
                       </a>
@@ -219,7 +219,7 @@ export default function SerpCompetitors() {
       )}
 
       {competitors.length === 0 && !isLoading && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-12">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-12">
           <div className="text-center space-y-4">
             <Search className="h-12 w-12 mx-auto text-slate-600" />
             <p className="font-medium text-white">Discover SERP competitors</p>

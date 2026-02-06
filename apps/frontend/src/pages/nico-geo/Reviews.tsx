@@ -86,10 +86,10 @@ export default function NicoGeoReviews() {
   }
 
   function getStatusIcon(status: string) {
-    if (status === "pending") return <Clock size={16} className="text-amber-400" />;
-    if (status === "approved") return <CheckCircle size={16} className="text-blue-400" />;
-    if (status === "applied") return <CheckCircle size={16} className="text-emerald-400" />;
-    return <XCircle size={16} className="text-red-400" />;
+    if (status === "pending") return <Clock size={16} className="text-amber-600" />;
+    if (status === "approved") return <CheckCircle size={16} className="text-blue-600" />;
+    if (status === "applied") return <CheckCircle size={16} className="text-emerald-600" />;
+    return <XCircle size={16} className="text-red-600" />;
   }
 
   function getStatusBg(status: string) {
@@ -133,7 +133,7 @@ export default function NicoGeoReviews() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold flex items-center gap-3">
-            <ClipboardCheck className="text-amber-400" />
+            <ClipboardCheck className="text-amber-600" />
             Review Sessions
           </h1>
           <p className="text-sm text-slate-400 mt-1">
@@ -142,7 +142,7 @@ export default function NicoGeoReviews() {
         </div>
         <button
           onClick={loadSessions}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-sm transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-sm transition-colors"
         >
           <RefreshCw size={16} />
           Refresh
@@ -154,10 +154,10 @@ export default function NicoGeoReviews() {
         <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-amber-500/20">
-              <Clock size={18} className="text-amber-400" />
+              <Clock size={18} className="text-amber-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-amber-400">{pendingCount}</div>
+              <div className="text-2xl font-semibold text-amber-600">{pendingCount}</div>
               <div className="text-xs text-slate-500">Pending Review</div>
             </div>
           </div>
@@ -165,10 +165,10 @@ export default function NicoGeoReviews() {
         <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-blue-500/20">
-              <CheckCircle size={18} className="text-blue-400" />
+              <CheckCircle size={18} className="text-blue-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-blue-400">{approvedCount}</div>
+              <div className="text-2xl font-semibold text-blue-600">{approvedCount}</div>
               <div className="text-xs text-slate-500">Approved</div>
             </div>
           </div>
@@ -176,10 +176,10 @@ export default function NicoGeoReviews() {
         <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-emerald-500/20">
-              <CheckCircle size={18} className="text-emerald-400" />
+              <CheckCircle size={18} className="text-emerald-600" />
             </div>
             <div>
-              <div className="text-2xl font-semibold text-emerald-400">{appliedCount}</div>
+              <div className="text-2xl font-semibold text-emerald-600">{appliedCount}</div>
               <div className="text-xs text-slate-500">Applied</div>
             </div>
           </div>
@@ -190,7 +190,7 @@ export default function NicoGeoReviews() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading sessions...</div>
       ) : sessions.length === 0 ? (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-12 text-center">
+        <div className="rounded-xl border border-slate-200 bg-white p-12 text-center">
           <ClipboardCheck size={48} className="mx-auto text-slate-600 mb-4" />
           <p className="text-slate-400">No review sessions</p>
           <p className="text-sm text-slate-500 mt-1">
@@ -213,12 +213,12 @@ export default function NicoGeoReviews() {
                         href={session.siteUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-medium hover:text-blue-400 flex items-center gap-1"
+                        className="font-medium hover:text-blue-600 flex items-center gap-1"
                       >
                         {session.siteUrl}
                         <ExternalLink size={14} />
                       </a>
-                      <span className="px-2 py-0.5 rounded text-xs bg-slate-800 capitalize">
+                      <span className="px-2 py-0.5 rounded text-xs bg-slate-100 capitalize">
                         {session.status}
                       </span>
                     </div>
@@ -238,7 +238,7 @@ export default function NicoGeoReviews() {
                     </div>
 
                     {session.commitShas && (
-                      <div className="mt-2 text-xs text-emerald-400">
+                      <div className="mt-2 text-xs text-emerald-600">
                         Commits: {session.commitShas.join(", ")}
                       </div>
                     )}
@@ -252,7 +252,7 @@ export default function NicoGeoReviews() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setSelectedSession(session)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm"
                   >
                     <Eye size={14} />
                     View
@@ -283,35 +283,35 @@ export default function NicoGeoReviews() {
       )}
 
       {/* Info Card */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
         <h3 className="font-semibold mb-3 flex items-center gap-2">
-          <AlertTriangle size={16} className="text-amber-400" />
+          <AlertTriangle size={16} className="text-amber-600" />
           Session Lifecycle
         </h3>
         <div className="grid md:grid-cols-4 gap-4 text-sm">
           <div className="flex items-start gap-2">
-            <div className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-bold">1</div>
+            <div className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-600 flex items-center justify-center text-xs font-bold">1</div>
             <div>
               <div className="font-medium">Create</div>
               <div className="text-xs text-slate-500">Session created with 24h TTL</div>
             </div>
           </div>
           <div className="flex items-start gap-2">
-            <div className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold">2</div>
+            <div className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-600 flex items-center justify-center text-xs font-bold">2</div>
             <div>
               <div className="font-medium">Review</div>
               <div className="text-xs text-slate-500">View diff previews</div>
             </div>
           </div>
           <div className="flex items-start gap-2">
-            <div className="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs font-bold">3</div>
+            <div className="w-6 h-6 rounded-full bg-purple-500/20 text-purple-600 flex items-center justify-center text-xs font-bold">3</div>
             <div>
               <div className="font-medium">Approve</div>
               <div className="text-xs text-slate-500">Mark ready for deploy</div>
             </div>
           </div>
           <div className="flex items-start gap-2">
-            <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">4</div>
+            <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-600 flex items-center justify-center text-xs font-bold">4</div>
             <div>
               <div className="font-medium">Apply</div>
               <div className="text-xs text-slate-500">Write to GitHub</div>

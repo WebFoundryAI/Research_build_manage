@@ -117,14 +117,14 @@ export default function WebsitesPage() {
   function getStatusBadge(status: number | null) {
     if (status === 1) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400">
+        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-600">
           <CheckCircle size={12} /> Live
         </span>
       );
     }
     if (status === 0) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-400">
+        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-600">
           <XCircle size={12} /> Down
         </span>
       );
@@ -164,7 +164,7 @@ export default function WebsitesPage() {
             placeholder="Search websites..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
           />
         </div>
         <div className="relative">
@@ -172,7 +172,7 @@ export default function WebsitesPage() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="pl-10 pr-8 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-emerald-500 appearance-none cursor-pointer"
+            className="pl-10 pr-8 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-emerald-500 appearance-none cursor-pointer"
           >
             <option value="">All Categories</option>
             {categories.map(cat => (
@@ -206,11 +206,11 @@ export default function WebsitesPage() {
           {filteredWebsites.map(website => (
             <div
               key={website.id}
-              className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 hover:border-slate-700 transition-colors"
+              className="rounded-xl border border-slate-200 bg-white p-4 hover:border-slate-200 transition-colors"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-slate-800/50">
+                  <div className="p-2 rounded-lg bg-slate-100">
                     <Globe size={18} className="text-slate-400" />
                   </div>
                   <div>
@@ -225,7 +225,7 @@ export default function WebsitesPage() {
                 href={website.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-4 truncate"
+                className="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-900 mb-4 truncate"
               >
                 {website.url}
                 <ExternalLink size={12} />
@@ -243,14 +243,14 @@ export default function WebsitesPage() {
               <div className="flex gap-2">
                 <button
                   onClick={() => openEditModal(website)}
-                  className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm transition-colors"
+                  className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm transition-colors"
                 >
                   <Edit2 size={14} />
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(website.id)}
-                  className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-400 text-sm transition-colors"
+                  className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-600 text-sm transition-colors"
                 >
                   <Trash2 size={14} />
                 </button>
@@ -267,10 +267,10 @@ export default function WebsitesPage() {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setShowModal(false)}
           />
-          <div className="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <div className="relative w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6">
             <button
               onClick={() => setShowModal(false)}
-              className="absolute right-4 top-4 p-1 rounded-lg hover:bg-slate-800"
+              className="absolute right-4 top-4 p-1 rounded-lg hover:bg-slate-100"
             >
               <X size={20} />
             </button>
@@ -290,7 +290,7 @@ export default function WebsitesPage() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="My Website"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
@@ -304,7 +304,7 @@ export default function WebsitesPage() {
                   value={formData.url}
                   onChange={(e) => setFormData({ ...formData, url: e.target.value })}
                   placeholder="https://example.com"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
@@ -315,7 +315,7 @@ export default function WebsitesPage() {
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-emerald-500"
                 >
                   {categories.map(cat => (
                     <option key={cat.value} value={cat.value}>{cat.label}</option>
@@ -327,7 +327,7 @@ export default function WebsitesPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-sm font-medium transition-colors"
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>

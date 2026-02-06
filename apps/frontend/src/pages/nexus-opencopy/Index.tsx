@@ -15,10 +15,10 @@ import { Link } from "react-router-dom";
 
 export default function NexusOpenCopyIndex() {
   const stats = [
-    { label: "Total Projects", value: "8", icon: FolderKanban, color: "text-pink-400" },
-    { label: "Keywords Tracked", value: "156", icon: Search, color: "text-blue-400" },
-    { label: "Articles Generated", value: "342", icon: FileText, color: "text-emerald-400" },
-    { label: "Avg SEO Score", value: "78", icon: TrendingUp, color: "text-amber-400" },
+    { label: "Total Projects", value: "8", icon: FolderKanban, color: "text-pink-600" },
+    { label: "Keywords Tracked", value: "156", icon: Search, color: "text-blue-600" },
+    { label: "Articles Generated", value: "342", icon: FileText, color: "text-emerald-600" },
+    { label: "Avg SEO Score", value: "78", icon: TrendingUp, color: "text-amber-600" },
   ];
 
   const features = [
@@ -77,15 +77,15 @@ export default function NexusOpenCopyIndex() {
   ];
 
   function getStatusColor(status: string) {
-    if (status === "published") return "bg-emerald-500/20 text-emerald-400";
-    if (status === "in_review") return "bg-amber-500/20 text-amber-400";
-    return "bg-blue-500/20 text-blue-400";
+    if (status === "published") return "bg-emerald-500/20 text-emerald-600";
+    if (status === "in_review") return "bg-amber-500/20 text-amber-600";
+    return "bg-blue-500/20 text-blue-600";
   }
 
   function getScoreColor(score: number) {
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-emerald-600";
+    if (score >= 60) return "text-amber-600";
+    return "text-red-600";
   }
 
   return (
@@ -93,7 +93,7 @@ export default function NexusOpenCopyIndex() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-semibold flex items-center gap-3">
-          <FileEdit className="text-pink-400" />
+          <FileEdit className="text-pink-600" />
           Nexus OpenCopy
         </h1>
         <p className="text-sm text-slate-400 mt-1">
@@ -106,10 +106,10 @@ export default function NexusOpenCopyIndex() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-xl border border-slate-800 bg-slate-900/40 p-4"
+            className="rounded-xl border border-slate-200 bg-white p-4"
           >
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-slate-800/50">
+              <div className="p-2 rounded-lg bg-slate-100">
                 <stat.icon size={18} className={stat.color} />
               </div>
               <div>
@@ -130,10 +130,10 @@ export default function NexusOpenCopyIndex() {
             className={`group rounded-xl border bg-gradient-to-br ${feature.color} p-5 transition-all hover:scale-[1.02]`}
           >
             <div className="flex items-start justify-between">
-              <div className="p-2 rounded-lg bg-slate-800/50">
+              <div className="p-2 rounded-lg bg-slate-100">
                 <feature.icon size={20} className="text-white" />
               </div>
-              <ArrowRight size={18} className="text-slate-500 group-hover:text-white group-hover:translate-x-1 transition-all" />
+              <ArrowRight size={18} className="text-slate-500 group-hover:text-slate-900 group-hover:translate-x-1 transition-all" />
             </div>
             <h3 className="font-semibold mt-4">{feature.title}</h3>
             <p className="text-sm text-slate-400 mt-1">{feature.description}</p>
@@ -142,12 +142,12 @@ export default function NexusOpenCopyIndex() {
       </div>
 
       {/* Recent Articles */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Recent Articles</h2>
           <Link
             to="/nexus-opencopy/articles"
-            className="text-sm text-pink-400 hover:text-pink-300 flex items-center gap-1"
+            className="text-sm text-pink-600 hover:text-pink-300 flex items-center gap-1"
           >
             View all
             <ArrowRight size={14} />
@@ -158,11 +158,11 @@ export default function NexusOpenCopyIndex() {
           {recentArticles.map((article, i) => (
             <div
               key={i}
-              className="flex items-center justify-between p-3 rounded-lg bg-slate-800/30 hover:bg-slate-800/50 transition-colors"
+              className="flex items-center justify-between p-3 rounded-lg bg-slate-100/30 hover:bg-slate-100 transition-colors"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-slate-800">
-                  <FileText size={16} className="text-pink-400" />
+                <div className="p-2 rounded-lg bg-slate-100">
+                  <FileText size={16} className="text-pink-600" />
                 </div>
                 <div>
                   <div className="font-medium text-sm">{article.title}</div>
@@ -193,7 +193,7 @@ export default function NexusOpenCopyIndex() {
       <div className="rounded-xl border border-pink-500/30 bg-pink-500/10 p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-semibold text-pink-400 flex items-center gap-2">
+            <h3 className="font-semibold text-pink-600 flex items-center gap-2">
               <Sparkles size={18} />
               Quick Generate
             </h3>
