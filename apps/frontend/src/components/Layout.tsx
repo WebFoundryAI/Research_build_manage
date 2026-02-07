@@ -2,12 +2,14 @@ import React from "react";
 import { getTheme, setTheme, type Theme } from "../lib/theme";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../lib/auth";
-import { BarChart3, Globe, Search, Settings, Shield, CalendarClock, User } from "lucide-react";
+import { BarChart3, Globe, Search, Settings, Shield, CalendarClock, User, Sparkles, Zap } from "lucide-react";
 
 const baseNav = [
   { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
   { to: "/websites", label: "Websites", icon: Globe },
   { to: "/research", label: "Research", icon: Search },
+  { to: "/build", label: "Build", icon: Sparkles },
+  { to: "/mcp-spark", label: "Multi-tools", icon: Zap },
   { to: "/planner", label: "Planner", icon: CalendarClock },
   { to: "/profile", label: "Profile", icon: User },
   { to: "/settings", label: "Settings", icon: Settings },

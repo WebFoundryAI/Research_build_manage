@@ -12,6 +12,8 @@ import PlannerPage from "./pages/PlannerPage";
 import AdminPage from "./pages/AdminPage";
 import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
+import BuildPage from "./pages/BuildPage";
+import MultiToolsPage from "./pages/MultiToolsPage";
 
 class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { err: any }> {
   state = { err: null };
@@ -46,6 +48,9 @@ export default function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/websites" element={<WebsitesPage />} />
               <Route path="/research" element={<ResearchPage />} />
+              <Route path="/build" element={<BuildPage />} />
+              <Route path="/mcp-spark" element={<MultiToolsPage />} />
+              <Route path="/multi-tools" element={<Navigate to="/mcp-spark" replace />} />
               <Route path="/planner" element={<PlannerPage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/profile" element={<ProfilePage />} />
