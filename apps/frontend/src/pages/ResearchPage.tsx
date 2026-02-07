@@ -1,25 +1,29 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { callEdgeFunction } from "../lib/edgeFunctions";
 
 type Mode = 'geo' | 'audit';
 
 export default function ResearchPage() {
   const [mode, setMode] = useState<Mode>('geo');
-  const [keyword, setKeyword] = useState('blocked drain manchester');
-  const [domain, setDomain] = useState('manchesterblockeddrain.co.uk');
+  const [keyword, setKeyword] = useState("blocked drain manchester");
+  const [domain, setDomain] = useState("manchesterblockeddrain.co.uk");
   const [busy, setBusy] = useState(false);
-  const [out, setOut] = useState<string>('');
+  const [out, setOut] = useState<string>("");
 
   async function run() {
     setBusy(true);
-    setOut('');
+    setOut("");
     try {
-      const url =
-        mode === 'geo'
-          ? `/geo_generate?keyword=${encodeURIComponent(keyword)}`
-          : `/seo_audit?domain=${encodeURIComponent(domain)}`;
-      const res = await fetch(url);
-      const json = await res.json();
-      setOut(JSON.stringify(json, null, 2));
+      const result =
+        mode === "geo"
+          ? await callEdgeFunction("geo-generate", { keyword, location: "United Kingdom" })
+          : await callEdgeFunction("seo-audit", { domain });
+
+      if (!result.ok) {
+        setOut(result.bodyText);
+        return;
+      }
+      setOut(JSON.stringify(result.json ?? result.bodyText, null, 2));
     } catch (e: any) {
       setOut(String(e?.message ?? e));
     } finally {
@@ -32,24 +36,24 @@ export default function ResearchPage() {
       <div>
         <h1 className="text-2xl font-semibold">Research</h1>
         <p className="text-sm text-slate-600 mt-1">
-          GEO content generation and technical SEO audit entry points (wired to Cloudflare Pages Functions).
+          GEO content generation and technical SEO audit entry points (wired to Supabase Edge Functions).
         </p>
       </div>
 
       <div className="rounded-2xl border bg-white p-4 shadow-soft">
         <div className="flex flex-wrap gap-2">
           <button
-            onClick={() => setMode('geo')}
+            onClick={() => setMode("geo")}
             className={`px-3 py-1.5 rounded-xl text-sm border ${
-              mode === 'geo' ? 'bg-slate-900 text-white border-slate-900' : 'hover:bg-slate-50'
+              mode === "geo" ? "bg-slate-900 text-white border-slate-900" : "hover:bg-slate-50"
             }`}
           >
             GEO content
           </button>
           <button
-            onClick={() => setMode('audit')}
+            onClick={() => setMode("audit")}
             className={`px-3 py-1.5 rounded-xl text-sm border ${
-              mode === 'audit' ? 'bg-slate-900 text-white border-slate-900' : 'hover:bg-slate-50'
+              mode === "audit" ? "bg-slate-900 text-white border-slate-900" : "hover:bg-slate-50"
             }`}
           >
             SEO audit
@@ -57,7 +61,7 @@ export default function ResearchPage() {
         </div>
 
         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
-          {mode === 'geo' ? (
+          {mode === "geo" ? (
             <>
               <div className="md:col-span-2">
                 <div className="text-xs text-slate-500 mb-1">Seed keyword</div>
@@ -73,7 +77,7 @@ export default function ResearchPage() {
                   disabled={busy}
                   className="w-full px-4 py-2 rounded-xl bg-slate-900 text-white"
                 >
-                  {busy ? 'Running…' : 'Generate'}
+                  {busy ? "Running…" : "Generate"}
                 </button>
               </div>
             </>
@@ -93,7 +97,7 @@ export default function ResearchPage() {
                   disabled={busy}
                   className="w-full px-4 py-2 rounded-xl bg-slate-900 text-white"
                 >
-                  {busy ? 'Running…' : 'Audit'}
+                  {busy ? "Running…" : "Audit"}
                 </button>
               </div>
             </>
@@ -103,7 +107,7 @@ export default function ResearchPage() {
 
       <div className="rounded-2xl border bg-slate-950 text-slate-100 p-4 shadow-soft">
         <div className="text-sm font-medium">Output</div>
-        <pre className="mt-3 text-xs overflow-x-auto min-h-40">{out || '—'}</pre>
+        <pre className="mt-3 text-xs overflow-x-auto min-h-40">{out || "—"}</pre>
       </div>
     </div>
   );

@@ -14,7 +14,11 @@ function getFunctionsBaseUrl() {
   return `${origin}/functions/v1`;
 }
 
-export async function callEdgeFunction(functionName: string, body?: unknown): Promise<EdgeFunctionResult> {
+export async function callEdgeFunction(
+  functionName: string,
+  body?: unknown,
+  options?: { headers?: Record<string, string> }
+): Promise<EdgeFunctionResult> {
   const supabase = getSupabase();
   if (!supabase) {
     return { ok: false, status: 500, bodyText: "Supabase client not initialized." };
@@ -45,6 +49,7 @@ export async function callEdgeFunction(functionName: string, body?: unknown): Pr
       Authorization: `Bearer ${accessToken}`,
       apikey: anonKey,
       "Content-Type": "application/json",
+      ...(options?.headers ?? {}),
     },
     body: JSON.stringify(body ?? {}),
   });

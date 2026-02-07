@@ -6,6 +6,11 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const source = req.headers.get("x-rbm-source");
+    if (source !== "settings") {
+      return corsErrorResponse(req, "Forbidden", 403);
+    }
+
     const supabase = getSupabaseClient();
     const user = await requireUser(req);
     const { key, value } = await req.json();
