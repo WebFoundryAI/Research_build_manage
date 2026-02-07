@@ -1,118 +1,316 @@
-import React from "react";
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar } from "recharts";
+import { useState, useEffect, useCallback } from "react";
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
+import { callEdgeFunction } from "../lib/edgeFunctions";
+import type { Website, WebsitesSummary } from "../lib/types";
+import { RefreshCw, Globe, Activity, Shield, TrendingUp } from "lucide-react";
 
-const lineData = [
-  { day: "Mon", impressions: 1200, clicks: 34 },
-  { day: "Tue", impressions: 1800, clicks: 41 },
-  { day: "Wed", impressions: 1400, clicks: 38 },
-  { day: "Thu", impressions: 2200, clicks: 55 },
-  { day: "Fri", impressions: 2600, clicks: 63 },
-  { day: "Sat", impressions: 1900, clicks: 46 },
-  { day: "Sun", impressions: 2400, clicks: 59 },
-];
+const COLORS = {
+  live: "#22c55e",
+  down: "#ef4444",
+  unknown: "#94a3b8",
+};
 
-const barData = [
-  { name: "Live", value: 18 },
-  { name: "Staging", value: 6 },
-  { name: "Broken", value: 3 },
-];
-
-const sites = [
-  { domain: "manchesterblockeddrain.co.uk", live: true, gsc: "connected", ga: "pending", lastCheck: "2h ago" },
-  { domain: "bristolemergencyplumber.co.uk", live: true, gsc: "pending", ga: "pending", lastCheck: "6h ago" },
-  { domain: "swindonblockeddrains.co.uk", live: false, gsc: "pending", ga: "pending", lastCheck: "—" },
-];
-
-function Card({ title, value, sub }: { title: string; value: string; sub: string }) {
+function Card({ title, value, sub, color }: { title: string; value: string | number; sub: string; color?: string }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
+    <div className="rounded-2xl border border-slate-200 bg-white p-4">
       <div className="text-xs opacity-70">{title}</div>
-      <div className="mt-2 text-2xl font-semibold">{value}</div>
+      <div className={`mt-2 text-2xl font-semibold ${color || ""}`}>{value}</div>
       <div className="mt-1 text-xs opacity-60">{sub}</div>
     </div>
   );
 }
 
+function StatusBadge({ isLive }: { isLive?: boolean }) {
+  if (isLive === undefined) {
+    return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-slate-200 text-slate-600">Unknown</span>;
+  }
+  if (isLive) {
+    return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-emerald-50 text-emerald-600">Live</span>;
+  }
+  return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-red-50 text-red-600">Down</span>;
+}
+
+function SeoScoreBadge({ score }: { score?: number }) {
+  if (score === undefined) return <span className="text-slate-500">—</span>;
+  const color = score >= 80 ? "text-emerald-600" : score >= 50 ? "text-amber-600" : "text-red-600";
+  return <span className={`font-semibold ${color}`}>{score}</span>;
+}
+
 export default function Dashboard() {
+  const [websites, setWebsites] = useState<Website[]>([]);
+  const [summary, setSummary] = useState<WebsitesSummary>({ total: 0, live: 0, down: 0, avgSeoScore: 0 });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await callEdgeFunction("websites", {});
+      if (result.ok && result.json) {
+        const data = result.json as { websites: Website[]; summary: WebsitesSummary };
+        setWebsites(data.websites || []);
+        setSummary(data.summary || { total: 0, live: 0, down: 0, avgSeoScore: 0 });
+      } else if (!result.ok && result.status === 401) {
+        // Not authenticated - show demo data
+        setWebsites([]);
+        setSummary({ total: 0, live: 0, down: 0, avgSeoScore: 0 });
+      } else {
+        setError(result.bodyText || "Failed to load data");
+      }
+    } catch (err) {
+      setError("Failed to connect to server");
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // Prepare chart data
+  const fleetStatusData = [
+    { name: "Live", value: summary.live, color: COLORS.live },
+    { name: "Down", value: summary.down, color: COLORS.down },
+    { name: "Unknown", value: Math.max(0, summary.total - summary.live - summary.down), color: COLORS.unknown },
+  ].filter(d => d.value > 0);
+
+  // Get SEO score distribution
+  const seoDistribution = websites.reduce((acc, w) => {
+    const score = w.seo_health_checks?.[0]?.health_score;
+    if (score === undefined) {
+      acc.unchecked++;
+    } else if (score >= 80) {
+      acc.good++;
+    } else if (score >= 50) {
+      acc.medium++;
+    } else {
+      acc.poor++;
+    }
+    return acc;
+  }, { good: 0, medium: 0, poor: 0, unchecked: 0 });
+
+  const seoData = [
+    { name: "Good (80+)", value: seoDistribution.good },
+    { name: "Medium (50-79)", value: seoDistribution.medium },
+    { name: "Poor (<50)", value: seoDistribution.poor },
+  ];
+
+  // Recent checks - last 5 websites checked
+  const recentWebsites = [...websites]
+    .filter(w => w.last_checked_at)
+    .sort((a, b) => new Date(b.last_checked_at!).getTime() - new Date(a.last_checked_at!).getTime())
+    .slice(0, 5);
+
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return "—";
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return "Just now";
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    return `${diffDays}d ago`;
+  };
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-semibold">Dashboard</h1>
-        <p className="mt-2 text-sm opacity-70">
-          Unified monitoring for sites, SEO signals, research, and planned work.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-semibold">Dashboard</h1>
+          <p className="mt-2 text-sm opacity-70">
+            Unified monitoring for your website portfolio, SEO health, and performance.
+          </p>
+        </div>
+        <button
+          onClick={loadData}
+          disabled={loading}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-sm"
+        >
+          <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
+          Refresh
+        </button>
       </div>
 
+      {error && (
+        <div className="rounded-xl bg-red-50 border border-red-800 p-4 text-red-600">
+          {error}
+        </div>
+      )}
+
+      {/* Summary Cards */}
       <div className="grid gap-3 md:grid-cols-4">
-        <Card title="Total sites" value="27" sub="tracked in registry" />
-        <Card title="Live" value="18" sub="passing uptime checks" />
-        <Card title="Impressions (7d)" value="13.5k" sub="sample data (wire GSC next)" />
-        <Card title="Clicks (7d)" value="336" sub="sample data (wire GSC next)" />
+        <Card title="Total Sites" value={summary.total} sub="in your portfolio" />
+        <Card title="Live" value={summary.live} sub="passing uptime checks" color="text-emerald-600" />
+        <Card title="Down" value={summary.down} sub="need attention" color="text-red-600" />
+        <Card title="Avg SEO Score" value={summary.avgSeoScore || "—"} sub="across all sites" color="text-blue-600" />
       </div>
 
+      {/* Charts Row */}
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
-          <div className="text-sm font-semibold">Search trend (7d)</div>
-          <div className="mt-3 h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={lineData}>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                <XAxis dataKey="day" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="impressions" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="clicks" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+        {/* Fleet Status Pie Chart */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-4">
+          <div className="text-sm font-semibold mb-4">Fleet Status</div>
+          {summary.total === 0 ? (
+            <div className="h-64 flex items-center justify-center text-slate-500">
+              No websites added yet
+            </div>
+          ) : (
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={fleetStatusData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={90}
+                    paddingAngle={2}
+                    dataKey="value"
+                    label={({ name, value }) => `${name}: ${value}`}
+                  >
+                    {fleetStatusData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
-          <div className="text-sm font-semibold">Fleet status</div>
-          <div className="mt-3 h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={barData}>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                <XAxis dataKey="name" />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Bar dataKey="value" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+        {/* SEO Score Distribution */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-4">
+          <div className="text-sm font-semibold mb-4">SEO Score Distribution</div>
+          {summary.total === 0 ? (
+            <div className="h-64 flex items-center justify-center text-slate-500">
+              No SEO data yet
+            </div>
+          ) : (
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={seoData} layout="vertical">
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.2} horizontal={false} />
+                  <XAxis type="number" />
+                  <YAxis dataKey="name" type="category" width={100} />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
-        <div className="flex items-center justify-between">
-          <div className="text-sm font-semibold">Websites</div>
-          <div className="text-xs opacity-60">Next: wire Functions → registry → checks</div>
+      {/* Recent Websites Table */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="text-sm font-semibold">Recent Activity</div>
+          <a href="/websites" className="text-xs text-blue-600 hover:underline">View all websites →</a>
         </div>
 
-        <div className="mt-3 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="text-left opacity-70">
-              <tr>
-                <th className="py-2 pr-4">Domain</th>
-                <th className="py-2 pr-4">Live</th>
-                <th className="py-2 pr-4">GSC</th>
-                <th className="py-2 pr-4">GA4</th>
-                <th className="py-2 pr-4">Last check</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sites.map((s) => (
-                <tr key={s.domain} className="border-t border-slate-800/60">
-                  <td className="py-2 pr-4 font-medium">{s.domain}</td>
-                  <td className="py-2 pr-4">{s.live ? "Yes" : "No"}</td>
-                  <td className="py-2 pr-4">{s.gsc}</td>
-                  <td className="py-2 pr-4">{s.ga}</td>
-                  <td className="py-2 pr-4">{s.lastCheck}</td>
+        {loading ? (
+          <div className="py-8 text-center text-slate-500">Loading...</div>
+        ) : websites.length === 0 ? (
+          <div className="py-8 text-center text-slate-500">
+            <Globe size={32} className="mx-auto mb-2 opacity-50" />
+            <p>No websites monitored yet.</p>
+            <a href="/websites" className="text-blue-600 hover:underline text-sm">Add your first website →</a>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="text-left opacity-70">
+                <tr>
+                  <th className="py-2 pr-4">Website</th>
+                  <th className="py-2 pr-4">Status</th>
+                  <th className="py-2 pr-4">SEO</th>
+                  <th className="py-2 pr-4">Response</th>
+                  <th className="py-2 pr-4">Last Check</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {recentWebsites.map((website) => {
+                  const latestStatus = website.status_checks?.[0];
+                  const latestSeo = website.seo_health_checks?.[0];
+                  return (
+                    <tr key={website.id} className="border-t border-slate-200">
+                      <td className="py-3 pr-4">
+                        <a href="/websites" className="hover:text-blue-600">
+                          <div className="font-medium">{website.name || website.url}</div>
+                          {website.name && <div className="text-xs opacity-60">{website.url}</div>}
+                        </a>
+                      </td>
+                      <td className="py-3 pr-4">
+                        <StatusBadge isLive={latestStatus?.is_live} />
+                      </td>
+                      <td className="py-3 pr-4">
+                        <SeoScoreBadge score={latestSeo?.health_score} />
+                      </td>
+                      <td className="py-3 pr-4 text-slate-400">
+                        {latestStatus?.response_time_ms ? `${latestStatus.response_time_ms}ms` : "—"}
+                      </td>
+                      <td className="py-3 pr-4 text-slate-500 text-xs">
+                        {formatDate(website.last_checked_at)}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <a
+          href="/websites"
+          className="rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-100 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-blue-50">
+              <Globe size={20} className="text-blue-600" />
+            </div>
+            <div>
+              <div className="font-medium">Website Monitor</div>
+              <div className="text-xs opacity-60">Manage and check your websites</div>
+            </div>
+          </div>
+        </a>
+        <a
+          href="/research"
+          className="rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-100 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-emerald-50">
+              <TrendingUp size={20} className="text-emerald-600" />
+            </div>
+            <div>
+              <div className="font-medium">Research Tools</div>
+              <div className="text-xs opacity-60">SEO audit & content generation</div>
+            </div>
+          </div>
+        </a>
+        <a
+          href="/settings"
+          className="rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-100 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-purple-50">
+              <Shield size={20} className="text-purple-600" />
+            </div>
+            <div>
+              <div className="font-medium">Settings</div>
+              <div className="text-xs opacity-60">API keys & integrations</div>
+            </div>
+          </div>
+        </a>
       </div>
     </div>
   );

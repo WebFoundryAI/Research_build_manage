@@ -39,3 +39,28 @@ This skeleton is intended to be deployed on **Cloudflare Pages** as a full‑sta
 4. Cloudflare Pages will detect functions in `apps/edge-functions/functions`.  To emulate functions locally, install [wrangler](https://developers.cloudflare.com/workers/wrangler/) and run `wrangler pages dev ./apps/frontend --functions ./apps/edge-functions/functions`.
 
 Refer to the planning documents for detailed instructions on how to extend each module and integrate Supabase, DataForSEO and OpenAI services.
+
+## Local Setup
+
+Run the commands below to configure Supabase env vars locally and start the Vite dev server:
+
+```
+./super-seo-tool/scripts/set_supabase_env.sh
+npm --prefix apps/frontend install
+npm --prefix apps/frontend run dev -- --host --port 5173
+```
+
+The `set_supabase_env.sh` script writes `apps/frontend/.env.local` (do not commit it).
+
+## Supabase Edge Functions
+
+Deploy the secrets functions and configure the encryption key using the Supabase CLI:
+
+```
+supabase secrets set SUPABASE_FUNCTIONS_SECRET="your-strong-key"
+supabase functions deploy secrets-set
+supabase functions deploy secrets-get
+supabase functions deploy secrets-list
+```
+
+Settings secrets require an authenticated session, and values are stored server-side via Supabase Edge Functions so they are never exposed client-side.

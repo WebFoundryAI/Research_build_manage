@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "pnpm --filter ./apps/frontend dev",
     "build": "pnpm --filter ./apps/frontend build",
-    "lint": "echo 'TODO: add linting scripts'"
+    "lint": "pnpm --filter ./apps/frontend lint",
+    "type-check": "pnpm --filter ./apps/frontend type-check"
   },
   "workspaces": [
     "apps/*",

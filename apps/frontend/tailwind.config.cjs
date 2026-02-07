@@ -8,7 +8,7 @@ module.exports = {
         '2xl': '1.25rem',
       },
       boxShadow: {
-        soft: '0 10px 30px rgba(0,0,0,0.12)',
+        soft: '0 10px 30px rgba(0,0,0,0.08)',
       },
     },
   },
