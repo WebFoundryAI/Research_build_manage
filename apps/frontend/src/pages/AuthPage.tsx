@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth } from "../lib/auth";
 
 export default function AuthPage() {
-  const { mode, loading, user, error, signInWithGoogle } = useAuth();
+  const { loading, user, error, signInWithGoogle } = useAuth();
 
   if (loading) return <div className="text-sm opacity-70">Loading…</div>;
   if (user) {
@@ -18,11 +18,7 @@ export default function AuthPage() {
   return (
     <div className="max-w-lg space-y-4">
       <h1 className="text-3xl font-semibold">Sign in</h1>
-      <p className="text-sm opacity-70">
-        {mode === "demo"
-          ? "Supabase env vars are not configured, so the app is running in Demo Mode."
-          : "Sign in with Google via Supabase OAuth."}
-      </p>
+      <p className="text-sm opacity-70">Sign in with Google via Supabase OAuth.</p>
 
       {error ? (
         <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-200">
@@ -34,13 +30,8 @@ export default function AuthPage() {
         onClick={() => signInWithGoogle()}
         className="rounded-xl bg-slate-800 px-4 py-3 text-sm font-semibold hover:bg-slate-700"
       >
-        {mode === "demo" ? "Enter Demo" : "Continue with Google"}
+        Continue with Google
       </button>
-
-      <div className="text-xs opacity-60">
-        To enable real auth: set VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY in Cloudflare Pages env vars,
-        then redeploy.
-      </div>
     </div>
   );
 }

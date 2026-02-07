@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getSupabase, getSupabaseInitError } from "./supabase";
+import { getSupabaseInitError, supabaseClient } from "./supabaseClient";
 
 type AppUser = {
   id: string;
@@ -8,10 +8,7 @@ type AppUser = {
   avatar_url?: string;
 };
 
-type AuthMode = "supabase" | "demo";
-
 type AuthContextValue = {
-  mode: AuthMode;
   loading: boolean;
   user: AppUser | null;
   error: string | null;
@@ -21,29 +18,9 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-const DEMO_KEY = "rbm_demo_user";
-
-function getDemoUser(): AppUser | null {
-  try {
-    const raw = localStorage.getItem(DEMO_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-function setDemoUser(u: AppUser | null) {
-  try {
-    if (!u) localStorage.removeItem(DEMO_KEY);
-    else localStorage.setItem(DEMO_KEY, JSON.stringify(u));
-  } catch {}
-}
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const supabase = useMemo(() => getSupabase(), []);
+  const supabase = useMemo(() => supabaseClient, []);
   const supabaseInitError = getSupabaseInitError();
-
-  const mode: AuthMode = supabase ? "supabase" : "demo";
 
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<AppUser | null>(null);
@@ -56,9 +33,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       setError(null);
 
-      if (mode === "demo") {
+      if (!supabase) {
         if (supabaseInitError) setError(supabaseInitError.message);
-        setUser(getDemoUser());
+        setUser(null);
         setLoading(false);
         return;
       }
@@ -91,13 +68,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     boot();
     return () => { if (unsub) unsub(); };
-  }, [mode, supabase, supabaseInitError]);
+  }, [supabase, supabaseInitError]);
 
   async function signInWithGoogle() {
-    if (mode === "demo") {
-      const demo = { id: "demo-user", email: "demo@local", name: "Demo User" };
-      setDemoUser(demo);
-      setUser(demo);
+    if (!supabase) {
+      const message = supabaseInitError?.message ?? "Supabase is not configured.";
+      setError(message);
       return;
     }
 
@@ -108,16 +84,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function signOut() {
-    if (mode === "demo") {
-      setDemoUser(null);
-      setUser(null);
-      return;
-    }
+    if (!supabase) return;
     await supabase!.auth.signOut();
     setUser(null);
   }
 
-  const value: AuthContextValue = { mode, loading, user, error, signInWithGoogle, signOut };
+  const value: AuthContextValue = { loading, user, error, signInWithGoogle, signOut };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

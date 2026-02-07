@@ -13,7 +13,7 @@ const nav = [
 ];
 
 export default function Layout() {
-  const { mode, user, error, signOut } = useAuth();
+  const { user, error, signOut } = useAuth();
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
@@ -22,7 +22,6 @@ export default function Layout() {
           <div className="px-5 py-4">
             <div className="text-sm opacity-70">WebFoundryAI</div>
             <div className="text-lg font-semibold">Research Build Manage</div>
-            <div className="mt-2 text-xs opacity-70">Mode: {mode}</div>
           </div>
 
           <nav className="px-2 pb-4">
