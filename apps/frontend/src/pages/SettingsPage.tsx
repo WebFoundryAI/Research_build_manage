@@ -622,6 +622,22 @@ export default function SettingsPage() {
             <p className="text-sm text-slate-600">
               Keys are stored server-side via Supabase Edge Functions. Stored values are never revealed here.
             </p>
+            <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
+              <div className="font-medium text-slate-800">Required setup checklist</div>
+              <ul className="mt-2 space-y-1">
+                <li>OpenAI API Key (openai_api_key)</li>
+                <li>DataForSEO Login (dataforseo_login)</li>
+                <li>DataForSEO Password (dataforseo_password)</li>
+                <li>Optional: DataForSEO Token (dataforseo_token)</li>
+                <li>Optional: Google API Key (google_api_key)</li>
+                <li>Optional: Cloudflare API Key (cloudflare_api_key)</li>
+              </ul>
+              <div className="mt-3 font-medium text-slate-800">MCP servers to configure</div>
+              <ul className="mt-2 space-y-1">
+                <li>Each MCP server requires a base URL and any required headers.</li>
+                <li>Mark headers as secret when they map to stored secrets in this Settings page.</li>
+              </ul>
+            </div>
           </div>
 
           <div className="grid gap-4">

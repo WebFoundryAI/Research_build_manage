@@ -4,18 +4,24 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../lib/auth";
 import { BarChart3, Globe, Search, Settings, Shield, CalendarClock, User } from "lucide-react";
 
-const nav = [
+const baseNav = [
   { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
   { to: "/websites", label: "Websites", icon: Globe },
   { to: "/research", label: "Research", icon: Search },
   { to: "/planner", label: "Planner", icon: CalendarClock },
-  { to: "/admin", label: "Admin", icon: Shield },
   { to: "/profile", label: "Profile", icon: User },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
 export default function Layout() {
   const { mode, user, error, signOut } = useAuth();
+  const nav = React.useMemo(() => {
+    const items = [...baseNav];
+    if (user?.isAdmin) {
+      items.splice(4, 0, { to: "/admin", label: "Admin", icon: Shield });
+    }
+    return items;
+  }, [user?.isAdmin]);
   const [theme, setThemeState] = React.useState<Theme>(() => getTheme());
 
   const toggleTheme = React.useCallback(() => {

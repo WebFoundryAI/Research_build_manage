@@ -6,7 +6,21 @@
  * statistics, enable/disable features and manage user roles.  This page
  * currently displays a placeholder describing these responsibilities.
  */
+import { useAuth } from "../lib/auth";
+
 export default function AdminPage() {
+  const { user } = useAuth();
+  if (!user?.isAdmin) {
+    return (
+      <div className="p-8">
+        <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
+        <p className="text-gray-700">
+          You do not have access to this page. Contact an administrator if you need admin privileges.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
