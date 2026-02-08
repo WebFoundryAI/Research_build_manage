@@ -7,6 +7,8 @@ export type EdgeFunctionResult = {
   json?: unknown;
 };
 
+const DEFAULT_TIMEOUT_MS = 20000;
+
 function getFunctionsBaseUrl() {
   const supabaseUrl = (import.meta as any).env?.VITE_SUPABASE_URL as string | undefined;
   if (!supabaseUrl) return null;
@@ -17,7 +19,7 @@ function getFunctionsBaseUrl() {
 export async function callEdgeFunction(
   functionName: string,
   body?: unknown,
-  options?: { headers?: Record<string, string> }
+  options?: { headers?: Record<string, string>; timeoutMs?: number }
 ): Promise<EdgeFunctionResult> {
   const supabase = getSupabase();
   if (!supabase) {
@@ -43,16 +45,34 @@ export async function callEdgeFunction(
     return { ok: false, status: 500, bodyText: "Missing VITE_SUPABASE_URL." };
   }
 
-  const response = await fetch(`${baseUrl}/${functionName}`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      apikey: anonKey,
-      "Content-Type": "application/json",
-      ...(options?.headers ?? {}),
-    },
-    body: JSON.stringify(body ?? {}),
-  });
+  const controller = new AbortController();
+  const timeoutMs = options?.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  let response: Response;
+  try {
+    response = await fetch(`${baseUrl}/${functionName}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        apikey: anonKey,
+        "Content-Type": "application/json",
+        ...(options?.headers ?? {}),
+      },
+      body: JSON.stringify(body ?? {}),
+      signal: controller.signal,
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.name === "AbortError"
+          ? `Request timed out after ${timeoutMs / 1000}s.`
+          : error.message
+        : String(error);
+    return { ok: false, status: 0, bodyText: message };
+  } finally {
+    clearTimeout(timeoutId);
+  }
 
   const bodyText = await response.text();
   let json: unknown;

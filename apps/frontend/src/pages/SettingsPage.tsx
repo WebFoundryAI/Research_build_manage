@@ -365,8 +365,9 @@ export default function SettingsPage() {
         error: null,
       },
     }));
-    const result = await callEdgeFunction("secrets-get", { key });
+    const result = await callEdgeFunction("secrets-get", { key }, { timeoutMs: 15000 });
     if (!result.ok) {
+      setToast({ type: "error", message: formatEdgeFunctionError("secrets-get", result) });
       setApiKeys((prev) => ({
         ...prev,
         [key]: { ...prev[key], status: "idle", error: formatEdgeFunctionError("secrets-get", result) },
@@ -409,15 +410,18 @@ export default function SettingsPage() {
         error: null,
       },
     }));
+    const label = apiKeyFieldMap[key]?.label ?? key;
     const result = await callEdgeFunction(
       "secrets-set",
       { key, value: current.value },
-      { headers: { "x-rbm-source": "settings" } }
+      { headers: { "x-rbm-source": "settings" }, timeoutMs: 15000 }
     );
     if (!result.ok) {
+      const errorMessage = formatEdgeFunctionError("secrets-set", result);
+      setToast({ type: "error", message: errorMessage });
       setApiKeys((prev) => ({
         ...prev,
-        [key]: { ...prev[key], status: "idle", error: formatEdgeFunctionError("secrets-set", result) },
+        [key]: { ...prev[key], status: "idle", error: errorMessage },
       }));
       return;
     }
@@ -425,6 +429,7 @@ export default function SettingsPage() {
       ...prev,
       [key]: { ...prev[key], value: "", status: "idle", error: null },
     }));
+    setToast({ type: "success", message: `${label} saved.` });
     await loadSecret(key);
   }
 
@@ -459,7 +464,7 @@ export default function SettingsPage() {
     setSettingsMessage(null);
 
     const payload = buildSettingsPayload();
-    const result = await callEdgeFunction("settings-update", { settings: payload });
+    const result = await callEdgeFunction("settings-update", { settings: payload }, { timeoutMs: 20000 });
     if (!result.ok) {
       const errorMessage = formatEdgeFunctionError("settings-update", result);
       setStatus("error");
@@ -533,11 +538,13 @@ export default function SettingsPage() {
           const result = await callEdgeFunction(
             "secrets-set",
             { key: header.value, value: header.secretValue },
-            { headers: { "x-rbm-source": "settings" } }
+            { headers: { "x-rbm-source": "settings" }, timeoutMs: 15000 }
           );
           if (!result.ok) {
+            const errorMessage = formatEdgeFunctionError("secrets-set", result);
             setMcpStatus("error");
-            setMcpMessage(formatEdgeFunctionError("secrets-set", result));
+            setMcpMessage(errorMessage);
+            setToast({ type: "error", message: errorMessage });
             return;
           }
         }
@@ -618,7 +625,7 @@ export default function SettingsPage() {
       ...prev,
       [providerId]: { status: "running", output: null, timestamp: new Date().toISOString() },
     }));
-    const result = await callEdgeFunction("settings-test", { provider: providerId });
+    const result = await callEdgeFunction("settings-test", { provider: providerId }, { timeoutMs: 20000 });
     if (!result.ok) {
       const errorMessage = formatEdgeFunctionError("settings-test", result);
       setProviderTests((prev) => ({
