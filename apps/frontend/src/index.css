@@ -14,6 +14,11 @@ body {
   color: #0f172a;
 }
 
+html[data-theme="dark"] body {
+  background: rgb(2 6 23);
+  color: rgb(241 245 249);
+}
+
 input,
 textarea,
 select {
@@ -22,12 +27,24 @@ select {
   border-color: #e2e8f0;
 }
 
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select {
+  background-color: #0f1724;
+  color: #f1f5f9;
+  border-color: #334155;
+}
+
 input:focus,
 textarea:focus,
 select:focus {
   border-color: #6366f1;
   outline: none;
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+html[data-theme="dark"] button {
+  color: inherit;
 }
 
 ::-webkit-scrollbar {

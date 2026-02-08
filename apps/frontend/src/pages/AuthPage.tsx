@@ -13,7 +13,7 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
 }
 
 export default function AuthPage() {
-  const { mode, loading, user, error, signInWithGoogle } = useAuth();
+  const { loading, user, error, signInWithGoogle, mode } = useAuth();
 
   const page: React.CSSProperties = {
     minHeight: "100dvh",

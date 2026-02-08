@@ -14,7 +14,17 @@ function applyTheme(theme: Theme) {
 }
 
 export function getTheme(): Theme {
-  return "light";
+  if (typeof window === "undefined") {
+    return "light";
+  }
+  try {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    if (isTheme(stored)) return stored;
+  } catch {
+    // ignore localStorage access errors
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 export function setTheme(theme: Theme) {
