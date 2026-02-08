@@ -100,19 +100,31 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   const refresh = useMemo(
     () => async () => {
-      if (!user) return;
-      setStatus("loading");
-      setError(null);
-      const result = await callEdgeFunction("settings-get", {});
-      if (!result.ok) {
-        setStatus("error");
-        setError(result.bodyText || "Failed to load settings");
+      if (!user) {
+        setStatus("idle");
+        setError(null);
+        setSettings(defaultSettings);
         return;
       }
-      const payload = result.json as { settings?: SettingsRecord; updated_at?: string | null } | undefined;
-      const merged = mergeSettings({ ...payload?.settings, updated_at: payload?.updated_at ?? null });
-      setSettings(merged);
-      setStatus("idle");
+      setStatus("loading");
+      setError(null);
+      try {
+        const result = await callEdgeFunction("settings-get", {});
+        if (!result.ok) {
+          setStatus("error");
+          setError(result.bodyText || "Failed to load settings");
+          setSettings(defaultSettings);
+          return;
+        }
+        const payload = result.json as { settings?: SettingsRecord; updated_at?: string | null } | undefined;
+        const merged = mergeSettings({ ...payload?.settings, updated_at: payload?.updated_at ?? null });
+        setSettings(merged);
+        setStatus("idle");
+      } catch (err) {
+        setStatus("error");
+        setError(err instanceof Error ? err.message : "Failed to load settings");
+        setSettings(defaultSettings);
+      }
     },
     [user?.id]
   );

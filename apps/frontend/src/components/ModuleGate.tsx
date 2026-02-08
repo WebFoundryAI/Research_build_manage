@@ -18,6 +18,10 @@ export default function ModuleGate({ moduleKey, children }: ModuleGateProps) {
     );
   }
 
+  if (status === "error") {
+    return <>{children}</>;
+  }
+
   if (!settings.modules[moduleKey]) {
     return <EmptyState title="Module disabled" />;
   }
