@@ -28,7 +28,8 @@ const navSections = [
   {
     title: "Modules",
     items: [
-      { to: "/mcp-spark", label: "MCP Spark", icon: Zap, desc: "27 SEO & scraping tools" },
+      { to: "/mcp-spark", label: "Multi-tools", icon: Zap, desc: "SEO & scraping suite" },
+      { to: "/build", label: "Build", icon: Sparkles, desc: "Workflow automation" },
       { to: "/daily-checks", label: "Daily Checks", icon: CalendarCheck, desc: "Website monitoring & SEO" },
       { to: "/asset-tracker", label: "Asset Tracker", icon: Package, desc: "Portfolio management" },
       { to: "/nico-geo", label: "Nico GEO", icon: Globe2, desc: "GEO content engine" },
@@ -50,7 +51,12 @@ export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const currentPage = navSections
+  const visibleSections = navSections.map((section) => ({
+    ...section,
+    items: section.items.filter((item) => item.to !== "/admin" || user?.isAdmin),
+  }));
+
+  const currentPage = visibleSections
     .flatMap((s) => s.items)
     .find((item) => {
       if (item.to === "/mcp-spark") {
@@ -119,7 +125,7 @@ export default function Layout() {
           </div>
 
           <nav className="flex-1 overflow-y-auto py-4 px-3">
-            {navSections.map((section) => (
+            {visibleSections.map((section) => (
               <div key={section.title} className="mb-6">
                 <div className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
                   {section.title}
@@ -204,7 +210,7 @@ export default function Layout() {
 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto py-4 px-3">
-            {navSections.map((section) => (
+            {visibleSections.map((section) => (
               <div key={section.title} className="mb-6">
                 <div className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
                   {section.title}

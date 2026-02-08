@@ -81,10 +81,38 @@ export async function decryptValue(payload: string) {
   return new TextDecoder().decode(plain);
 }
 
-export function maskValue(value: string) {
-  if (!value) return "••••";
-  const last = value.slice(-4);
-  return `••••${last}`;
+export type SecretMetadata = {
+  present: boolean;
+  length: number;
+  last4: string;
+  status: "present" | "missing";
+};
+
+export function buildSecretMetadata(value: string | null): SecretMetadata {
+  const present = Boolean(value);
+  const last4 = value ? value.slice(-4) : "";
+  return {
+    present,
+    length: value?.length ?? 0,
+    last4,
+    status: present ? "present" : "missing",
+  };
+}
+
+export async function getSecretValue(userId: string, key: string) {
+  const supabase = getSupabaseClient();
+  const { data, error } = await supabase
+    .from("user_secrets")
+    .select("value_encrypted")
+    .eq("user_id", userId)
+    .eq("key", String(key))
+    .maybeSingle();
+
+  if (error || !data?.value_encrypted) {
+    return null;
+  }
+
+  return decryptValue(data.value_encrypted);
 }
 
 export function getCorsHeaders(req: Request) {
@@ -92,7 +120,7 @@ export function getCorsHeaders(req: Request) {
   const allowOrigin = ALLOWED_ORIGINS.has(origin) ? origin : "null";
   return {
     "Access-Control-Allow-Origin": allowOrigin,
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-rbm-source",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
   };
 }

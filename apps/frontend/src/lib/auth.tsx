@@ -6,6 +6,7 @@ type AppUser = {
   email?: string;
   name?: string;
   avatar_url?: string;
+  isAdmin?: boolean;
 };
 
 type AuthMode = "supabase" | "demo";
@@ -22,11 +23,22 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 const DEMO_KEY = "rbm_demo_user";
+const ADMIN_EMAILS = new Set(["cloudventuresonline@gmail.com"]);
+
+function isAdminEmail(email?: string) {
+  if (!email) return false;
+  return ADMIN_EMAILS.has(email.toLowerCase());
+}
+
+function withAdminFlag(user: AppUser | null): AppUser | null {
+  if (!user) return null;
+  return { ...user, isAdmin: isAdminEmail(user.email) };
+}
 
 function getDemoUser(): AppUser | null {
   try {
     const raw = localStorage.getItem(DEMO_KEY);
-    return raw ? JSON.parse(raw) : null;
+    return raw ? withAdminFlag(JSON.parse(raw)) : null;
   } catch {
     return null;
   }
@@ -35,7 +47,7 @@ function getDemoUser(): AppUser | null {
 function setDemoUser(u: AppUser | null) {
   try {
     if (!u) localStorage.removeItem(DEMO_KEY);
-    else localStorage.setItem(DEMO_KEY, JSON.stringify(u));
+    else localStorage.setItem(DEMO_KEY, JSON.stringify(withAdminFlag(u)));
   } catch {
     // localStorage may be unavailable (e.g. private browsing)
   }
@@ -70,14 +82,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const s = data.session;
         setUser(
           s?.user
-            ? { id: s.user.id, email: s.user.email ?? undefined }
+            ? withAdminFlag({ id: s.user.id, email: s.user.email ?? undefined })
             : null
         );
 
         const { data: sub } = supabase!.auth.onAuthStateChange((_evt, session) => {
           setUser(
             session?.user
-              ? { id: session.user.id, email: session.user.email ?? undefined }
+              ? withAdminFlag({ id: session.user.id, email: session.user.email ?? undefined })
               : null
           );
         });
@@ -98,8 +110,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function signInWithGoogle() {
     if (mode === "demo") {
       const demo = { id: "demo-user", email: "demo@local", name: "Demo User" };
-      setDemoUser(demo);
-      setUser(demo);
+      const demoUser = withAdminFlag(demo);
+      setDemoUser(demoUser);
+      setUser(demoUser);
       return;
     }
 

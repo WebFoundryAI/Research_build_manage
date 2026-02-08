@@ -51,10 +51,16 @@ type EdgeTestState = {
   timestamp: string | null;
 };
 
+type SecretMetadata = {
+  present: boolean;
+  length: number;
+  last4: string;
+  status: "present" | "missing";
+};
+
 type SecretState = {
   value: string;
-  masked: string | null;
-  revealed: string | null;
+  metadata: SecretMetadata | null;
   status: "idle" | "loading" | "saving";
   error: string | null;
 };
@@ -145,6 +151,12 @@ function normalizeCustomKeys(input: unknown): CustomKey[] {
       key: typeof entry?.key === "string" ? entry.key : "",
     }))
     .filter((entry) => entry.key.trim().length > 0);
+}
+
+function formatSecretStatus(metadata: SecretMetadata | null) {
+  if (!metadata?.present) return "Not set";
+  const last4 = metadata.last4 || "----";
+  return `Stored (••••${last4}) · len ${metadata.length}`;
 }
 
 export default function SettingsPage() {
@@ -276,7 +288,7 @@ export default function SettingsPage() {
 
   const [apiKeys, setApiKeys] = useState<Record<string, SecretState>>(() =>
     apiKeyFields.reduce((acc, field) => {
-      acc[field.key] = { value: "", masked: null, revealed: null, status: "idle", error: null };
+      acc[field.key] = { value: "", metadata: null, status: "idle", error: null };
       return acc;
     }, {} as Record<string, SecretState>)
   );
@@ -294,10 +306,8 @@ export default function SettingsPage() {
   const [integrationStatus, setIntegrationStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const [integrationMessage, setIntegrationMessage] = useState<string | null>(null);
 
-  const [showPasswords, setShowPasswords] = useState<Record<string, boolean>>({});
-
-  const supabaseUrlPresent = Boolean((import.meta as any).env?.VITE_SUPABASE_URL);
-  const supabaseAnonPresent = Boolean((import.meta as any).env?.VITE_SUPABASE_ANON_KEY);
+  const [inputVisibility, setInputVisibility] = useState<Record<string, boolean>>({});
+  const supabaseEnv = getSupabaseEnvStatus();
 
   useEffect(() => {
     setDiagnostics((prev) => ({
@@ -400,8 +410,7 @@ export default function SettingsPage() {
       ...prev,
       [key]: {
         value: prev[key]?.value ?? "",
-        masked: prev[key]?.masked ?? null,
-        revealed: prev[key]?.revealed ?? null,
+        metadata: prev[key]?.metadata ?? null,
         status: "loading",
         error: null,
       },
@@ -414,44 +423,12 @@ export default function SettingsPage() {
       }));
       return;
     }
-    const payload = (result.json ?? {}) as { masked?: string | null };
+    const payload = (result.json ?? {}) as { metadata?: SecretMetadata | null };
     setApiKeys((prev) => ({
       ...prev,
       [key]: {
         ...prev[key],
-        masked: payload?.masked ?? null,
-        revealed: null,
-        status: "idle",
-        error: null,
-      },
-    }));
-  }
-
-  async function revealSecret(key: string) {
-    setApiKeys((prev) => ({
-      ...prev,
-      [key]: {
-        value: prev[key]?.value ?? "",
-        masked: prev[key]?.masked ?? null,
-        revealed: prev[key]?.revealed ?? null,
-        status: "loading",
-        error: null,
-      },
-    }));
-    const result = await callEdgeFunction("secrets-get", { key, reveal: true });
-    if (!result.ok) {
-      setApiKeys((prev) => ({
-        ...prev,
-        [key]: { ...prev[key], status: "idle", error: formatEdgeFunctionError("secrets-get", result) },
-      }));
-      return;
-    }
-    const payload = (result.json ?? {}) as { value?: string };
-    setApiKeys((prev) => ({
-      ...prev,
-      [key]: {
-        ...prev[key],
-        revealed: payload?.value ?? "",
+        metadata: payload?.metadata ?? null,
         status: "idle",
         error: null,
       },
@@ -461,8 +438,7 @@ export default function SettingsPage() {
   async function saveSecret(key: string) {
     const current = apiKeys[key] ?? {
       value: "",
-      masked: null,
-      revealed: null,
+      metadata: null,
       status: "idle",
       error: null,
     };
@@ -471,13 +447,16 @@ export default function SettingsPage() {
       ...prev,
       [key]: {
         value: current.value,
-        masked: prev[key]?.masked ?? null,
-        revealed: prev[key]?.revealed ?? null,
+        metadata: prev[key]?.metadata ?? null,
         status: "saving",
         error: null,
       },
     }));
-    const result = await callEdgeFunction("secrets-set", { key, value: current.value });
+    const result = await callEdgeFunction(
+      "secrets-set",
+      { key, value: current.value },
+      { headers: { "x-rbm-source": "settings" } }
+    );
     if (!result.ok) {
       setApiKeys((prev) => ({
         ...prev,
@@ -487,7 +466,7 @@ export default function SettingsPage() {
     }
     setApiKeys((prev) => ({
       ...prev,
-      [key]: { ...prev[key], value: "", revealed: null, status: "idle", error: null },
+      [key]: { ...prev[key], value: "", status: "idle", error: null },
     }));
     await loadSecret(key);
   }
@@ -606,10 +585,11 @@ export default function SettingsPage() {
     for (const server of mcpServers) {
       for (const header of server.headers) {
         if (header.isSecret && header.value && header.secretValue) {
-          const result = await callEdgeFunction("secrets-set", {
-            key: header.value,
-            value: header.secretValue,
-          });
+          const result = await callEdgeFunction(
+            "secrets-set",
+            { key: header.value, value: header.secretValue },
+            { headers: { "x-rbm-source": "settings" } }
+          );
           if (!result.ok) {
             setMcpStatus("error");
             setMcpMessage(formatEdgeFunctionError("secrets-set", result));
@@ -715,6 +695,17 @@ export default function SettingsPage() {
     );
   }
 
+  function toggleInputVisibility(key: string) {
+    setInputVisibility((prev) => ({ ...prev, [key]: !prev[key] }));
+  }
+
+  const envBanner =
+    supabaseEnv.status === "ok"
+      ? { label: "OK", classes: "border-emerald-200 bg-emerald-50 text-emerald-800" }
+      : supabaseEnv.status === "warn"
+      ? { label: "WARN", classes: "border-amber-200 bg-amber-50 text-amber-800" }
+      : { label: "ERROR", classes: "border-red-200 bg-red-50 text-red-800" };
+
   if (mode === "demo" || !supabase) {
     return (
       <div className="max-w-4xl">
@@ -749,6 +740,11 @@ export default function SettingsPage() {
         <p className="mt-2 text-sm text-slate-500">
           Centralize API keys, MCP servers, integrations, and diagnostics.
         </p>
+      </div>
+
+      <div className={`rounded-2xl border p-4 text-sm ${envBanner.classes}`}>
+        <div className="font-semibold">Supabase env status: {envBanner.label}</div>
+        <div className="mt-1">URL and anon key validation includes presence, format, and safe metadata checks.</div>
       </div>
 
       {initError && (
@@ -883,60 +879,41 @@ export default function SettingsPage() {
                 API Keys
               </h2>
               <p className="text-sm text-slate-500 mt-1">
-                Keys are stored server-side via Supabase Edge Functions. Values are masked by default.
+                Keys are stored server-side via Supabase Edge Functions. Values are never revealed here.
               </p>
             </div>
 
             <div className="space-y-4">
               {apiKeyFields.map((field) => {
                 const state = apiKeys[field.key];
-                const isPasswordVisible = showPasswords[field.key];
                 return (
                   <div key={field.key} className="rounded-xl border border-slate-200 p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-medium">{field.label}</div>
-                        <div className="text-xs text-slate-500 mt-0.5">
-                          {state.masked ? (
-                            <span className="text-emerald-600 flex items-center gap-1">
-                              <CheckCircle size={12} /> Stored ({state.masked})
-                            </span>
-                          ) : (
-                            <span className="text-slate-500">Not configured</span>
-                          )}
-                        </div>
+                    <div>
+                      <div className="font-medium">{field.label}</div>
+                      <div className="text-xs text-slate-500 mt-0.5">
+                        {formatSecretStatus(state.metadata)}
                       </div>
-                      <button
-                        onClick={() => revealSecret(field.key)}
-                        className="flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-1.5 text-xs hover:bg-slate-100 transition-colors"
-                        disabled={state.status !== "idle"}
-                      >
-                        <Eye size={14} />
-                        Reveal
-                      </button>
                     </div>
-                    <div className="flex gap-2">
-                      <div className="relative flex-1">
-                        <input
-                          type={isPasswordVisible ? "text" : "password"}
-                          value={state.value}
-                          onChange={(event) =>
-                            setApiKeys((prev) => ({
-                              ...prev,
-                              [field.key]: { ...prev[field.key], value: event.target.value },
-                            }))
-                          }
-                          placeholder={field.placeholder}
-                          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none pr-10"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPasswords(prev => ({ ...prev, [field.key]: !prev[field.key] }))}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                        >
-                          {isPasswordVisible ? <EyeOff size={16} /> : <Eye size={16} />}
-                        </button>
-                      </div>
+                    <div className="grid gap-2 md:grid-cols-[1fr_auto_auto]">
+                      <input
+                        type={inputVisibility[field.key] ? "text" : "password"}
+                        value={state.value}
+                        onChange={(event) =>
+                          setApiKeys((prev) => ({
+                            ...prev,
+                            [field.key]: { ...prev[field.key], value: event.target.value },
+                          }))
+                        }
+                        placeholder={field.placeholder}
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => toggleInputVisibility(field.key)}
+                        className="rounded-xl border border-slate-300 px-3 py-2 text-xs hover:bg-slate-100 transition-colors"
+                      >
+                        {inputVisibility[field.key] ? "Hide" : "Show"}
+                      </button>
                       <button
                         onClick={() => saveSecret(field.key)}
                         className="flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-4 py-2.5 text-sm font-medium text-white transition-colors disabled:opacity-50"
@@ -946,11 +923,6 @@ export default function SettingsPage() {
                         {state.status === "saving" ? "Saving..." : "Save"}
                       </button>
                     </div>
-                    {state.revealed && (
-                      <div className="text-xs bg-slate-100 rounded-lg p-2 font-mono break-all">
-                        {state.revealed}
-                      </div>
-                    )}
                     {state.error && (
                       <div className="text-xs text-red-600 flex items-center gap-1">
                         <AlertTriangle size={12} />
@@ -1005,8 +977,7 @@ export default function SettingsPage() {
               {customKeys.map((entry) => {
                 const state = apiKeys[entry.key] ?? {
                   value: "",
-                  masked: null,
-                  revealed: null,
+                  metadata: null,
                   status: "idle",
                   error: null,
                 };
@@ -1025,9 +996,9 @@ export default function SettingsPage() {
                         Remove
                       </button>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="grid gap-2 md:grid-cols-[1fr_auto_auto]">
                       <input
-                        type="password"
+                        type={inputVisibility[entry.key] ? "text" : "password"}
                         value={state.value}
                         onChange={(event) =>
                           setApiKeys((prev) => ({
@@ -1039,11 +1010,10 @@ export default function SettingsPage() {
                         className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
                       />
                       <button
-                        onClick={() => revealSecret(entry.key)}
+                        onClick={() => toggleInputVisibility(entry.key)}
                         className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs hover:bg-slate-100 transition-colors"
-                        disabled={state.status !== "idle"}
                       >
-                        Reveal
+                        {inputVisibility[entry.key] ? "Hide" : "Show"}
                       </button>
                       <button
                         onClick={() => saveSecret(entry.key)}
@@ -1054,8 +1024,9 @@ export default function SettingsPage() {
                       </button>
                     </div>
                     <div className="text-xs text-slate-500">
-                      {state.masked ? `Stored (${state.masked})` : "Not set"}
+                      {formatSecretStatus(state.metadata)}
                     </div>
+                    {state.error && <div className="text-xs text-red-600">{state.error}</div>}
                   </div>
                 );
               })}
@@ -1194,7 +1165,7 @@ export default function SettingsPage() {
                       </div>
                       {header.isSecret && (
                         <input
-                          type="password"
+                          type={inputVisibility[header.id] ? "text" : "password"}
                           value={header.secretValue}
                           onChange={(event) =>
                             updateHeader(server.id, header.id, { secretValue: event.target.value })
@@ -1202,6 +1173,14 @@ export default function SettingsPage() {
                           placeholder="Secret value (saved to secrets-set)"
                           className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm placeholder:text-slate-400"
                         />
+                      )}
+                      {header.isSecret && (
+                        <button
+                          onClick={() => toggleInputVisibility(header.id)}
+                          className="rounded-lg border px-3 py-1.5 text-xs hover:bg-slate-50"
+                        >
+                          {inputVisibility[header.id] ? "Hide" : "Show"}
+                        </button>
                       )}
                     </div>
                   ))}
@@ -1339,23 +1318,24 @@ export default function SettingsPage() {
             </button>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-xl border border-slate-200 p-4 space-y-3">
-              <h3 className="font-medium text-sm">Supabase Environment</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-slate-500">URL</span>
-                  <span className={supabaseUrlPresent ? "text-emerald-600" : "text-red-600"}>
-                    {supabaseUrlPresent ? "Present" : "Missing"}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Anon Key</span>
-                  <span className={supabaseAnonPresent ? "text-emerald-600" : "text-red-600"}>
-                    {supabaseAnonPresent ? "Present" : "Missing"}
-                  </span>
-                </div>
+          <div className="grid gap-4 md:grid-cols-2 text-sm">
+            <div className="rounded-xl border p-4 space-y-2">
+              <div className="font-medium">Supabase env</div>
+              <div className="flex justify-between">
+                <span>Status</span>
+                <span>{supabaseEnv.status.toUpperCase()}</span>
               </div>
+              <div className="flex justify-between">
+                <span>URL</span>
+                <span>{supabaseEnv.url.present ? "present" : "missing"} · len {supabaseEnv.url.length} · …{supabaseEnv.url.last4 || "----"} · {supabaseEnv.url.format}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Anon key</span>
+                <span>{supabaseEnv.anonKey.present ? "present" : "missing"} · len {supabaseEnv.anonKey.length} · …{supabaseEnv.anonKey.last4 || "----"} · {supabaseEnv.anonKey.format}</span>
+              </div>
+              {supabaseEnv.errors.length > 0 && (
+                <div className="text-xs text-amber-700">{supabaseEnv.errors.join(" ")}</div>
+              )}
             </div>
 
             <div className="rounded-xl border border-slate-200 p-4 space-y-3">
