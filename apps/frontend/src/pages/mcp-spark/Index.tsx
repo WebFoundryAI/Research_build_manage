@@ -34,12 +34,12 @@ const toolCategories = [
     description: "Extract and analyze web content at scale",
     color: "from-blue-500 to-cyan-500",
     tools: [
-      { title: "Single URL Scrape", url: "/mcp-spark/scrape", icon: Globe, description: "Scrape content from any URL" },
-      { title: "Site Crawl", url: "/mcp-spark/crawl", icon: FileSearch, description: "Crawl entire websites" },
-      { title: "URL Map", url: "/mcp-spark/map", icon: Map, description: "Discover all URLs on a site" },
-      { title: "Web Search + Scrape", url: "/mcp-spark/search", icon: Search, description: "Search the web and scrape results" },
-      { title: "Structured Extract", url: "/mcp-spark/extract", icon: Database, description: "Extract structured data from pages" },
-      { title: "Site Cloner", url: "/mcp-spark/clone", icon: Code, description: "Clone websites to React code" },
+      { title: "Single URL Scrape", url: "/multi-tools/scrape", icon: Globe, description: "Scrape content from any URL" },
+      { title: "Site Crawl", url: "/multi-tools/crawl", icon: FileSearch, description: "Crawl entire websites" },
+      { title: "URL Map", url: "/multi-tools/map", icon: Map, description: "Discover all URLs on a site" },
+      { title: "Web Search + Scrape", url: "/multi-tools/search", icon: Search, description: "Search the web and scrape results" },
+      { title: "Structured Extract", url: "/multi-tools/extract", icon: Database, description: "Extract structured data from pages" },
+      { title: "Site Cloner", url: "/multi-tools/clone", icon: Code, description: "Clone websites to React code" },
     ],
   },
   {
@@ -47,10 +47,10 @@ const toolCategories = [
     description: "AI-powered research and analysis",
     color: "from-purple-500 to-pink-500",
     tools: [
-      { title: "Deep Research", url: "/mcp-spark/deep-research", icon: Brain, description: "AI-powered deep research agent" },
-      { title: "Product Research", url: "/mcp-spark/products", icon: ShoppingCart, description: "Analyze products and markets" },
-      { title: "Content Analysis", url: "/mcp-spark/content-analysis", icon: FileText, description: "Analyze content quality" },
-      { title: "Question Finder", url: "/mcp-spark/questions", icon: HelpCircle, description: "Find questions people ask" },
+      { title: "Deep Research", url: "/multi-tools/deep-research", icon: Brain, description: "AI-powered deep research agent" },
+      { title: "Product Research", url: "/multi-tools/products", icon: ShoppingCart, description: "Analyze products and markets" },
+      { title: "Content Analysis", url: "/multi-tools/content-analysis", icon: FileText, description: "Analyze content quality" },
+      { title: "Question Finder", url: "/multi-tools/questions", icon: HelpCircle, description: "Find questions people ask" },
     ],
   },
   {
@@ -58,12 +58,12 @@ const toolCategories = [
     description: "Discover and analyze keywords",
     color: "from-amber-500 to-orange-500",
     tools: [
-      { title: "Dashboard", url: "/mcp-spark/dashboard", icon: TrendingUp, description: "Keyword research overview" },
-      { title: "Search Volume", url: "/mcp-spark/search-volume", icon: TrendingUp, description: "Get search volume metrics" },
-      { title: "Keyword Ideas", url: "/mcp-spark/ideas", icon: Lightbulb, description: "Generate keyword ideas" },
-      { title: "Difficulty Analysis", url: "/mcp-spark/difficulty", icon: Target, description: "Analyze keyword difficulty" },
-      { title: "Keyword Clustering", url: "/mcp-spark/clustering", icon: Layers, description: "Cluster keywords by topic" },
-      { title: "Trends", url: "/mcp-spark/trends", icon: LineChart, description: "Analyze keyword trends" },
+      { title: "Dashboard", url: "/multi-tools/dashboard", icon: TrendingUp, description: "Keyword research overview" },
+      { title: "Search Volume", url: "/multi-tools/search-volume", icon: TrendingUp, description: "Get search volume metrics" },
+      { title: "Keyword Ideas", url: "/multi-tools/ideas", icon: Lightbulb, description: "Generate keyword ideas" },
+      { title: "Difficulty Analysis", url: "/multi-tools/difficulty", icon: Target, description: "Analyze keyword difficulty" },
+      { title: "Keyword Clustering", url: "/multi-tools/clustering", icon: Layers, description: "Cluster keywords by topic" },
+      { title: "Trends", url: "/multi-tools/trends", icon: LineChart, description: "Analyze keyword trends" },
     ],
   },
   {
@@ -71,10 +71,10 @@ const toolCategories = [
     description: "Analyze competitor SEO strategies",
     color: "from-emerald-500 to-teal-500",
     tools: [
-      { title: "Competitor Keywords", url: "/mcp-spark/competitor-keywords", icon: Users, description: "Find competitor keywords" },
-      { title: "SERP Competitors", url: "/mcp-spark/serp-competitors", icon: Search, description: "Analyze SERP competitors" },
-      { title: "SERP Features", url: "/mcp-spark/serp-features", icon: Eye, description: "Track SERP features" },
-      { title: "Domain Analytics", url: "/mcp-spark/domain-analytics", icon: BarChart, description: "Domain-level analytics" },
+      { title: "Competitor Keywords", url: "/multi-tools/competitor-keywords", icon: Users, description: "Find competitor keywords" },
+      { title: "SERP Competitors", url: "/multi-tools/serp-competitors", icon: Search, description: "Analyze SERP competitors" },
+      { title: "SERP Features", url: "/multi-tools/serp-features", icon: Eye, description: "Track SERP features" },
+      { title: "Domain Analytics", url: "/multi-tools/domain-analytics", icon: BarChart, description: "Domain-level analytics" },
     ],
   },
   {
@@ -82,8 +82,8 @@ const toolCategories = [
     description: "Backlink analysis and opportunities",
     color: "from-red-500 to-rose-500",
     tools: [
-      { title: "Backlink Analysis", url: "/mcp-spark/backlinks", icon: Link2, description: "Analyze backlink profiles" },
-      { title: "Link Opportunities", url: "/mcp-spark/link-opportunities", icon: Unlink, description: "Find link opportunities" },
+      { title: "Backlink Analysis", url: "/multi-tools/backlinks", icon: Link2, description: "Analyze backlink profiles" },
+      { title: "Link Opportunities", url: "/multi-tools/link-opportunities", icon: Unlink, description: "Find link opportunities" },
     ],
   },
   {
@@ -91,7 +91,7 @@ const toolCategories = [
     description: "Local search optimization",
     color: "from-indigo-500 to-violet-500",
     tools: [
-      { title: "Local SEO", url: "/mcp-spark/local-seo", icon: MapPin, description: "Local SEO analysis" },
+      { title: "Local SEO", url: "/multi-tools/local-seo", icon: MapPin, description: "Local SEO analysis" },
     ],
   },
   {
@@ -99,9 +99,9 @@ const toolCategories = [
     description: "History and settings",
     color: "from-slate-500 to-slate-600",
     tools: [
-      { title: "Research History", url: "/mcp-spark/history", icon: History, description: "View research history" },
-      { title: "Scheduled Reports", url: "/mcp-spark/scheduled-reports", icon: Calendar, description: "Schedule automated reports" },
-      { title: "Monitoring", url: "/mcp-spark/monitoring", icon: Activity, description: "Monitor keywords and sites" },
+      { title: "Research History", url: "/multi-tools/history", icon: History, description: "View research history" },
+      { title: "Scheduled Reports", url: "/multi-tools/scheduled-reports", icon: Calendar, description: "Schedule automated reports" },
+      { title: "Monitoring", url: "/multi-tools/monitoring", icon: Activity, description: "Monitor keywords and sites" },
     ],
   },
 ];
@@ -115,7 +115,7 @@ export default function McpSparkIndex() {
           <div className="p-2 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600">
             <Zap size={24} className="text-white" />
           </div>
-          <h1 className="text-3xl font-bold">MCP Spark Tools</h1>
+          <h1 className="text-3xl font-bold">Multi Tools</h1>
         </div>
         <p className="text-slate-400">
           A comprehensive suite of web scraping, keyword research, and SEO analysis tools powered by DataForSEO and Firecrawl APIs.

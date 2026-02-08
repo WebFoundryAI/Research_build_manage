@@ -39,69 +39,69 @@ const menuSections = [
     title: "Web Tools",
     defaultOpen: true,
     items: [
-      { title: "Tools Home", url: "/mcp-spark", icon: Home, end: true },
-      { title: "Single URL Scrape", url: "/mcp-spark/scrape", icon: Globe },
-      { title: "Site Crawl", url: "/mcp-spark/crawl", icon: FileSearch },
-      { title: "URL Map", url: "/mcp-spark/map", icon: Map },
-      { title: "Web Search + Scrape", url: "/mcp-spark/search", icon: Search },
-      { title: "Structured Extract", url: "/mcp-spark/extract", icon: Database },
-      { title: "Site Cloner", url: "/mcp-spark/clone", icon: Code },
+      { title: "Tools Home", url: "/multi-tools", icon: Home, end: true },
+      { title: "Single URL Scrape", url: "/multi-tools/scrape", icon: Globe },
+      { title: "Site Crawl", url: "/multi-tools/crawl", icon: FileSearch },
+      { title: "URL Map", url: "/multi-tools/map", icon: Map },
+      { title: "Web Search + Scrape", url: "/multi-tools/search", icon: Search },
+      { title: "Structured Extract", url: "/multi-tools/extract", icon: Database },
+      { title: "Site Cloner", url: "/multi-tools/clone", icon: Code },
     ],
   },
   {
     title: "Research",
     defaultOpen: true,
     items: [
-      { title: "Deep Research", url: "/mcp-spark/deep-research", icon: Brain },
-      { title: "Product Research", url: "/mcp-spark/products", icon: ShoppingCart },
-      { title: "Content Analysis", url: "/mcp-spark/content-analysis", icon: FileText },
-      { title: "Question Finder", url: "/mcp-spark/questions", icon: HelpCircle },
+      { title: "Deep Research", url: "/multi-tools/deep-research", icon: Brain },
+      { title: "Product Research", url: "/multi-tools/products", icon: ShoppingCart },
+      { title: "Content Analysis", url: "/multi-tools/content-analysis", icon: FileText },
+      { title: "Question Finder", url: "/multi-tools/questions", icon: HelpCircle },
     ],
   },
   {
     title: "Keyword Tools",
     defaultOpen: true,
     items: [
-      { title: "Dashboard", url: "/mcp-spark/dashboard", icon: TrendingUp },
-      { title: "Search Volume", url: "/mcp-spark/search-volume", icon: TrendingUp },
-      { title: "Keyword Ideas", url: "/mcp-spark/ideas", icon: Lightbulb },
-      { title: "Difficulty Analysis", url: "/mcp-spark/difficulty", icon: Target },
-      { title: "Keyword Clustering", url: "/mcp-spark/clustering", icon: Layers },
-      { title: "Trends", url: "/mcp-spark/trends", icon: LineChart },
+      { title: "Dashboard", url: "/multi-tools/dashboard", icon: TrendingUp },
+      { title: "Search Volume", url: "/multi-tools/search-volume", icon: TrendingUp },
+      { title: "Keyword Ideas", url: "/multi-tools/ideas", icon: Lightbulb },
+      { title: "Difficulty Analysis", url: "/multi-tools/difficulty", icon: Target },
+      { title: "Keyword Clustering", url: "/multi-tools/clustering", icon: Layers },
+      { title: "Trends", url: "/multi-tools/trends", icon: LineChart },
     ],
   },
   {
     title: "Competitor Analysis",
     defaultOpen: false,
     items: [
-      { title: "Competitor Keywords", url: "/mcp-spark/competitor-keywords", icon: Users },
-      { title: "SERP Competitors", url: "/mcp-spark/serp-competitors", icon: Search },
-      { title: "SERP Features", url: "/mcp-spark/serp-features", icon: Eye },
-      { title: "Domain Analytics", url: "/mcp-spark/domain-analytics", icon: BarChart },
+      { title: "Competitor Keywords", url: "/multi-tools/competitor-keywords", icon: Users },
+      { title: "SERP Competitors", url: "/multi-tools/serp-competitors", icon: Search },
+      { title: "SERP Features", url: "/multi-tools/serp-features", icon: Eye },
+      { title: "Domain Analytics", url: "/multi-tools/domain-analytics", icon: BarChart },
     ],
   },
   {
     title: "Link Analysis",
     defaultOpen: false,
     items: [
-      { title: "Backlink Analysis", url: "/mcp-spark/backlinks", icon: Link2 },
-      { title: "Link Opportunities", url: "/mcp-spark/link-opportunities", icon: Unlink },
+      { title: "Backlink Analysis", url: "/multi-tools/backlinks", icon: Link2 },
+      { title: "Link Opportunities", url: "/multi-tools/link-opportunities", icon: Unlink },
     ],
   },
   {
     title: "Local",
     defaultOpen: false,
     items: [
-      { title: "Local SEO", url: "/mcp-spark/local-seo", icon: MapPin },
+      { title: "Local SEO", url: "/multi-tools/local-seo", icon: MapPin },
     ],
   },
   {
     title: "Configuration",
     defaultOpen: false,
     items: [
-      { title: "Research History", url: "/mcp-spark/history", icon: History },
-      { title: "Scheduled Reports", url: "/mcp-spark/scheduled-reports", icon: Calendar },
-      { title: "Monitoring", url: "/mcp-spark/monitoring", icon: Activity },
+      { title: "Research History", url: "/multi-tools/history", icon: History },
+      { title: "Scheduled Reports", url: "/multi-tools/scheduled-reports", icon: Calendar },
+      { title: "Monitoring", url: "/multi-tools/monitoring", icon: Activity },
     ],
   },
 ];
@@ -187,7 +187,7 @@ export default function McpSparkLayout() {
                   <Zap size={18} className="text-white" />
                 </div>
                 <div>
-                  <div className="font-semibold text-sm">MCP Spark</div>
+                  <div className="font-semibold text-sm">Multi Tools</div>
                   <div className="text-[10px] text-slate-500">SEO Research Suite</div>
                 </div>
               </div>
@@ -237,7 +237,7 @@ export default function McpSparkLayout() {
           </button>
           <div className="flex items-center gap-2">
             <Zap size={18} className="text-amber-500" />
-            <span className="font-semibold">MCP Spark Tools</span>
+            <span className="font-semibold">Multi Tools</span>
           </div>
         </div>
 

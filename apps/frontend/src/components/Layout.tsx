@@ -28,7 +28,7 @@ const navSections = [
   {
     title: "Modules",
     items: [
-      { to: "/mcp-spark", label: "Multi-tools", icon: Zap, desc: "SEO & scraping suite" },
+      { to: "/multi-tools", label: "Multi Tools", icon: Zap, desc: "SEO & scraping suite" },
       { to: "/build", label: "Build", icon: Sparkles, desc: "Workflow automation" },
       { to: "/daily-checks", label: "Daily Checks", icon: CalendarCheck, desc: "Website monitoring & SEO" },
       { to: "/asset-tracker", label: "Asset Tracker", icon: Package, desc: "Portfolio management" },
@@ -59,8 +59,8 @@ export default function Layout() {
   const currentPage = visibleSections
     .flatMap((s) => s.items)
     .find((item) => {
-      if (item.to === "/mcp-spark") {
-        return location.pathname.startsWith("/mcp-spark");
+      if (item.to === "/multi-tools") {
+        return location.pathname.startsWith("/multi-tools");
       }
       if (item.to === "/daily-checks") {
         return location.pathname.startsWith("/daily-checks");

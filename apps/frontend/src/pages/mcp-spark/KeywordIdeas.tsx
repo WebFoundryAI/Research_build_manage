@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getSupabase } from "../../lib/supabase";
+import { callEdgeFunction } from "../../lib/edgeFunctions";
 import { Lightbulb, Loader2, Download, Search, Copy, CheckCircle } from "lucide-react";
 
 interface KeywordIdea {
@@ -10,11 +10,16 @@ interface KeywordIdea {
 }
 
 const COUNTRIES = [
-  { code: "US", name: "United States" },
-  { code: "UK", name: "United Kingdom" },
-  { code: "CA", name: "Canada" },
-  { code: "AU", name: "Australia" },
+  { code: "US", name: "United States", location: 2840 },
+  { code: "UK", name: "United Kingdom", location: 2826 },
+  { code: "CA", name: "Canada", location: 2124 },
+  { code: "AU", name: "Australia", location: 2036 },
 ];
+
+const COUNTRY_LOCATION_MAP = COUNTRIES.reduce<Record<string, number>>((acc, entry) => {
+  acc[entry.code] = entry.location;
+  return acc;
+}, {});
 
 export default function KeywordIdeas() {
   const [seedKeyword, setSeedKeyword] = useState("");
@@ -40,28 +45,26 @@ export default function KeywordIdeas() {
     setResults([]);
 
     try {
-      const supabase = getSupabase();
-      if (!supabase) throw new Error("Supabase not configured");
-
-      const { data, error } = await supabase.functions.invoke("dataforseo", {
-        body: {
-          seedKeywords: [seedKeyword.trim()],
-          country,
-          language: "en",
-          fetchKeywords: true,
-          fetchSerp: false,
-          keywordLimit: limit,
-        },
+      const locationCode = COUNTRY_LOCATION_MAP[country] ?? 2840;
+      const result = await callEdgeFunction("keyword-research", {
+        keywords: [seedKeyword.trim()],
+        location_code: locationCode,
+        language_code: "en",
+        fetch_difficulty: false,
+        limit,
       });
 
-      if (error) throw error;
+      if (!result.ok) {
+        throw new Error(result.bodyText || "Keyword research failed");
+      }
 
-      const keywordResults = data?.keywords || [];
+      const payload = result.json as { keywords?: Array<any> } | undefined;
+      const keywordResults = payload?.keywords ?? [];
       const mapped: KeywordIdea[] = keywordResults.map((k: any) => ({
         keyword: k.keyword,
-        search_volume: k.keyword_info?.search_volume ?? k.search_volume ?? null,
-        cpc: k.keyword_info?.cpc ?? k.cpc ?? null,
-        competition: k.keyword_info?.competition ?? k.competition ?? null,
+        search_volume: k.searchVolume ?? k.search_volume ?? null,
+        cpc: k.cpc ?? null,
+        competition: k.competition ?? null,
       }));
 
       setResults(mapped);
