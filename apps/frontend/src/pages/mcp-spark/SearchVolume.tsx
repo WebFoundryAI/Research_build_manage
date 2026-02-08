@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getSupabase } from "../../lib/supabase";
+import { callEdgeFunction } from "../../lib/edgeFunctions";
 import { TrendingUp, Loader2, Download, Search, ArrowUp, ArrowDown, Minus } from "lucide-react";
 
 interface KeywordData {
@@ -17,6 +17,11 @@ const COUNTRIES = [
   { code: "AU", name: "Australia", location: 2036 },
   { code: "DE", name: "Germany", location: 2276 },
 ];
+
+const COUNTRY_LOCATION_MAP = COUNTRIES.reduce<Record<string, number>>((acc, entry) => {
+  acc[entry.code] = entry.location;
+  return acc;
+}, {});
 
 export default function SearchVolume() {
   const [keywords, setKeywords] = useState("");
@@ -47,28 +52,26 @@ export default function SearchVolume() {
     setResults([]);
 
     try {
-      const supabase = getSupabase();
-      if (!supabase) throw new Error("Supabase not configured");
-
-      const { data, error } = await supabase.functions.invoke("dataforseo", {
-        body: {
-          seedKeywords: keywordList,
-          country,
-          language: "en",
-          fetchKeywords: true,
-          fetchSerp: false,
-          keywordLimit: keywordList.length,
-        },
+      const locationCode = COUNTRY_LOCATION_MAP[country] ?? 2840;
+      const result = await callEdgeFunction("keyword-research", {
+        keywords: keywordList,
+        location_code: locationCode,
+        language_code: "en",
+        fetch_difficulty: false,
+        limit: keywordList.length,
       });
 
-      if (error) throw error;
+      if (!result.ok) {
+        throw new Error(result.bodyText || "Keyword research failed");
+      }
 
-      const keywordResults = data?.keywords || [];
+      const payload = result.json as { keywords?: Array<any> } | undefined;
+      const keywordResults = payload?.keywords ?? [];
       const mapped: KeywordData[] = keywordResults.map((k: any) => ({
         keyword: k.keyword,
-        search_volume: k.keyword_info?.search_volume ?? k.search_volume ?? null,
-        cpc: k.keyword_info?.cpc ?? k.cpc ?? null,
-        competition: k.keyword_info?.competition ?? k.competition ?? null,
+        search_volume: k.searchVolume ?? k.search_volume ?? null,
+        cpc: k.cpc ?? null,
+        competition: k.competition ?? null,
         trend: Math.random() > 0.5 ? "up" : Math.random() > 0.5 ? "down" : "stable",
       }));
 
