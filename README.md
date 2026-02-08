@@ -1,66 +1,54 @@
 # Super SEO & Content Platform
 
-This repository contains a monorepo implementation of the unified SEO/content application described in the planning documents.  It is not a full implementation; instead it provides a **skeleton** structure that can be extended to replicate the functionality of several existing WebFoundryAI projects.  The goal is to offer a starting point for building and deploying a comprehensive tool combining AI‑driven content generation, website monitoring, SEO research and account management.
+Research Build Manage is a unified SEO and content platform built with React, Vite, Tailwind, and Supabase. It centralizes keyword research, monitoring, and content workflows behind authenticated Supabase Edge Functions.
 
 ## Repository layout
 
 ```
-super-seo-tool/
-├── package.json                # root package config for monorepo
-├── pnpm-workspace.yaml         # defines workspace packages
-├── apps/
-│   ├── frontend/               # React + Vite application (client)
-│   │   ├── package.json        # frontend dependencies
-│   │   ├── vite.config.ts      # Vite configuration
-│   │   ├── index.html          # base HTML file
-│   │   └── src/
-│   │       ├── main.tsx        # React entry point
-│   │       └── App.tsx         # root component with placeholder routes
-│   └── edge-functions/         # Cloudflare Pages Functions (Deno)
-│       └── functions/
-│           ├── geo_generate.ts  # placeholder for Nico GEO engine
-│           ├── monitor_check.ts # placeholder for website monitoring
-│           └── seo_audit.ts     # placeholder for SEO audit analysis
-├── packages/
-│   └── common/                 # shared utilities and types
-│       ├── supabaseClient.ts   # helper to create Supabase client
-│       └── creditCosts.ts      # credit cost constants (sample)
-└── supabase/
-    └── schema.sql             # SQL migrations for Supabase tables
+apps/
+  frontend/                # React + Vite application
+packages/                  # Shared utilities
+supabase/
+  migrations/              # Supabase SQL migrations
+  functions/               # Supabase Edge Functions (Deno)
 ```
 
-This skeleton is intended to be deployed on **Cloudflare Pages** as a full‑stack application.  The `frontend` app contains the client‑side UI built with React and Tailwind.  The `edge-functions` folder contains Deno functions that will be deployed as Cloudflare Functions and serve as the API layer for content generation, monitoring, and SEO research.  Shared code lives under `packages/common`.  The `supabase/schema.sql` file holds database definitions for user profiles, projects, credits, and other tables.
+## Local setup
 
-## Getting started
+1. Install dependencies: `pnpm install`
+2. Set frontend env vars:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+3. Start the frontend: `pnpm --filter ./apps/frontend dev -- --host --port 5173`
 
-1. Install [pnpm](https://pnpm.io/) globally.
-2. Run `pnpm install` at the root to install workspace dependencies.
-3. Change into `apps/frontend` and run `pnpm dev` to start the Vite development server.
-4. Cloudflare Pages will detect functions in `apps/edge-functions/functions`.  To emulate functions locally, install [wrangler](https://developers.cloudflare.com/workers/wrangler/) and run `wrangler pages dev ./apps/frontend --functions ./apps/edge-functions/functions`.
-
-Refer to the planning documents for detailed instructions on how to extend each module and integrate Supabase, DataForSEO and OpenAI services.
-
-## Local Setup
-
-Run the commands below to configure Supabase env vars locally and start the Vite dev server:
-
-```
-./super-seo-tool/scripts/set_supabase_env.sh
-npm --prefix apps/frontend install
-npm --prefix apps/frontend run dev -- --host --port 5173
-```
-
-The `set_supabase_env.sh` script writes `apps/frontend/.env.local` (do not commit it).
+> Tip: `scripts/smoke-check.sh` verifies required env vars are present before starting the app.
 
 ## Supabase Edge Functions
 
-Deploy the secrets functions and configure the encryption key using the Supabase CLI:
+The app relies on Edge Functions for settings, secrets storage, and provider tests. Deploy them using the Supabase CLI:
 
 ```
-supabase secrets set SUPABASE_FUNCTIONS_SECRET="your-strong-key"
-supabase functions deploy secrets-set
+supabase functions deploy settings-get
+supabase functions deploy settings-update
+supabase functions deploy settings-test
 supabase functions deploy secrets-get
+supabase functions deploy secrets-set
 supabase functions deploy secrets-list
 ```
 
-Settings secrets require an authenticated session, and values are stored server-side via Supabase Edge Functions so they are never exposed client-side.
+Required Supabase function secrets:
+
+```
+supabase secrets set SUPABASE_FUNCTIONS_SECRET="your-strong-key"
+supabase secrets set SUPABASE_ALLOWED_ORIGINS="https://your-pages-domain,https://your-custom-domain"
+```
+
+## Settings & modules
+
+- Settings are stored per user in `user_settings`.
+- Secrets are encrypted and stored in `user_secrets` via Edge Functions.
+- Module toggles and provider selections are configured in **Settings** and drive navigation visibility.
+
+## Deployment
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for Cloudflare Pages configuration and environment variables.

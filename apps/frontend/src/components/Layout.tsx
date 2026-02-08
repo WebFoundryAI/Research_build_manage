@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../lib/auth";
+import { useSettings } from "../lib/settings";
 import {
   BarChart3,
   Settings,
@@ -48,12 +49,28 @@ const navSections = [
 
 export default function Layout() {
   const { mode, user, error, signOut } = useAuth();
+  const { settings } = useSettings();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
+  const moduleVisibility: Record<string, boolean> = {
+    "/multi-tools": settings.modules.multi_tools,
+    "/build": settings.modules.build,
+    "/daily-checks": settings.modules.daily_checks,
+    "/asset-tracker": settings.modules.asset_tracker,
+    "/nico-geo": settings.modules.nico_geo,
+    "/nexus-opencopy": settings.modules.nexus_opencopy,
+  };
+
   const visibleSections = navSections.map((section) => ({
     ...section,
-    items: section.items.filter((item) => item.to !== "/admin" || user?.isAdmin),
+    items: section.items.filter((item) => {
+      if (item.to === "/admin" && !user?.isAdmin) return false;
+      if (item.to in moduleVisibility) {
+        return moduleVisibility[item.to];
+      }
+      return true;
+    }),
   }));
 
   const currentPage = visibleSections

@@ -12,26 +12,7 @@ interface MonitoredDomain {
 }
 
 export default function Monitoring() {
-  const [domains, setDomains] = useState<MonitoredDomain[]>([
-    {
-      id: "1",
-      domain: "example.com",
-      lastCheck: new Date().toISOString(),
-      status: "up",
-      uptime: 99.9,
-      rankChange: 5,
-      keywords: 150,
-    },
-    {
-      id: "2",
-      domain: "myblog.io",
-      lastCheck: new Date().toISOString(),
-      status: "up",
-      uptime: 98.5,
-      rankChange: -3,
-      keywords: 75,
-    },
-  ]);
+  const [domains, setDomains] = useState<MonitoredDomain[]>([]);
 
   const [newDomain, setNewDomain] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -59,8 +40,8 @@ export default function Monitoring() {
       id: Date.now().toString(),
       domain,
       lastCheck: new Date().toISOString(),
-      status: "checking",
-      uptime: 100,
+      status: "up",
+      uptime: 0,
       rankChange: 0,
       keywords: 0,
     };
@@ -69,14 +50,6 @@ export default function Monitoring() {
     setNewDomain("");
     showFeedback("success", `Added ${domain} to monitoring`);
 
-    // Simulate initial check
-    setTimeout(() => {
-      setDomains((prev) =>
-        prev.map((d) =>
-          d.domain === domain ? { ...d, status: "up" as const, keywords: Math.floor(Math.random() * 100) + 10 } : d
-        )
-      );
-    }, 2000);
   };
 
   const removeDomain = (id: string) => {
@@ -86,19 +59,7 @@ export default function Monitoring() {
 
   const refreshAll = async () => {
     setIsRefreshing(true);
-    setDomains(domains.map((d) => ({ ...d, status: "checking" as const })));
-
-    // Simulate refresh
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    setDomains(
-      domains.map((d) => ({
-        ...d,
-        status: "up" as const,
-        lastCheck: new Date().toISOString(),
-        rankChange: Math.floor(Math.random() * 10) - 5,
-      }))
-    );
+    setDomains(domains.map((d) => ({ ...d, lastCheck: new Date().toISOString() })));
 
     setIsRefreshing(false);
     showFeedback("success", "All domains refreshed");

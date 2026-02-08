@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  ClipboardList,
   CheckCircle,
   AlertTriangle,
   Clock,
@@ -10,6 +9,7 @@ import {
   FileText,
   ChevronRight,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type ReviewItem = {
   id: string;
@@ -36,54 +36,7 @@ export default function OpsReviewPage() {
 
   async function loadReviews() {
     setLoading(true);
-
-    const demoReviews: ReviewItem[] = [
-      {
-        id: "1",
-        project_name: "Main Website",
-        domain: "example.com",
-        category: "business",
-        status: "ok",
-        items: [
-          { name: "SSL Certificate", status: "ok", message: "Valid until Dec 2025" },
-          { name: "Domain Expiry", status: "ok", message: "Expires Jan 2026" },
-          { name: "Uptime", status: "ok", message: "99.9% last 30 days" },
-          { name: "Backups", status: "ok", message: "Last backup: 2 hours ago" },
-        ],
-        last_reviewed: new Date().toISOString(),
-      },
-      {
-        id: "2",
-        project_name: "E-Commerce Store",
-        domain: "shop.example.com",
-        category: "ecommerce",
-        status: "warning",
-        items: [
-          { name: "SSL Certificate", status: "ok", message: "Valid until Nov 2025" },
-          { name: "Domain Expiry", status: "ok", message: "Expires Jan 2026" },
-          { name: "Uptime", status: "warning", message: "98.5% last 30 days (2 incidents)" },
-          { name: "Backups", status: "warning", message: "Last backup: 3 days ago" },
-          { name: "Performance", status: "warning", message: "Page load > 4s" },
-        ],
-        last_reviewed: new Date(Date.now() - 86400000).toISOString(),
-      },
-      {
-        id: "3",
-        project_name: "SaaS Dashboard",
-        domain: "app.example.com",
-        category: "saas",
-        status: "critical",
-        items: [
-          { name: "SSL Certificate", status: "critical", message: "Expires in 15 days!" },
-          { name: "Domain Expiry", status: "ok", message: "Expires Feb 2026" },
-          { name: "Uptime", status: "ok", message: "100% last 30 days" },
-          { name: "Backups", status: "ok", message: "Last backup: 1 hour ago" },
-        ],
-        last_reviewed: new Date().toISOString(),
-      },
-    ];
-
-    setReviews(demoReviews);
+    setReviews([]);
     setLoading(false);
   }
 
@@ -165,10 +118,7 @@ export default function OpsReviewPage() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading...</div>
       ) : reviews.length === 0 ? (
-        <div className="text-center py-12">
-          <ClipboardList size={48} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-400">No projects to review</p>
-        </div>
+        <EmptyState />
       ) : (
         <div className="space-y-4">
           {reviews.map((review) => (

@@ -5,12 +5,11 @@ import {
   CheckSquare,
   Circle,
   Clock,
-  AlertCircle,
-  ChevronDown,
   MoreVertical,
   X,
   Calendar,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type Task = {
   id: string;
@@ -57,17 +56,7 @@ export default function TasksPage() {
 
   async function loadTasks() {
     setLoading(true);
-
-    const demoTasks: Task[] = [
-      { id: "1", title: "Fix mobile navigation", description: "Navigation menu doesn't work on mobile devices", project_id: "2", project_name: "E-Commerce Store", status: "In Progress", priority: "High", due_date: new Date(Date.now() + 86400000).toISOString(), created_at: "2024-07-01" },
-      { id: "2", title: "Update SSL certificate", description: "Certificate expires in 30 days", project_id: "1", project_name: "Main Website", status: "To Do", priority: "Critical", due_date: new Date(Date.now() + 172800000).toISOString(), created_at: "2024-07-02" },
-      { id: "3", title: "Optimize images", description: "Compress and lazy load images", project_id: "3", project_name: "Blog Platform", status: "To Do", priority: "Medium", due_date: null, created_at: "2024-07-03" },
-      { id: "4", title: "Add payment gateway", description: "Integrate Stripe payment processing", project_id: "4", project_name: "SaaS Dashboard", status: "In Progress", priority: "High", due_date: new Date(Date.now() + 604800000).toISOString(), created_at: "2024-07-04" },
-      { id: "5", title: "Write documentation", description: "Create user guide and API docs", project_id: "4", project_name: "SaaS Dashboard", status: "To Do", priority: "Low", due_date: null, created_at: "2024-07-05" },
-      { id: "6", title: "SEO audit", description: "Run full SEO audit and fix issues", project_id: "1", project_name: "Main Website", status: "Done", priority: "Medium", due_date: "2024-06-30", created_at: "2024-06-15" },
-    ];
-
-    setTasks(demoTasks);
+    setTasks([]);
     setLoading(false);
   }
 
@@ -156,6 +145,8 @@ export default function TasksPage() {
       {/* Tasks List */}
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading...</div>
+      ) : filteredTasks.length === 0 ? (
+        <EmptyState />
       ) : (
         <div className="space-y-6">
           {(["To Do", "In Progress", "Done"] as const).map(status => {

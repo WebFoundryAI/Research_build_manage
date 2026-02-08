@@ -9,6 +9,7 @@ import {
   Trash2,
   Filter,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type Keyword = {
   id: string;
@@ -25,9 +26,10 @@ export default function NexusOpenCopyKeywords() {
   const [keywords, setKeywords] = useState<Keyword[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newKeyword, setNewKeyword] = useState({ keyword: "", secondaryKeywords: "", project: "1" });
+  const [newKeyword, setNewKeyword] = useState({ keyword: "", secondaryKeywords: "", project: "" });
   const [generatingIds, setGeneratingIds] = useState<string[]>([]);
   const [filter, setFilter] = useState("all");
+  const projectOptions = Array.from(new Set(keywords.map((keyword) => keyword.project))).sort();
 
   useEffect(() => {
     loadKeywords();
@@ -35,59 +37,7 @@ export default function NexusOpenCopyKeywords() {
 
   async function loadKeywords() {
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1000));
-    setKeywords([
-      {
-        id: "1",
-        keyword: "react hooks tutorial",
-        secondaryKeywords: ["usestate", "useeffect", "custom hooks"],
-        project: "Tech Blog",
-        difficulty: "medium",
-        volume: "high",
-        articlesCount: 3,
-        status: "idle",
-      },
-      {
-        id: "2",
-        keyword: "typescript best practices",
-        secondaryKeywords: ["type safety", "generics"],
-        project: "Tech Blog",
-        difficulty: "high",
-        volume: "medium",
-        articlesCount: 2,
-        status: "idle",
-      },
-      {
-        id: "3",
-        keyword: "seo optimization guide",
-        secondaryKeywords: ["meta tags", "content optimization"],
-        project: "Marketing Site",
-        difficulty: "high",
-        volume: "high",
-        articlesCount: 5,
-        status: "idle",
-      },
-      {
-        id: "4",
-        keyword: "product photography tips",
-        secondaryKeywords: ["lighting", "backgrounds"],
-        project: "E-Commerce Blog",
-        difficulty: "low",
-        volume: "medium",
-        articlesCount: 1,
-        status: "idle",
-      },
-      {
-        id: "5",
-        keyword: "api documentation",
-        secondaryKeywords: ["openapi", "swagger"],
-        project: "Documentation",
-        difficulty: null,
-        volume: null,
-        articlesCount: 0,
-        status: "idle",
-      },
-    ]);
+    setKeywords([]);
     setLoading(false);
   }
 
@@ -158,13 +108,13 @@ export default function NexusOpenCopyKeywords() {
   }
 
   async function addKeyword() {
-    if (!newKeyword.keyword) return;
+    if (!newKeyword.keyword || !newKeyword.project) return;
     setKeywords((prev) => [
       {
         id: Date.now().toString(),
         keyword: newKeyword.keyword,
         secondaryKeywords: newKeyword.secondaryKeywords.split(",").map((s) => s.trim()).filter(Boolean),
-        project: "Tech Blog",
+        project: newKeyword.project,
         difficulty: null,
         volume: null,
         articlesCount: 0,
@@ -173,7 +123,7 @@ export default function NexusOpenCopyKeywords() {
       ...prev,
     ]);
     setShowAddModal(false);
-    setNewKeyword({ keyword: "", secondaryKeywords: "", project: "1" });
+    setNewKeyword({ keyword: "", secondaryKeywords: "", project: "" });
   }
 
   const needsAnalysis = keywords.filter((k) => !k.difficulty || !k.volume);
@@ -236,11 +186,17 @@ export default function NexusOpenCopyKeywords() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading keywords...</div>
       ) : keywords.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-12 text-center">
-          <Search size={48} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-400">No keywords yet</p>
-          <p className="text-sm text-slate-500 mt-1">Add your first keyword to get started</p>
-        </div>
+        <EmptyState
+          action={
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm"
+            >
+              <Plus size={16} />
+              Add Keyword
+            </button>
+          }
+        />
       ) : (
         <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
           <table className="w-full">
@@ -360,9 +316,14 @@ export default function NexusOpenCopyKeywords() {
                   onChange={(e) => setNewKeyword({ ...newKeyword, project: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-white focus:outline-none focus:border-blue-500"
                 >
-                  <option value="1">Tech Blog</option>
-                  <option value="2">Marketing Site</option>
-                  <option value="3">E-Commerce Blog</option>
+                  <option value="" disabled>
+                    {projectOptions.length === 0 ? "No projects available" : "Select a project"}
+                  </option>
+                  {projectOptions.map((project) => (
+                    <option key={project} value={project}>
+                      {project}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -376,7 +337,7 @@ export default function NexusOpenCopyKeywords() {
               </button>
               <button
                 onClick={addKeyword}
-                disabled={!newKeyword.keyword}
+                disabled={!newKeyword.keyword || !newKeyword.project}
                 className="flex-1 px-4 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium transition-colors disabled:opacity-60"
               >
                 Add Keyword

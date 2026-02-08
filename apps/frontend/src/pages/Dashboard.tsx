@@ -3,6 +3,7 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianG
 import { callEdgeFunction } from "../lib/edgeFunctions";
 import type { Website, WebsitesSummary } from "../lib/types";
 import { RefreshCw, Globe, Activity, Shield, TrendingUp } from "lucide-react";
+import EmptyState from "../components/EmptyState";
 
 const COLORS = {
   live: "#22c55e",
@@ -51,10 +52,6 @@ export default function Dashboard() {
         const data = result.json as { websites: Website[]; summary: WebsitesSummary };
         setWebsites(data.websites || []);
         setSummary(data.summary || { total: 0, live: 0, down: 0, avgSeoScore: 0 });
-      } else if (!result.ok && result.status === 401) {
-        // Not authenticated - show demo data
-        setWebsites([]);
-        setSummary({ total: 0, live: 0, down: 0, avgSeoScore: 0 });
       } else {
         setError(result.bodyText || "Failed to load data");
       }
@@ -142,6 +139,10 @@ export default function Dashboard() {
         </div>
       )}
 
+      {!loading && !error && summary.total === 0 && (
+        <EmptyState />
+      )}
+
       {/* Summary Cards */}
       <div className="grid gap-3 md:grid-cols-4">
         <Card title="Total Sites" value={summary.total} sub="in your portfolio" />
@@ -157,7 +158,7 @@ export default function Dashboard() {
           <div className="text-sm font-semibold mb-4">Fleet Status</div>
           {summary.total === 0 ? (
             <div className="h-64 flex items-center justify-center text-slate-500">
-              No websites added yet
+              No data yet. Connect APIs in Settings to begin.
             </div>
           ) : (
             <div className="h-64">
@@ -189,7 +190,7 @@ export default function Dashboard() {
           <div className="text-sm font-semibold mb-4">SEO Score Distribution</div>
           {summary.total === 0 ? (
             <div className="h-64 flex items-center justify-center text-slate-500">
-              No SEO data yet
+              No data yet. Connect APIs in Settings to begin.
             </div>
           ) : (
             <div className="h-64">

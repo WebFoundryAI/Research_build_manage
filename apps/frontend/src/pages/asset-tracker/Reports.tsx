@@ -6,38 +6,36 @@ import {
   Users,
   DollarSign,
   Activity,
-  Calendar,
   Download,
-  Filter,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
+
+type SummaryData = {
+  trafficTotal: number;
+  trafficChange: number;
+  trafficTrend: "up" | "down";
+  revenueTotal: number;
+  revenueChange: number;
+  revenueTrend: "up" | "down";
+  healthAvg: number;
+  healthChange: number;
+  healthTrend: "up" | "down";
+};
+
+type ProjectBreakdown = {
+  name: string;
+  traffic: number;
+  revenue: number;
+  health: number;
+};
 
 type TimeRange = "7d" | "30d" | "90d" | "12m";
 
 export default function ReportsPage() {
   const [timeRange, setTimeRange] = useState<TimeRange>("30d");
 
-  const trafficData = {
-    total: 57000,
-    change: 12.5,
-    trend: "up" as const,
-  };
-
-  const revenueData = {
-    total: 11000,
-    change: 8.3,
-    trend: "up" as const,
-  };
-
-  const healthData = {
-    avg: 82,
-    change: -2.1,
-    trend: "down" as const,
-  };
-
-  const projectsData = [
-    { name: "Main Website", traffic: 45000, revenue: 2500, health: 92 },
-    { name: "E-Commerce Store", traffic: 12000, revenue: 8500, health: 68 },
-  ];
+  const summaryData: SummaryData | null = null;
+  const projectsData: ProjectBreakdown[] = [];
 
   return (
     <div className="space-y-6">
@@ -68,49 +66,56 @@ export default function ReportsPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid md:grid-cols-3 gap-4">
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2 rounded-lg bg-blue-500/20">
-              <Users size={20} className="text-blue-600" />
+      {summaryData ? (
+        <div className="grid md:grid-cols-3 gap-4">
+          <div className="rounded-xl border border-slate-200 bg-white p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2 rounded-lg bg-blue-500/20">
+                <Users size={20} className="text-blue-600" />
+              </div>
+              <div className={`flex items-center gap-1 text-sm ${summaryData.trafficTrend === "up" ? "text-emerald-600" : "text-red-600"}`}>
+                {summaryData.trafficTrend === "up" ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+                {summaryData.trafficChange}%
+              </div>
             </div>
-            <div className={`flex items-center gap-1 text-sm ${trafficData.trend === "up" ? "text-emerald-600" : "text-red-600"}`}>
-              {trafficData.trend === "up" ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
-              {trafficData.change}%
-            </div>
+            <div className="text-3xl font-bold">{summaryData.trafficTotal.toLocaleString()}</div>
+            <div className="text-sm text-slate-400 mt-1">Total Traffic</div>
           </div>
-          <div className="text-3xl font-bold">{trafficData.total.toLocaleString()}</div>
-          <div className="text-sm text-slate-400 mt-1">Total Traffic</div>
-        </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2 rounded-lg bg-emerald-500/20">
-              <DollarSign size={20} className="text-emerald-600" />
+          <div className="rounded-xl border border-slate-200 bg-white p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2 rounded-lg bg-emerald-500/20">
+                <DollarSign size={20} className="text-emerald-600" />
+              </div>
+              <div className={`flex items-center gap-1 text-sm ${summaryData.revenueTrend === "up" ? "text-emerald-600" : "text-red-600"}`}>
+                {summaryData.revenueTrend === "up" ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+                {summaryData.revenueChange}%
+              </div>
             </div>
-            <div className={`flex items-center gap-1 text-sm ${revenueData.trend === "up" ? "text-emerald-600" : "text-red-600"}`}>
-              {revenueData.trend === "up" ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
-              {revenueData.change}%
-            </div>
+            <div className="text-3xl font-bold">${summaryData.revenueTotal.toLocaleString()}</div>
+            <div className="text-sm text-slate-400 mt-1">Total Revenue</div>
           </div>
-          <div className="text-3xl font-bold">${revenueData.total.toLocaleString()}</div>
-          <div className="text-sm text-slate-400 mt-1">Total Revenue</div>
-        </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2 rounded-lg bg-purple-500/20">
-              <Activity size={20} className="text-purple-600" />
+          <div className="rounded-xl border border-slate-200 bg-white p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2 rounded-lg bg-purple-500/20">
+                <Activity size={20} className="text-purple-600" />
+              </div>
+              <div className={`flex items-center gap-1 text-sm ${summaryData.healthTrend === "up" ? "text-emerald-600" : "text-red-600"}`}>
+                {summaryData.healthTrend === "up" ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+                {Math.abs(summaryData.healthChange)}%
+              </div>
             </div>
-            <div className={`flex items-center gap-1 text-sm ${healthData.trend === "up" ? "text-emerald-600" : "text-red-600"}`}>
-              {healthData.trend === "up" ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
-              {Math.abs(healthData.change)}%
-            </div>
+            <div className="text-3xl font-bold">{summaryData.healthAvg}</div>
+            <div className="text-sm text-slate-400 mt-1">Avg Health Score</div>
           </div>
-          <div className="text-3xl font-bold">{healthData.avg}</div>
-          <div className="text-sm text-slate-400 mt-1">Avg Health Score</div>
         </div>
-      </div>
+      ) : (
+        <EmptyState
+          title="No report data yet"
+          description="Connect analytics sources to populate performance summaries."
+        />
+      )}
 
       {/* Traffic Chart Placeholder */}
       <div className="rounded-xl border border-slate-200 bg-white p-6">
@@ -141,32 +146,41 @@ export default function ReportsPage() {
         <div className="px-4 py-3 border-b border-slate-200">
           <h2 className="font-semibold">Project Breakdown</h2>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-slate-200 text-left">
-                <th className="px-4 py-3 font-medium text-slate-400">Project</th>
-                <th className="px-4 py-3 font-medium text-slate-400 text-right">Traffic</th>
-                <th className="px-4 py-3 font-medium text-slate-400 text-right">Revenue</th>
-                <th className="px-4 py-3 font-medium text-slate-400 text-right">Health</th>
-              </tr>
-            </thead>
-            <tbody>
-              {projectsData.map((project, i) => (
-                <tr key={i} className="border-b border-slate-200 hover:bg-slate-100/30">
-                  <td className="px-4 py-3 font-medium">{project.name}</td>
-                  <td className="px-4 py-3 text-right">{project.traffic.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-right text-emerald-600">${project.revenue.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-right">
-                    <span className={`${project.health >= 80 ? "text-emerald-600" : project.health >= 60 ? "text-amber-600" : "text-red-600"}`}>
-                      {project.health}
-                    </span>
-                  </td>
+        {projectsData.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-slate-200 text-left">
+                  <th className="px-4 py-3 font-medium text-slate-400">Project</th>
+                  <th className="px-4 py-3 font-medium text-slate-400 text-right">Traffic</th>
+                  <th className="px-4 py-3 font-medium text-slate-400 text-right">Revenue</th>
+                  <th className="px-4 py-3 font-medium text-slate-400 text-right">Health</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {projectsData.map((project, i) => (
+                  <tr key={i} className="border-b border-slate-200 hover:bg-slate-100/30">
+                    <td className="px-4 py-3 font-medium">{project.name}</td>
+                    <td className="px-4 py-3 text-right">{project.traffic.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-right text-emerald-600">${project.revenue.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-right">
+                      <span className={`${project.health >= 80 ? "text-emerald-600" : project.health >= 60 ? "text-amber-600" : "text-red-600"}`}>
+                        {project.health}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="p-6">
+            <EmptyState
+              title="No project data"
+              description="Connect project analytics to see per-asset performance."
+            />
+          </div>
+        )}
       </div>
     </div>
   );

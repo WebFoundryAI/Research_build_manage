@@ -9,6 +9,7 @@ import {
   Clock,
   X,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type DeletedItem = {
   id: string;
@@ -30,35 +31,7 @@ export default function TrashPage() {
 
   async function loadItems() {
     setLoading(true);
-
-    const demoItems: DeletedItem[] = [
-      {
-        id: "1",
-        type: "project",
-        name: "Old Marketing Site",
-        description: "marketing.example.com",
-        deleted_at: new Date(Date.now() - 86400000 * 5).toISOString(),
-        expires_at: new Date(Date.now() + 86400000 * 25).toISOString(),
-      },
-      {
-        id: "2",
-        type: "task",
-        name: "Update homepage banner",
-        description: "Main Website",
-        deleted_at: new Date(Date.now() - 86400000 * 2).toISOString(),
-        expires_at: new Date(Date.now() + 86400000 * 28).toISOString(),
-      },
-      {
-        id: "3",
-        type: "task",
-        name: "Fix broken links",
-        description: "E-Commerce Store",
-        deleted_at: new Date(Date.now() - 86400000 * 10).toISOString(),
-        expires_at: new Date(Date.now() + 86400000 * 20).toISOString(),
-      },
-    ];
-
-    setItems(demoItems);
+    setItems([]);
     setLoading(false);
   }
 
@@ -126,11 +99,7 @@ export default function TrashPage() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading...</div>
       ) : items.length === 0 ? (
-        <div className="text-center py-12">
-          <Trash2 size={48} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-400 mb-2">Trash is empty</p>
-          <p className="text-sm text-slate-500">Deleted items will appear here</p>
-        </div>
+        <EmptyState />
       ) : (
         <div className="space-y-3">
           {items.map((item) => {

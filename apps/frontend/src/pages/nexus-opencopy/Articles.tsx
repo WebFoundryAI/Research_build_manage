@@ -11,6 +11,7 @@ import {
   Trash2,
   Filter,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type Article = {
   id: string;
@@ -38,74 +39,7 @@ export default function NexusOpenCopyArticles() {
 
   async function loadArticles() {
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1000));
-    setArticles([
-      {
-        id: "1",
-        title: "Complete Guide to React Hooks in 2025",
-        slug: "react-hooks-guide-2025",
-        project: "Tech Blog",
-        keyword: "react hooks tutorial",
-        wordCount: 2450,
-        readingTime: 12,
-        seoScore: 85,
-        cost: 0.45,
-        status: "published",
-        createdAt: new Date(Date.now() - 7200000).toISOString(),
-      },
-      {
-        id: "2",
-        title: "SEO Best Practices for Modern Websites",
-        slug: "seo-best-practices",
-        project: "Marketing Site",
-        keyword: "seo optimization guide",
-        wordCount: 3200,
-        readingTime: 15,
-        seoScore: 92,
-        cost: 0.62,
-        status: "in_review",
-        createdAt: new Date(Date.now() - 18000000).toISOString(),
-      },
-      {
-        id: "3",
-        title: "TypeScript Best Practices for Large Projects",
-        slug: "typescript-best-practices",
-        project: "Tech Blog",
-        keyword: "typescript best practices",
-        wordCount: 2800,
-        readingTime: 13,
-        seoScore: 78,
-        cost: 0.55,
-        status: "published",
-        createdAt: new Date(Date.now() - 86400000).toISOString(),
-      },
-      {
-        id: "4",
-        title: "Product Photography Tips for E-Commerce",
-        slug: "product-photography-tips",
-        project: "E-Commerce Blog",
-        keyword: "product photography tips",
-        wordCount: 1800,
-        readingTime: 8,
-        seoScore: 72,
-        cost: 0.38,
-        status: "draft",
-        createdAt: new Date(Date.now() - 172800000).toISOString(),
-      },
-      {
-        id: "5",
-        title: "Understanding useState and useEffect",
-        slug: "usestate-useeffect-guide",
-        project: "Tech Blog",
-        keyword: "react hooks tutorial",
-        wordCount: 0,
-        readingTime: 0,
-        seoScore: null,
-        cost: null,
-        status: "generating",
-        createdAt: new Date().toISOString(),
-      },
-    ]);
+    setArticles([]);
     setLoading(false);
   }
 
@@ -209,13 +143,7 @@ export default function NexusOpenCopyArticles() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading articles...</div>
       ) : filteredArticles.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-12 text-center">
-          <FileText size={48} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-400">No articles found</p>
-          <p className="text-sm text-slate-500 mt-1">
-            {searchQuery ? "Try a different search" : "Generate articles from keywords"}
-          </p>
-        </div>
+        <EmptyState />
       ) : (
         <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
           <table className="w-full">

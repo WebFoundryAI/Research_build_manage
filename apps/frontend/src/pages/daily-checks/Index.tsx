@@ -12,6 +12,7 @@ import {
   Clock,
   AlertTriangle,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type Website = {
   id: number;
@@ -43,28 +44,8 @@ export default function DailyChecksDashboard() {
 
   async function loadData() {
     setLoading(true);
-    // Demo data for now - replace with actual API calls
-    const demoWebsites: Website[] = [
-      { id: 1, name: "Example Site", url: "https://example.com", category: "general", last_status: 1, seo_score: 85, last_checked: new Date().toISOString() },
-      { id: 2, name: "Test Blog", url: "https://blog.example.com", category: "blog", last_status: 1, seo_score: 72, last_checked: new Date().toISOString() },
-      { id: 3, name: "E-Commerce", url: "https://shop.example.com", category: "ecommerce", last_status: 0, seo_score: 45, last_checked: new Date().toISOString() },
-    ];
-
-    setWebsites(demoWebsites);
-
-    const live = demoWebsites.filter(w => w.last_status === 1).length;
-    const down = demoWebsites.filter(w => w.last_status === 0).length;
-    const withScores = demoWebsites.filter(w => w.seo_score !== null);
-    const avgScore = withScores.length > 0
-      ? Math.round(withScores.reduce((sum, w) => sum + (w.seo_score || 0), 0) / withScores.length)
-      : null;
-
-    setSummary({
-      total: demoWebsites.length,
-      live,
-      down,
-      avgSeoScore: avgScore,
-    });
+    setWebsites([]);
+    setSummary({ total: 0, live: 0, down: 0, avgSeoScore: null });
     setLoading(false);
   }
 
@@ -246,15 +227,17 @@ export default function DailyChecksDashboard() {
         {loading ? (
           <div className="p-8 text-center text-slate-500">Loading...</div>
         ) : websites.length === 0 ? (
-          <div className="p-8 text-center">
-            <Globe size={40} className="mx-auto text-slate-600 mb-3" />
-            <p className="text-slate-400">No websites yet</p>
-            <Link
-              to="/daily-checks/websites"
-              className="inline-flex items-center gap-2 mt-3 text-sm text-emerald-600 hover:underline"
-            >
-              Add your first website
-            </Link>
+          <div className="p-6">
+            <EmptyState
+              action={
+                <Link
+                  to="/daily-checks/websites"
+                  className="inline-flex items-center gap-2 mt-3 text-sm text-emerald-600 hover:underline"
+                >
+                  Add your first website
+                </Link>
+              }
+            />
           </div>
         ) : (
           <div className="overflow-x-auto">

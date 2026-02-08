@@ -8,6 +8,7 @@ import {
   MapPin,
   X,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type Keyword = {
   id: number;
@@ -40,25 +41,8 @@ export default function KeywordsPage() {
 
   async function loadData() {
     setLoading(true);
-
-    // Demo websites
-    const demoWebsites: Website[] = [
-      { id: 1, name: "Example Site", url: "https://example.com" },
-      { id: 2, name: "Test Blog", url: "https://blog.example.com" },
-      { id: 3, name: "E-Commerce Store", url: "https://shop.example.com" },
-    ];
-
-    // Demo keywords
-    const demoKeywords: Keyword[] = [
-      { id: 1, website_id: 1, website_name: "Example Site", keyword: "web development services", location: "United Kingdom", created_at: new Date().toISOString() },
-      { id: 2, website_id: 1, website_name: "Example Site", keyword: "react developer london", location: "London, UK", created_at: new Date().toISOString() },
-      { id: 3, website_id: 2, website_name: "Test Blog", keyword: "javascript tutorials", location: "United States", created_at: new Date().toISOString() },
-      { id: 4, website_id: 3, website_name: "E-Commerce Store", keyword: "buy electronics online", location: "United Kingdom", created_at: new Date().toISOString() },
-      { id: 5, website_id: 3, website_name: "E-Commerce Store", keyword: "best laptop deals", location: "United Kingdom", created_at: new Date().toISOString() },
-    ];
-
-    setWebsites(demoWebsites);
-    setKeywords(demoKeywords);
+    setWebsites([]);
+    setKeywords([]);
     setLoading(false);
   }
 
@@ -155,12 +139,8 @@ export default function KeywordsPage() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading...</div>
       ) : Object.keys(groupedKeywords).length === 0 ? (
-        <div className="text-center py-12">
-          <Key size={48} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-400 mb-4">
-            {searchQuery || websiteFilter !== "" ? "No keywords match your filters" : "No keywords yet"}
-          </p>
-          {!searchQuery && websiteFilter === "" && (
+        <EmptyState
+          action={
             <button
               onClick={() => setShowModal(true)}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-sm"
@@ -168,8 +148,8 @@ export default function KeywordsPage() {
               <Plus size={16} />
               Add your first keyword
             </button>
-          )}
-        </div>
+          }
+        />
       ) : (
         <div className="space-y-6">
           {Object.entries(groupedKeywords).map(([websiteId, data]) => (

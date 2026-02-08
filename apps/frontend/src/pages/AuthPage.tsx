@@ -13,7 +13,8 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
 }
 
 export default function AuthPage() {
-  const { loading, user, error, signInWithGoogle, mode } = useAuth();
+  const { loading, user, error, signInWithGoogle } = useAuth();
+  const signInDisabled = Boolean(error);
 
   const page: React.CSSProperties = {
     minHeight: "100dvh",
@@ -138,32 +139,31 @@ export default function AuthPage() {
         <div style={brand}>
           <span style={dot} />
           <div style={{ fontWeight: 700 }}>Super SEO</div>
-          <div style={{ marginLeft: "auto", fontSize: 12, color: "#94a3b8" }}>
-            {mode === "demo" ? "Demo" : "Production"}
-          </div>
         </div>
 
         <h1 style={title}>Sign in</h1>
         <p style={sub}>
-          {mode === "demo"
-            ? "Supabase isn't configured, so the app is running in Demo Mode."
-            : "Continue with Google to access the dashboard."}
+          Continue with Google to access the dashboard.
         </p>
 
         {error ? <div style={warn}>{error}</div> : null}
 
         <button
-          style={btn}
+          style={{
+            ...btn,
+            ...(signInDisabled ? { opacity: 0.6, cursor: "not-allowed" } : {}),
+          }}
+          disabled={signInDisabled}
           onClick={() => signInWithGoogle()}
           onMouseEnter={(e) => ((e.currentTarget.style.transform = "translateY(-1px)"), (e.currentTarget.style.background = "#4338ca"))}
           onMouseLeave={(e) => ((e.currentTarget.style.transform = "translateY(0px)"), (e.currentTarget.style.background = "#4f46e5"))}
         >
-          {mode === "demo" ? null : <GoogleIcon />}
-          {mode === "demo" ? "Enter Demo" : "Continue with Google"}
+          <GoogleIcon />
+          Continue with Google
         </button>
 
         <div style={fine}>
-          {mode === "demo" ? "Demo Mode is intended for UI review only." : "Single sign-on via Supabase OAuth."}
+          Single sign-on via Supabase OAuth.
         </div>
       </div>
     </div>

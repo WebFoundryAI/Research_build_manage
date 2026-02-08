@@ -38,50 +38,7 @@ export default function NicoGeoReviews() {
 
   async function loadSessions() {
     setLoading(true);
-    // Simulate API call
-    await new Promise((r) => setTimeout(r, 1000));
-    setSessions([
-      {
-        id: "abc12345-1234-4567-89ab-cdef01234567",
-        siteUrl: "https://example.com",
-        status: "pending",
-        createdAt: new Date(Date.now() - 3600000).toISOString(),
-        expiresAt: new Date(Date.now() + 82800000).toISOString(),
-        targetRepo: {
-          owner: "your-org",
-          repo: "your-site",
-          branch: "main",
-        },
-        plannedFilesCount: 3,
-      },
-      {
-        id: "def67890-5678-9012-bcde-f01234567890",
-        siteUrl: "https://shop.example.com",
-        status: "approved",
-        createdAt: new Date(Date.now() - 7200000).toISOString(),
-        expiresAt: new Date(Date.now() + 79200000).toISOString(),
-        targetRepo: {
-          owner: "your-org",
-          repo: "shop-site",
-          branch: "main",
-        },
-        plannedFilesCount: 5,
-      },
-      {
-        id: "ghi34567-9012-3456-efgh-234567890123",
-        siteUrl: "https://blog.example.com",
-        status: "applied",
-        createdAt: new Date(Date.now() - 86400000).toISOString(),
-        expiresAt: new Date(Date.now() - 3600000).toISOString(),
-        targetRepo: {
-          owner: "your-org",
-          repo: "blog-site",
-          branch: "main",
-        },
-        plannedFilesCount: 2,
-        commitShas: ["abc123", "def456"],
-      },
-    ]);
+    setSessions([]);
     setLoading(false);
   }
 

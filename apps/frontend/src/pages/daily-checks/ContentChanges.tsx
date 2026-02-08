@@ -8,6 +8,7 @@ import {
   CheckCircle,
   Globe,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type ContentChange = {
   id: number;
@@ -31,52 +32,7 @@ export default function ContentChangesPage() {
 
   async function loadChanges() {
     setLoading(true);
-
-    // Demo data
-    const demoChanges: ContentChange[] = [
-      {
-        id: 1,
-        website_id: 1,
-        website_name: "Example Site",
-        website_url: "https://example.com",
-        change_type: "content",
-        description: "Homepage content updated - 15% change detected",
-        detected_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-        acknowledged: false,
-      },
-      {
-        id: 2,
-        website_id: 2,
-        website_name: "Test Blog",
-        website_url: "https://blog.example.com",
-        change_type: "title",
-        description: "Page title changed from 'Blog Home' to 'Tech Blog - Latest Posts'",
-        detected_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-        acknowledged: true,
-      },
-      {
-        id: 3,
-        website_id: 1,
-        website_name: "Example Site",
-        website_url: "https://example.com/about",
-        change_type: "meta",
-        description: "Meta description updated on About page",
-        detected_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
-        acknowledged: true,
-      },
-      {
-        id: 4,
-        website_id: 3,
-        website_name: "E-Commerce Store",
-        website_url: "https://shop.example.com",
-        change_type: "structure",
-        description: "New navigation menu detected - 3 new links added",
-        detected_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
-        acknowledged: false,
-      },
-    ];
-
-    setChanges(demoChanges);
+    setChanges([]);
     setLoading(false);
   }
 
@@ -155,13 +111,7 @@ export default function ContentChangesPage() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading...</div>
       ) : changes.length === 0 ? (
-        <div className="text-center py-12">
-          <FileText size={48} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-400 mb-2">No content changes detected</p>
-          <p className="text-sm text-slate-500">
-            Run availability checks regularly to detect content changes
-          </p>
-        </div>
+        <EmptyState />
       ) : (
         <div className="space-y-4">
           {changes.map(change => (

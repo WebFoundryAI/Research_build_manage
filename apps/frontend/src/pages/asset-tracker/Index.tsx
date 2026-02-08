@@ -14,6 +14,7 @@ import {
   RefreshCw,
   ExternalLink,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type Project = {
   id: string;
@@ -60,31 +61,13 @@ export default function AssetTrackerDashboard() {
 
   async function loadData() {
     setLoading(true);
-
-    // Demo data
-    const demoProjects: Project[] = [
-      { id: "1", name: "Main Website", domain: "example.com", status: "Live – Stable", health_score: 92, monthly_traffic: 45000, monthly_revenue: 2500, is_favourite: true, updated_at: new Date().toISOString() },
-      { id: "2", name: "E-Commerce Store", domain: "shop.example.com", status: "Live – Needs Improving", health_score: 68, monthly_traffic: 12000, monthly_revenue: 8500, is_favourite: true, updated_at: new Date().toISOString() },
-      { id: "3", name: "Blog Platform", domain: "blog.example.com", status: "In Build", health_score: null, monthly_traffic: 0, monthly_revenue: 0, is_favourite: false, updated_at: new Date().toISOString() },
-      { id: "4", name: "SaaS Dashboard", domain: "app.example.com", status: "Pre-Launch QA", health_score: 85, monthly_traffic: 0, monthly_revenue: 0, is_favourite: false, updated_at: new Date().toISOString() },
-    ];
-
-    const demoTasks: Task[] = [
-      { id: "1", title: "Fix mobile navigation", project_name: "E-Commerce Store", status: "In Progress", priority: "High", due_date: new Date(Date.now() + 86400000).toISOString() },
-      { id: "2", title: "Update SSL certificate", project_name: "Main Website", status: "To Do", priority: "Critical", due_date: new Date(Date.now() + 172800000).toISOString() },
-      { id: "3", title: "Optimize images", project_name: "Blog Platform", status: "To Do", priority: "Medium", due_date: null },
-      { id: "4", title: "Add payment gateway", project_name: "SaaS Dashboard", status: "In Progress", priority: "High", due_date: new Date(Date.now() + 604800000).toISOString() },
-    ];
-
-    setProjects(demoProjects);
-    setTasks(demoTasks);
-
-    const liveProjects = demoProjects.filter(p => p.status.startsWith("Live"));
+    setProjects([]);
+    setTasks([]);
     setStats({
-      totalProjects: demoProjects.length,
-      liveProjects: liveProjects.length,
-      totalTraffic: liveProjects.reduce((sum, p) => sum + (p.monthly_traffic || 0), 0),
-      totalRevenue: liveProjects.reduce((sum, p) => sum + (p.monthly_revenue || 0), 0),
+      totalProjects: 0,
+      liveProjects: 0,
+      totalTraffic: 0,
+      totalRevenue: 0,
     });
 
     setLoading(false);
@@ -208,9 +191,8 @@ export default function AssetTrackerDashboard() {
           {loading ? (
             <div className="p-8 text-center text-slate-500">Loading...</div>
           ) : projects.length === 0 ? (
-            <div className="p-8 text-center">
-              <Globe size={40} className="mx-auto text-slate-600 mb-3" />
-              <p className="text-slate-400">No projects yet</p>
+            <div className="p-6">
+              <EmptyState />
             </div>
           ) : (
             <div className="divide-y divide-slate-800/50">
@@ -260,9 +242,8 @@ export default function AssetTrackerDashboard() {
           {loading ? (
             <div className="p-8 text-center text-slate-500">Loading...</div>
           ) : tasks.length === 0 ? (
-            <div className="p-8 text-center">
-              <CheckCircle size={40} className="mx-auto text-slate-600 mb-3" />
-              <p className="text-slate-400">No pending tasks</p>
+            <div className="p-6">
+              <EmptyState />
             </div>
           ) : (
             <div className="divide-y divide-slate-800/50">

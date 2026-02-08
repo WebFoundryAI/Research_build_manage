@@ -10,6 +10,7 @@ import {
   ExternalLink,
   AlertTriangle,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type SeoHealthData = {
   id: number;
@@ -40,58 +41,7 @@ export default function SeoHealthPage() {
 
   async function loadHealthData() {
     setLoading(true);
-    // Demo data
-    const demoData: SeoHealthData[] = [
-      {
-        id: 1,
-        website_id: 1,
-        website_name: "Example Site",
-        website_url: "https://example.com",
-        health_score: 85,
-        robots_txt_exists: true,
-        robots_txt_valid: true,
-        robots_txt_allows_crawl: true,
-        sitemap_exists: true,
-        sitemap_valid: true,
-        sitemap_url_count: 150,
-        sitemap_url: "https://example.com/sitemap.xml",
-        ssl_valid: true,
-        checked_at: new Date().toISOString(),
-      },
-      {
-        id: 2,
-        website_id: 2,
-        website_name: "Test Blog",
-        website_url: "https://blog.example.com",
-        health_score: 55,
-        robots_txt_exists: true,
-        robots_txt_valid: true,
-        robots_txt_allows_crawl: false,
-        sitemap_exists: false,
-        sitemap_valid: false,
-        sitemap_url_count: 0,
-        sitemap_url: null,
-        ssl_valid: true,
-        checked_at: new Date().toISOString(),
-      },
-      {
-        id: 3,
-        website_id: 3,
-        website_name: "E-Commerce Store",
-        website_url: "https://shop.example.com",
-        health_score: 30,
-        robots_txt_exists: false,
-        robots_txt_valid: false,
-        robots_txt_allows_crawl: false,
-        sitemap_exists: true,
-        sitemap_valid: false,
-        sitemap_url_count: 0,
-        sitemap_url: "https://shop.example.com/sitemap.xml",
-        ssl_valid: true,
-        checked_at: new Date().toISOString(),
-      },
-    ];
-    setHealthData(demoData);
+    setHealthData([]);
     setLoading(false);
   }
 
@@ -167,11 +117,7 @@ export default function SeoHealthPage() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading...</div>
       ) : healthData.length === 0 ? (
-        <div className="text-center py-12">
-          <ShieldCheck size={48} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-400">No SEO health data yet</p>
-          <p className="text-sm text-slate-500 mt-2">Run SEO checks on your websites to see results</p>
-        </div>
+        <EmptyState />
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {healthData.map(site => (
