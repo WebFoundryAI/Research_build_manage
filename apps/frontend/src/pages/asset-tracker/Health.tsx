@@ -14,6 +14,7 @@ import {
   TrendingUp,
   TrendingDown,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type HealthCheck = {
   id: string;
@@ -40,50 +41,7 @@ export default function HealthPage() {
 
   async function loadHealthData() {
     setLoading(true);
-
-    const demoData: HealthCheck[] = [
-      {
-        id: "1",
-        project_id: "1",
-        project_name: "Main Website",
-        domain: "example.com",
-        overall_score: 92,
-        uptime_score: 100,
-        ssl_score: 100,
-        performance_score: 85,
-        seo_score: 82,
-        last_checked: new Date().toISOString(),
-        issues: [],
-      },
-      {
-        id: "2",
-        project_id: "2",
-        project_name: "E-Commerce Store",
-        domain: "shop.example.com",
-        overall_score: 68,
-        uptime_score: 99,
-        ssl_score: 100,
-        performance_score: 45,
-        seo_score: 65,
-        last_checked: new Date().toISOString(),
-        issues: ["Slow page load time", "Missing meta descriptions"],
-      },
-      {
-        id: "3",
-        project_id: "4",
-        project_name: "SaaS Dashboard",
-        domain: "app.example.com",
-        overall_score: 85,
-        uptime_score: 100,
-        ssl_score: 100,
-        performance_score: 78,
-        seo_score: 72,
-        last_checked: new Date().toISOString(),
-        issues: ["Missing sitemap.xml"],
-      },
-    ];
-
-    setHealthChecks(demoData);
+    setHealthChecks([]);
     setLoading(false);
   }
 
@@ -189,11 +147,7 @@ export default function HealthPage() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading...</div>
       ) : healthChecks.length === 0 ? (
-        <div className="text-center py-12">
-          <Activity size={48} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-400 mb-4">No health checks yet</p>
-          <p className="text-sm text-slate-500">Add projects to start monitoring their health</p>
-        </div>
+        <EmptyState />
       ) : (
         <div className="space-y-4">
           {healthChecks.map((check) => (

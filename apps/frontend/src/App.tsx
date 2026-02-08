@@ -1,9 +1,11 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./lib/auth";
+import { SettingsProvider } from "./lib/settings";
 import { ThemeProvider } from "./lib/ThemeContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
+import ModuleGate from "./components/ModuleGate";
 
 // Main Pages
 import Dashboard from "./pages/Dashboard";
@@ -106,115 +108,159 @@ export default function App() {
     <ErrorBoundary>
       <ThemeProvider>
         <AuthProvider>
-          <BrowserRouter>
-            <Routes>
-            <Route path="/auth" element={<AuthPage />} />
+          <SettingsProvider>
+            <BrowserRouter>
+              <Routes>
+              <Route path="/auth" element={<AuthPage />} />
 
-            <Route
-              element={
-                <ProtectedRoute>
-                  <Layout />
-                </ProtectedRoute>
-              }
-            >
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/websites" element={<WebsitesPage />} />
-              <Route path="/projects" element={<ProjectsPage />} />
-              <Route path="/tasks" element={<TasksPage />} />
-              <Route path="/seo-research" element={<SeoResearchPage />} />
-              <Route path="/research" element={<ResearchPage />} />
-              <Route path="/build" element={<BuildPage />} />
-              <Route path="/mcp-spark" element={<Navigate to="/multi-tools" replace />} />
-              <Route path="/planner" element={<PlannerPage />} />
-              <Route path="/admin" element={<AdminPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/settings" element={<SettingsPage />} />
+              <Route
+                element={
+                  <ProtectedRoute>
+                    <Layout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/websites" element={<WebsitesPage />} />
+                <Route path="/projects" element={<ProjectsPage />} />
+                <Route path="/tasks" element={<TasksPage />} />
+                <Route path="/seo-research" element={<SeoResearchPage />} />
+                <Route path="/research" element={<ResearchPage />} />
+                <Route
+                  path="/build"
+                  element={
+                    <ModuleGate moduleKey="build">
+                      <BuildPage />
+                    </ModuleGate>
+                  }
+                />
+                <Route path="/mcp-spark" element={<Navigate to="/multi-tools" replace />} />
+                <Route path="/planner" element={<PlannerPage />} />
+                <Route path="/admin" element={<AdminPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/settings" element={<SettingsPage />} />
 
-              {/* Multi Tools Section */}
-              <Route path="/multi-tools" element={<McpSparkLayout />}>
-                <Route index element={<MultiToolsPage />} />
-                {/* Web Tools */}
-                <Route path="scrape" element={<Scrape />} />
-                <Route path="crawl" element={<Crawl />} />
-                <Route path="map" element={<MapTool />} />
-                <Route path="search" element={<SearchTool />} />
-                <Route path="extract" element={<Extract />} />
-                <Route path="clone" element={<Clone />} />
-                {/* Research Tools */}
-                <Route path="deep-research" element={<DeepResearch />} />
-                <Route path="products" element={<ProductResearch />} />
-                <Route path="content-analysis" element={<ContentAnalysis />} />
-                <Route path="questions" element={<QuestionFinder />} />
-                {/* Keyword Tools */}
-                <Route path="dashboard" element={<KeywordDashboard />} />
-                <Route path="search-volume" element={<SearchVolume />} />
-                <Route path="ideas" element={<KeywordIdeas />} />
-                <Route path="difficulty" element={<DifficultyAnalysis />} />
-                <Route path="clustering" element={<KeywordClustering />} />
-                <Route path="trends" element={<KeywordTrends />} />
-                {/* Competitor Analysis */}
-                <Route path="competitor-keywords" element={<CompetitorKeywords />} />
-                <Route path="serp-competitors" element={<SerpCompetitors />} />
-                <Route path="serp-features" element={<SerpFeatures />} />
-                <Route path="domain-analytics" element={<DomainAnalytics />} />
-                {/* Link Analysis */}
-                <Route path="backlinks" element={<Backlinks />} />
-                <Route path="link-opportunities" element={<LinkOpportunities />} />
-                {/* Local SEO */}
-                <Route path="local-seo" element={<LocalSeo />} />
-                {/* Configuration */}
-                <Route path="history" element={<ResearchHistory />} />
-                <Route path="scheduled-reports" element={<ScheduledReports />} />
-                <Route path="monitoring" element={<Monitoring />} />
+                {/* Multi Tools Section */}
+                <Route
+                  path="/multi-tools"
+                  element={
+                    <ModuleGate moduleKey="multi_tools">
+                      <McpSparkLayout />
+                    </ModuleGate>
+                  }
+                >
+                  <Route index element={<MultiToolsPage />} />
+                  {/* Web Tools */}
+                  <Route path="scrape" element={<Scrape />} />
+                  <Route path="crawl" element={<Crawl />} />
+                  <Route path="map" element={<MapTool />} />
+                  <Route path="search" element={<SearchTool />} />
+                  <Route path="extract" element={<Extract />} />
+                  <Route path="clone" element={<Clone />} />
+                  {/* Research Tools */}
+                  <Route path="deep-research" element={<DeepResearch />} />
+                  <Route path="products" element={<ProductResearch />} />
+                  <Route path="content-analysis" element={<ContentAnalysis />} />
+                  <Route path="questions" element={<QuestionFinder />} />
+                  {/* Keyword Tools */}
+                  <Route path="dashboard" element={<KeywordDashboard />} />
+                  <Route path="search-volume" element={<SearchVolume />} />
+                  <Route path="ideas" element={<KeywordIdeas />} />
+                  <Route path="difficulty" element={<DifficultyAnalysis />} />
+                  <Route path="clustering" element={<KeywordClustering />} />
+                  <Route path="trends" element={<KeywordTrends />} />
+                  {/* Competitor Analysis */}
+                  <Route path="competitor-keywords" element={<CompetitorKeywords />} />
+                  <Route path="serp-competitors" element={<SerpCompetitors />} />
+                  <Route path="serp-features" element={<SerpFeatures />} />
+                  <Route path="domain-analytics" element={<DomainAnalytics />} />
+                  {/* Link Analysis */}
+                  <Route path="backlinks" element={<Backlinks />} />
+                  <Route path="link-opportunities" element={<LinkOpportunities />} />
+                  {/* Local SEO */}
+                  <Route path="local-seo" element={<LocalSeo />} />
+                  {/* Configuration */}
+                  <Route path="history" element={<ResearchHistory />} />
+                  <Route path="scheduled-reports" element={<ScheduledReports />} />
+                  <Route path="monitoring" element={<Monitoring />} />
+                </Route>
+
+                {/* Daily Checks Section */}
+                <Route
+                  path="/daily-checks"
+                  element={
+                    <ModuleGate moduleKey="daily_checks">
+                      <DailyChecksLayout />
+                    </ModuleGate>
+                  }
+                >
+                  <Route index element={<DailyChecksIndex />} />
+                  <Route path="websites" element={<DailyWebsites />} />
+                  <Route path="seo-health" element={<DailySeoHealth />} />
+                  <Route path="keywords" element={<DailyKeywords />} />
+                  <Route path="rankings" element={<DailyRankings />} />
+                  <Route path="content-changes" element={<DailyContentChanges />} />
+                </Route>
+
+                {/* Asset Tracker Section */}
+                <Route
+                  path="/asset-tracker"
+                  element={
+                    <ModuleGate moduleKey="asset_tracker">
+                      <AssetTrackerLayout />
+                    </ModuleGate>
+                  }
+                >
+                  <Route index element={<AssetTrackerIndex />} />
+                  <Route path="projects" element={<AssetProjects />} />
+                  <Route path="board" element={<AssetBoard />} />
+                  <Route path="tasks" element={<AssetTasks />} />
+                  <Route path="health" element={<AssetHealth />} />
+                  <Route path="reports" element={<AssetReports />} />
+                  <Route path="ops-review" element={<AssetOpsReview />} />
+                  <Route path="alerts" element={<AssetAlerts />} />
+                  <Route path="trash" element={<AssetTrash />} />
+                </Route>
+
+                {/* Nico GEO Section */}
+                <Route
+                  path="/nico-geo"
+                  element={
+                    <ModuleGate moduleKey="nico_geo">
+                      <NicoGeoLayout />
+                    </ModuleGate>
+                  }
+                >
+                  <Route index element={<NicoGeoIndex />} />
+                  <Route path="generate" element={<NicoGeoGenerate />} />
+                  <Route path="audit" element={<NicoGeoAudit />} />
+                  <Route path="improve" element={<NicoGeoImprove />} />
+                  <Route path="reviews" element={<NicoGeoReviews />} />
+                </Route>
+
+                {/* Nexus OpenCopy Section */}
+                <Route
+                  path="/nexus-opencopy"
+                  element={
+                    <ModuleGate moduleKey="nexus_opencopy">
+                      <NexusOpenCopyLayout />
+                    </ModuleGate>
+                  }
+                >
+                  <Route index element={<NexusOpenCopyIndex />} />
+                  <Route path="projects" element={<NexusOpenCopyProjects />} />
+                  <Route path="keywords" element={<NexusOpenCopyKeywords />} />
+                  <Route path="articles" element={<NexusOpenCopyArticles />} />
+                  <Route path="content-planner" element={<NexusOpenCopyContentPlanner />} />
+                  <Route path="integrations" element={<NexusOpenCopyIntegrations />} />
+                </Route>
               </Route>
 
-              {/* Daily Checks Section */}
-              <Route path="/daily-checks" element={<DailyChecksLayout />}>
-                <Route index element={<DailyChecksIndex />} />
-                <Route path="websites" element={<DailyWebsites />} />
-                <Route path="seo-health" element={<DailySeoHealth />} />
-                <Route path="keywords" element={<DailyKeywords />} />
-                <Route path="rankings" element={<DailyRankings />} />
-                <Route path="content-changes" element={<DailyContentChanges />} />
-              </Route>
-
-              {/* Asset Tracker Section */}
-              <Route path="/asset-tracker" element={<AssetTrackerLayout />}>
-                <Route index element={<AssetTrackerIndex />} />
-                <Route path="projects" element={<AssetProjects />} />
-                <Route path="board" element={<AssetBoard />} />
-                <Route path="tasks" element={<AssetTasks />} />
-                <Route path="health" element={<AssetHealth />} />
-                <Route path="reports" element={<AssetReports />} />
-                <Route path="ops-review" element={<AssetOpsReview />} />
-                <Route path="alerts" element={<AssetAlerts />} />
-                <Route path="trash" element={<AssetTrash />} />
-              </Route>
-
-              {/* Nico GEO Section */}
-              <Route path="/nico-geo" element={<NicoGeoLayout />}>
-                <Route index element={<NicoGeoIndex />} />
-                <Route path="generate" element={<NicoGeoGenerate />} />
-                <Route path="audit" element={<NicoGeoAudit />} />
-                <Route path="improve" element={<NicoGeoImprove />} />
-                <Route path="reviews" element={<NicoGeoReviews />} />
-              </Route>
-
-              {/* Nexus OpenCopy Section */}
-              <Route path="/nexus-opencopy" element={<NexusOpenCopyLayout />}>
-                <Route index element={<NexusOpenCopyIndex />} />
-                <Route path="projects" element={<NexusOpenCopyProjects />} />
-                <Route path="keywords" element={<NexusOpenCopyKeywords />} />
-                <Route path="articles" element={<NexusOpenCopyArticles />} />
-                <Route path="content-planner" element={<NexusOpenCopyContentPlanner />} />
-                <Route path="integrations" element={<NexusOpenCopyIntegrations />} />
-              </Route>
-            </Route>
-
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
-          </BrowserRouter>
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              </Routes>
+            </BrowserRouter>
+          </SettingsProvider>
         </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>

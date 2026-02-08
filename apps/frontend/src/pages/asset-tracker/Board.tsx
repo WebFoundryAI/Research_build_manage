@@ -6,6 +6,7 @@ import {
   Globe,
   Star,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type Project = {
   id: string;
@@ -45,17 +46,7 @@ export default function BoardPage() {
 
   async function loadProjects() {
     setLoading(true);
-
-    const demoProjects: Project[] = [
-      { id: "1", name: "Main Website", domain: "example.com", status: "Live – Stable", is_favourite: true, health_score: 92 },
-      { id: "2", name: "E-Commerce Store", domain: "shop.example.com", status: "Live – Needs Improving", is_favourite: true, health_score: 68 },
-      { id: "3", name: "Blog Platform", domain: "blog.example.com", status: "In Build", is_favourite: false, health_score: null },
-      { id: "4", name: "SaaS Dashboard", domain: "app.example.com", status: "Pre-Launch QA", is_favourite: false, health_score: 85 },
-      { id: "5", name: "Landing Page", domain: "promo.example.com", status: "Planning", is_favourite: false, health_score: null },
-      { id: "6", name: "API Documentation", domain: "docs.example.com", status: "Idea / Backlog", is_favourite: false, health_score: null },
-    ];
-
-    setProjects(demoProjects);
+    setProjects([]);
     setLoading(false);
   }
 
@@ -83,6 +74,8 @@ export default function BoardPage() {
       {/* Board */}
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading...</div>
+      ) : projects.length === 0 ? (
+        <EmptyState />
       ) : (
         <div className="flex gap-4 overflow-x-auto pb-4">
           {columns.map(column => {

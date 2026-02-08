@@ -73,7 +73,7 @@ function StatCard({
 }
 
 export default function AdminPage() {
-  const { user, mode } = useAuth();
+  const { user } = useAuth();
   const supabase = useMemo(() => getSupabase(), []);
 
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
@@ -162,7 +162,7 @@ export default function AdminPage() {
     });
   }
 
-  if (mode === "demo" || !supabase) {
+  if (!supabase) {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white p-8">
         <div className="flex items-center gap-4 mb-4">
@@ -171,7 +171,7 @@ export default function AdminPage() {
           </div>
           <div>
             <h1 className="text-xl font-semibold">Admin Panel</h1>
-            <p className="text-sm text-slate-400">Demo mode - Admin features disabled</p>
+            <p className="text-sm text-slate-400">Supabase not configured</p>
           </div>
         </div>
         <p className="text-slate-500">

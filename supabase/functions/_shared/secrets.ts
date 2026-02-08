@@ -1,9 +1,15 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const ALLOWED_ORIGINS = new Set([
-  "https://research-build-manage.pages.dev",
-  "http://localhost:5173",
-]);
+function getAllowedOrigins() {
+  const raw =
+    Deno.env.get("SUPABASE_ALLOWED_ORIGINS") ??
+    Deno.env.get("RBM_ALLOWED_ORIGINS") ??
+    "";
+  return raw
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
 
 const encoder = new TextEncoder();
 
@@ -117,7 +123,13 @@ export async function getSecretValue(userId: string, key: string) {
 
 export function getCorsHeaders(req: Request) {
   const origin = req.headers.get("Origin") ?? "";
-  const allowOrigin = ALLOWED_ORIGINS.has(origin) ? origin : "null";
+  const allowedOrigins = getAllowedOrigins();
+  const allowOrigin =
+    allowedOrigins.length === 0
+      ? origin || "*"
+      : allowedOrigins.includes(origin)
+      ? origin
+      : allowedOrigins[0] || "null";
   return {
     "Access-Control-Allow-Origin": allowOrigin,
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-rbm-source",

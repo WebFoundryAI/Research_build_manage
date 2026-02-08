@@ -3,6 +3,7 @@ import { useAuth } from "../lib/auth";
 import { useTheme } from "../lib/ThemeContext";
 import { callEdgeFunction, type EdgeFunctionResult } from "../lib/edgeFunctions";
 import { getSupabase, getSupabaseEnvStatus, getSupabaseInitError } from "../lib/supabase";
+import { defaultSettings, mergeSettings, useSettings, type Integrations, type ModuleSettings, type ProviderSettings } from "../lib/settings";
 import {
   Key,
   Server,
@@ -18,6 +19,7 @@ import {
   Palette,
   Sun,
   Moon,
+  Sliders,
 } from "lucide-react";
 
 type DiagnosticsState = {
@@ -70,14 +72,9 @@ type MCPServer = {
   headers: MCPHeader[];
 };
 
-type Integrations = {
-  cloudflare_account_id: string;
-  cloudflare_zone_id: string;
-  google_ga_property_id: string;
-  google_gsc_site: string;
-};
-
 type SettingsRecord = {
+  modules?: ModuleSettings;
+  providers?: ProviderSettings;
   api_keys?: {
     custom?: CustomKey[];
   };
@@ -103,12 +100,67 @@ const apiKeyFields = [
   { key: "cloudflare_api_key", label: "Cloudflare API Key", placeholder: "Optional" },
 ];
 
-const EMPTY_INTEGRATIONS: Integrations = {
-  cloudflare_account_id: "",
-  cloudflare_zone_id: "",
-  google_ga_property_id: "",
-  google_gsc_site: "",
-};
+const apiKeyFieldMap = apiKeyFields.reduce((acc, field) => {
+  acc[field.key] = field;
+  return acc;
+}, {} as Record<string, (typeof apiKeyFields)[number]>);
+
+const PROVIDER_GROUPS = [
+  {
+    id: "dataforseo",
+    label: "DataForSEO",
+    description: "Used for keyword research and SERP data.",
+    fields: ["dataforseo_login", "dataforseo_password", "dataforseo_token"],
+  },
+  {
+    id: "openai",
+    label: "OpenAI",
+    description: "Used for AI content generation and analysis.",
+    fields: ["openai_api_key"],
+  },
+  {
+    id: "google",
+    label: "Google APIs",
+    description: "Used for Search Console and Analytics integrations.",
+    fields: ["google_api_key", "gsc_client_id", "gsc_client_secret"],
+  },
+  {
+    id: "cloudflare",
+    label: "Cloudflare",
+    description: "Used for monitoring and DNS automation.",
+    fields: ["cloudflare_api_key"],
+  },
+];
+
+const EMPTY_INTEGRATIONS: Integrations = defaultSettings.integrations;
+
+const MODULE_OPTIONS: Array<{ key: keyof ModuleSettings; label: string; description: string }> = [
+  { key: "multi_tools", label: "MCP Spark", description: "SEO & scraping suite" },
+  { key: "build", label: "Build", description: "Workflow automation" },
+  { key: "daily_checks", label: "Daily Checks", description: "Website monitoring & SEO" },
+  { key: "asset_tracker", label: "Asset Tracker", description: "Portfolio management" },
+  { key: "nico_geo", label: "Nico GEO", description: "GEO content engine" },
+  { key: "nexus_opencopy", label: "Nexus OpenCopy", description: "AI content studio" },
+];
+
+const PROVIDER_OPTIONS: Array<{ key: keyof ProviderSettings; label: string; options: Array<{ value: ProviderSettings[keyof ProviderSettings]; label: string }> }> = [
+  {
+    key: "keyword_data",
+    label: "Keyword data provider",
+    options: [
+      { value: "dataforseo", label: "DataForSEO" },
+      { value: "none", label: "None" },
+    ],
+  },
+  {
+    key: "ai",
+    label: "AI provider",
+    options: [
+      { value: "openai", label: "OpenAI" },
+      { value: "none", label: "None" },
+    ],
+  },
+];
 
 function createId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -143,12 +195,13 @@ function formatSecretStatus(metadata: SecretMetadata | null) {
 }
 
 export default function SettingsPage() {
-  const { user, mode } = useAuth();
+  const { user } = useAuth();
   const { mode: themeMode, toggleTheme } = useTheme();
+  const settingsContext = useSettings();
   const supabase = useMemo(() => getSupabase(), []);
   const initError = getSupabaseInitError();
 
-  const [activeTab, setActiveTab] = useState<"appearance" | "api" | "mcp" | "integrations" | "diagnostics">("appearance");
+  const [activeTab, setActiveTab] = useState<"appearance" | "modules" | "api" | "mcp" | "integrations" | "diagnostics">("appearance");
   const [diagnostics, setDiagnostics] = useState<DiagnosticsState>({
     sessionStatus: "unknown",
     userId: user?.id ?? "",
@@ -177,12 +230,20 @@ export default function SettingsPage() {
   const [mcpStatus, setMcpStatus] = useState<"idle" | "saving" | "error" | "success">("idle");
   const [mcpMessage, setMcpMessage] = useState<string | null>(null);
 
+  const [modules, setModules] = useState<ModuleSettings>(defaultSettings.modules);
+  const [providers, setProviders] = useState<ProviderSettings>(defaultSettings.providers);
+  const [settingsStatus, setSettingsStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
+  const [settingsMessage, setSettingsMessage] = useState<string | null>(null);
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
+
   const [integrations, setIntegrations] = useState<Integrations>(EMPTY_INTEGRATIONS);
   const [integrationStatus, setIntegrationStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const [integrationMessage, setIntegrationMessage] = useState<string | null>(null);
 
   const [inputVisibility, setInputVisibility] = useState<Record<string, boolean>>({});
   const supabaseEnv = getSupabaseEnvStatus();
+  const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [providerTests, setProviderTests] = useState<Record<string, EdgeTestState>>({});
 
   useEffect(() => {
     setDiagnostics((prev) => ({
@@ -191,6 +252,12 @@ export default function SettingsPage() {
       userEmail: user?.email ?? "",
     }));
   }, [user]);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 3000);
+    return () => clearTimeout(timer);
+  }, [toast]);
 
   useEffect(() => {
     async function loadSettings() {
@@ -204,15 +271,23 @@ export default function SettingsPage() {
   }, [supabase, user?.id]);
 
   async function loadSettingsRecord() {
-    if (!supabase || !user) return;
-    const { data, error } = await supabase
-      .from("user_settings")
-      .select("settings")
-      .eq("user_id", user.id)
-      .maybeSingle();
-    if (error) return;
+    if (!user) return;
+    const result = await callEdgeFunction("settings-get", {});
+    if (!result.ok) {
+      setSettingsStatus("error");
+      setSettingsMessage(formatEdgeFunctionError("settings-get", result));
+      setToast({ type: "error", message: formatEdgeFunctionError("settings-get", result) });
+      return;
+    }
 
-    const settings = (data?.settings ?? {}) as SettingsRecord;
+    const payload = (result.json ?? {}) as { settings?: SettingsRecord; updated_at?: string | null };
+    const merged = mergeSettings({ ...payload.settings, updated_at: payload.updated_at ?? null });
+    const settings = merged as SettingsRecord;
+
+    setModules(merged.modules);
+    setProviders(merged.providers);
+    setLastSavedAt(payload.updated_at ?? null);
+
     const nextCustomKeys = normalizeCustomKeys(settings.api_keys?.custom);
     setCustomKeys(nextCustomKeys);
     setIntegrations({ ...EMPTY_INTEGRATIONS, ...(settings.integrations ?? {}) });
@@ -318,6 +393,13 @@ export default function SettingsPage() {
       error: null,
     };
     if (!current?.value?.trim()) return;
+    if (current.value.trim().length < 4) {
+      setApiKeys((prev) => ({
+        ...prev,
+        [key]: { ...prev[key], error: "Value is too short.", status: "idle" },
+      }));
+      return;
+    }
     setApiKeys((prev) => ({
       ...prev,
       [key]: {
@@ -346,14 +428,12 @@ export default function SettingsPage() {
     await loadSecret(key);
   }
 
-  async function saveCustomKeys(nextKeys: CustomKey[]) {
-    if (!supabase || !user) return;
-    setCustomStatus("saving");
-    setCustomMessage(null);
-
-    const payload: SettingsRecord = {
+  function buildSettingsPayload(): SettingsRecord {
+    return {
+      modules,
+      providers,
       api_keys: {
-        custom: nextKeys.map((entry) => ({ key: entry.key, label: entry.label })),
+        custom: customKeys.map((entry) => ({ key: entry.key, label: entry.label })),
       },
       integrations,
       mcp: {
@@ -369,21 +449,45 @@ export default function SettingsPage() {
         })),
       },
     };
+  }
 
-    const { error } = await supabase.from("user_settings").upsert({
-      user_id: user.id,
-      settings: payload,
-      updated_at: new Date().toISOString(),
-    });
+  async function saveSettingsRecord(successMessage: string, setStatus: (status: "idle" | "saving" | "success" | "error") => void, setMessage: (message: string | null) => void) {
+    if (!user) return;
+    setStatus("saving");
+    setMessage(null);
+    setSettingsStatus("saving");
+    setSettingsMessage(null);
 
-    if (error) {
-      setCustomStatus("error");
-      setCustomMessage(error.message);
+    const payload = buildSettingsPayload();
+    const result = await callEdgeFunction("settings-update", { settings: payload });
+    if (!result.ok) {
+      const errorMessage = formatEdgeFunctionError("settings-update", result);
+      setStatus("error");
+      setMessage(errorMessage);
+      setSettingsStatus("error");
+      setSettingsMessage(errorMessage);
+      setToast({ type: "error", message: errorMessage });
       return;
     }
-    setCustomStatus("success");
-    setCustomMessage("Custom keys saved.");
-    setTimeout(() => setCustomStatus("idle"), 1200);
+
+    const response = result.json as { updated_at?: string | null } | undefined;
+    setLastSavedAt(response?.updated_at ?? new Date().toISOString());
+    setStatus("success");
+    setMessage(successMessage);
+    setSettingsStatus("success");
+    setSettingsMessage(successMessage);
+    setToast({ type: "success", message: successMessage });
+    setTimeout(() => {
+      setStatus("idle");
+      setSettingsStatus("idle");
+    }, 1500);
+    await settingsContext.refresh();
+  }
+
+  async function saveCustomKeys(nextKeys: CustomKey[]) {
+    if (!user) return;
+    setCustomKeys(nextKeys);
+    await saveSettingsRecord("Custom keys saved.", setCustomStatus, setCustomMessage);
   }
 
   async function loadCustomSecrets(keys: CustomKey[]) {
@@ -414,46 +518,12 @@ export default function SettingsPage() {
   }
 
   async function saveIntegrations() {
-    if (!supabase || !user) return;
-    setIntegrationStatus("saving");
-    setIntegrationMessage(null);
-
-    const payload: SettingsRecord = {
-      api_keys: {
-        custom: customKeys.map((entry) => ({ key: entry.key, label: entry.label })),
-      },
-      mcp: {
-        servers: mcpServers.map((server) => ({
-          name: server.name,
-          base_url: server.base_url,
-          enabled: server.enabled,
-          headers: server.headers.map((header) => ({
-            key: header.key,
-            value: header.value,
-            isSecret: header.isSecret,
-          })),
-        })),
-      },
-      integrations,
-    };
-
-    const { error } = await supabase.from("user_settings").upsert({
-      user_id: user.id,
-      settings: payload,
-      updated_at: new Date().toISOString(),
-    });
-    if (error) {
-      setIntegrationStatus("error");
-      setIntegrationMessage(error.message);
-      return;
-    }
-    setIntegrationStatus("success");
-    setIntegrationMessage("Integrations saved.");
-    setTimeout(() => setIntegrationStatus("idle"), 1200);
+    if (!user) return;
+    await saveSettingsRecord("Integrations saved.", setIntegrationStatus, setIntegrationMessage);
   }
 
   async function saveMcpConfig() {
-    if (!supabase || !user) return;
+    if (!user) return;
     setMcpStatus("saving");
     setMcpMessage(null);
 
@@ -474,38 +544,7 @@ export default function SettingsPage() {
       }
     }
 
-    const payload: SettingsRecord = {
-      api_keys: {
-        custom: customKeys.map((entry) => ({ key: entry.key, label: entry.label })),
-      },
-      integrations,
-      mcp: {
-        servers: mcpServers.map((server) => ({
-          name: server.name,
-          base_url: server.base_url,
-          enabled: server.enabled,
-          headers: server.headers.map((header) => ({
-            key: header.key,
-            value: header.value,
-            isSecret: header.isSecret,
-          })),
-        })),
-      },
-    };
-
-    const { error } = await supabase.from("user_settings").upsert({
-      user_id: user.id,
-      settings: payload,
-      updated_at: new Date().toISOString(),
-    });
-    if (error) {
-      setMcpStatus("error");
-      setMcpMessage(error.message);
-      return;
-    }
-    setMcpStatus("success");
-    setMcpMessage("MCP configuration saved.");
-    setTimeout(() => setMcpStatus("idle"), 1500);
+    await saveSettingsRecord("MCP configuration saved.", setMcpStatus, setMcpMessage);
     setMcpServers((prev) =>
       prev.map((server) => ({
         ...server,
@@ -574,6 +613,28 @@ export default function SettingsPage() {
     setInputVisibility((prev) => ({ ...prev, [key]: !prev[key] }));
   }
 
+  async function runProviderTest(providerId: string) {
+    setProviderTests((prev) => ({
+      ...prev,
+      [providerId]: { status: "running", output: null, timestamp: new Date().toISOString() },
+    }));
+    const result = await callEdgeFunction("settings-test", { provider: providerId });
+    if (!result.ok) {
+      const errorMessage = formatEdgeFunctionError("settings-test", result);
+      setProviderTests((prev) => ({
+        ...prev,
+        [providerId]: { status: "error", output: result, timestamp: new Date().toISOString() },
+      }));
+      setToast({ type: "error", message: errorMessage });
+      return;
+    }
+    setProviderTests((prev) => ({
+      ...prev,
+      [providerId]: { status: "success", output: result, timestamp: new Date().toISOString() },
+    }));
+    setToast({ type: "success", message: `${providerId} connection ok.` });
+  }
+
   const envBanner =
     supabaseEnv.status === "ok"
       ? { label: "OK", classes: "border-emerald-200 bg-emerald-50 text-emerald-800" }
@@ -581,7 +642,7 @@ export default function SettingsPage() {
       ? { label: "WARN", classes: "border-amber-200 bg-amber-50 text-amber-800" }
       : { label: "ERROR", classes: "border-red-200 bg-red-50 text-red-800" };
 
-  if (mode === "demo" || !supabase) {
+  if (!supabase) {
     return (
       <div className="max-w-4xl">
         <div className="rounded-2xl border border-slate-200 bg-white/60 p-6">
@@ -591,7 +652,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <h1 className="text-xl font-semibold">Settings</h1>
-              <p className="text-sm text-slate-500">Demo mode - Settings disabled</p>
+              <p className="text-sm text-slate-500">Supabase not configured</p>
             </div>
           </div>
           <p className="text-slate-500">
@@ -604,6 +665,17 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-4xl space-y-6">
+      {toast && (
+        <div
+          className={`fixed top-6 right-6 z-50 rounded-xl px-4 py-3 text-sm shadow-lg ${
+            toast.type === "success"
+              ? "bg-emerald-600 text-white"
+              : "bg-red-600 text-white"
+          }`}
+        >
+          {toast.message}
+        </div>
+      )}
       {/* Header */}
       <div>
         <div className="flex items-center gap-3">
@@ -615,6 +687,9 @@ export default function SettingsPage() {
         <p className="mt-2 text-sm text-slate-500">
           Centralize API keys, MCP servers, integrations, and diagnostics.
         </p>
+        {lastSavedAt && (
+          <p className="mt-1 text-xs text-slate-400">Last saved: {new Date(lastSavedAt).toLocaleString()}</p>
+        )}
       </div>
 
       <div className={`rounded-2xl border p-4 text-sm ${envBanner.classes}`}>
@@ -635,6 +710,7 @@ export default function SettingsPage() {
         <div className="flex gap-2 overflow-x-auto pb-1">
           {[
             { id: "appearance", label: "Appearance", icon: Palette },
+            { id: "modules", label: "Modules", icon: Sliders },
             { id: "api", label: "API Keys", icon: Key },
             { id: "mcp", label: "MCP Servers", icon: Server },
             { id: "integrations", label: "Integrations", icon: Link2 },
@@ -709,6 +785,88 @@ export default function SettingsPage() {
         </div>
       )}
 
+      {/* Modules Tab */}
+      {activeTab === "modules" && (
+        <div className="rounded-2xl border border-slate-200 bg-white/60 p-6 space-y-6">
+          <div>
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <Sliders size={18} className="text-slate-500" />
+              Modules & Providers
+            </h2>
+            <p className="text-sm text-slate-500 mt-1">
+              Enable the modules you want to use and choose default providers.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {MODULE_OPTIONS.map((module) => (
+              <label
+                key={module.key}
+                className="flex items-center justify-between rounded-xl border border-slate-200 bg-white text-slate-900 px-4 py-3"
+              >
+                <div>
+                  <div className="font-medium text-slate-900">{module.label}</div>
+                  <div className="text-xs text-slate-500">{module.description}</div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={modules[module.key]}
+                  onChange={(event) =>
+                    setModules((prev) => ({ ...prev, [module.key]: event.target.checked }))
+                  }
+                  className="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                />
+              </label>
+            ))}
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {PROVIDER_OPTIONS.map((provider) => (
+              <label key={provider.key} className="space-y-2">
+                <span className="text-sm font-medium text-slate-700">{provider.label}</span>
+                <select
+                  value={providers[provider.key]}
+                  onChange={(event) =>
+                    setProviders((prev) => ({
+                      ...prev,
+                      [provider.key]: event.target.value as ProviderSettings[keyof ProviderSettings],
+                    }))
+                  }
+                  className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none"
+                >
+                  {provider.options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-3 pt-4 border-t border-slate-200">
+            <button
+              onClick={() => saveSettingsRecord("Module settings saved.", setSettingsStatus, setSettingsMessage)}
+              className="flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 text-sm font-medium text-white transition-colors"
+              disabled={settingsStatus === "saving"}
+            >
+              <Save size={14} />
+              {settingsStatus === "saving" ? "Saving..." : "Save Modules"}
+            </button>
+            {settingsMessage && (
+              <span
+                className={`text-sm flex items-center gap-2 ${
+                  settingsStatus === "error" ? "text-red-600" : "text-emerald-600"
+                }`}
+              >
+                {settingsStatus === "error" ? <AlertTriangle size={14} /> : <CheckCircle size={14} />}
+                {settingsMessage}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* API Keys Tab */}
       {activeTab === "api" && (
         <div className="space-y-6">
@@ -723,52 +881,89 @@ export default function SettingsPage() {
               </p>
             </div>
 
-            <div className="space-y-4">
-              {apiKeyFields.map((field) => {
-                const state = apiKeys[field.key];
+            <div className="space-y-6">
+              {PROVIDER_GROUPS.map((group) => {
+                const testInfo = providerTests[group.id];
+                const testState = testInfo?.status ?? "idle";
                 return (
-                  <div key={field.key} className="rounded-xl border border-slate-200 p-4 space-y-3">
-                    <div>
-                      <div className="font-medium">{field.label}</div>
-                      <div className="text-xs text-slate-500 mt-0.5">
-                        {formatSecretStatus(state.metadata)}
+                  <div key={group.id} className="rounded-2xl border border-slate-200 bg-white p-5 space-y-4">
+                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                      <div>
+                        <div className="font-semibold text-slate-900">{group.label}</div>
+                        <div className="text-xs text-slate-500">{group.description}</div>
                       </div>
-                    </div>
-                    <div className="grid gap-2 md:grid-cols-[1fr_auto_auto]">
-                      <input
-                        type={inputVisibility[field.key] ? "text" : "password"}
-                        value={state.value}
-                        onChange={(event) =>
-                          setApiKeys((prev) => ({
-                            ...prev,
-                            [field.key]: { ...prev[field.key], value: event.target.value },
-                          }))
-                        }
-                        placeholder={field.placeholder}
-                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
-                      />
                       <button
-                        type="button"
-                        onClick={() => toggleInputVisibility(field.key)}
-                        className="rounded-xl border border-slate-300 px-3 py-2 text-xs hover:bg-slate-100 transition-colors"
+                        onClick={() => runProviderTest(group.id)}
+                        className="flex items-center gap-2 rounded-xl border border-slate-300 px-4 py-2 text-xs hover:bg-slate-100 transition-colors"
+                        disabled={testState === "running"}
                       >
-                        {inputVisibility[field.key] ? "Hide" : "Show"}
-                      </button>
-                      <button
-                        onClick={() => saveSecret(field.key)}
-                        className="flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-4 py-2.5 text-sm font-medium text-white transition-colors disabled:opacity-50"
-                        disabled={state.status === "saving" || !state.value.trim()}
-                      >
-                        <Save size={14} />
-                        {state.status === "saving" ? "Saving..." : "Save"}
+                        <Activity size={14} />
+                        {testState === "running" ? "Testing..." : "Test Connection"}
                       </button>
                     </div>
-                    {state.error && (
-                      <div className="text-xs text-red-600 flex items-center gap-1">
-                        <AlertTriangle size={12} />
-                        {state.error}
+                    {testInfo && testState !== "idle" && (
+                      <div
+                        className={`text-xs ${
+                          testState === "success" ? "text-emerald-600" : testState === "error" ? "text-red-600" : "text-slate-500"
+                        }`}
+                      >
+                        {testState === "success"
+                          ? "Connection successful."
+                          : testInfo.output?.bodyText || "Connection failed."}
                       </div>
                     )}
+
+                    <div className="space-y-4">
+                      {group.fields.map((fieldKey) => {
+                        const field = apiKeyFieldMap[fieldKey];
+                        const state = apiKeys[fieldKey];
+                        return (
+                          <div key={fieldKey} className="rounded-xl border border-slate-200 p-4 space-y-3">
+                            <div>
+                              <div className="font-medium text-slate-900">{field.label}</div>
+                              <div className="text-xs text-slate-500 mt-0.5">
+                                {formatSecretStatus(state.metadata)}
+                              </div>
+                            </div>
+                            <div className="grid gap-2 md:grid-cols-[1fr_auto_auto]">
+                              <input
+                                type={inputVisibility[fieldKey] ? "text" : "password"}
+                                value={state.value}
+                                onChange={(event) =>
+                                  setApiKeys((prev) => ({
+                                    ...prev,
+                                    [fieldKey]: { ...prev[fieldKey], value: event.target.value },
+                                  }))
+                                }
+                                placeholder={field.placeholder}
+                                className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => toggleInputVisibility(fieldKey)}
+                                className="rounded-xl border border-slate-300 px-3 py-2 text-xs hover:bg-slate-100 transition-colors"
+                              >
+                                {inputVisibility[fieldKey] ? "Hide" : "Show"}
+                              </button>
+                              <button
+                                onClick={() => saveSecret(fieldKey)}
+                                className="flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-4 py-2.5 text-sm font-medium text-white transition-colors disabled:opacity-50"
+                                disabled={state.status === "saving" || !state.value.trim()}
+                              >
+                                <Save size={14} />
+                                {state.status === "saving" ? "Saving..." : "Save"}
+                              </button>
+                            </div>
+                            {state.error && (
+                              <div className="text-xs text-red-600 flex items-center gap-1">
+                                <AlertTriangle size={12} />
+                                {state.error}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 );
               })}
@@ -792,13 +987,13 @@ export default function SettingsPage() {
                 value={customDraft.label}
                 onChange={(event) => setCustomDraft((prev) => ({ ...prev, label: event.target.value }))}
                 placeholder="Label (optional)"
-                className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
+                className="flex-1 rounded-xl border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
               />
               <input
                 value={customDraft.key}
                 onChange={(event) => setCustomDraft((prev) => ({ ...prev, key: event.target.value }))}
                 placeholder="Key name"
-                className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
+                className="flex-1 rounded-xl border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
               />
               <button
                 onClick={addCustomKey}
@@ -847,7 +1042,7 @@ export default function SettingsPage() {
                           }))
                         }
                         placeholder="Secret value"
-                        className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
+                        className="flex-1 rounded-xl border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
                       />
                       <button
                         onClick={() => toggleInputVisibility(entry.key)}
@@ -923,13 +1118,13 @@ export default function SettingsPage() {
                       value={server.name}
                       onChange={(event) => updateServer(server.id, { name: event.target.value })}
                       placeholder="Server name"
-                      className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
+                      className="rounded-xl border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
                     />
                     <input
                       value={server.base_url}
                       onChange={(event) => updateServer(server.id, { base_url: event.target.value })}
                       placeholder="https://mcp.example.com"
-                      className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
+                      className="rounded-xl border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
                     />
                   </div>
                   <div className="flex items-center gap-3">
@@ -973,7 +1168,7 @@ export default function SettingsPage() {
                             updateHeader(server.id, header.id, { key: event.target.value })
                           }
                           placeholder="Header key"
-                          className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm placeholder:text-slate-400"
+                          className="rounded-lg border border-slate-200 bg-white text-slate-900 px-3 py-2 text-sm placeholder:text-slate-400"
                         />
                         <input
                           value={header.value}
@@ -981,7 +1176,7 @@ export default function SettingsPage() {
                             updateHeader(server.id, header.id, { value: event.target.value })
                           }
                           placeholder={header.isSecret ? "Secret name" : "Header value"}
-                          className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm placeholder:text-slate-400"
+                          className="rounded-lg border border-slate-200 bg-white text-slate-900 px-3 py-2 text-sm placeholder:text-slate-400"
                         />
                         <div className="flex items-center gap-2">
                           <label className="flex items-center gap-2 text-xs cursor-pointer">
@@ -1011,13 +1206,13 @@ export default function SettingsPage() {
                             updateHeader(server.id, header.id, { secretValue: event.target.value })
                           }
                           placeholder="Secret value (saved to secrets-set)"
-                          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm placeholder:text-slate-400"
+                          className="w-full rounded-lg border border-slate-200 bg-white text-slate-900 px-3 py-2 text-sm placeholder:text-slate-400"
                         />
                       )}
                       {header.isSecret && (
                         <button
                           onClick={() => toggleInputVisibility(header.id)}
-                          className="rounded-lg border px-3 py-1.5 text-xs hover:bg-slate-50"
+                          className="rounded-lg border px-3 py-1.5 text-xs hover:bg-white"
                         >
                           {inputVisibility[header.id] ? "Hide" : "Show"}
                         </button>
@@ -1072,7 +1267,7 @@ export default function SettingsPage() {
                   setIntegrations((prev) => ({ ...prev, cloudflare_account_id: event.target.value }))
                 }
                 placeholder="Account ID"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
               />
             </label>
 
@@ -1084,7 +1279,7 @@ export default function SettingsPage() {
                   setIntegrations((prev) => ({ ...prev, cloudflare_zone_id: event.target.value }))
                 }
                 placeholder="Zone ID"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
               />
             </label>
 
@@ -1096,7 +1291,7 @@ export default function SettingsPage() {
                   setIntegrations((prev) => ({ ...prev, google_ga_property_id: event.target.value }))
                 }
                 placeholder="GA property ID"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
               />
             </label>
 
@@ -1108,7 +1303,7 @@ export default function SettingsPage() {
                   setIntegrations((prev) => ({ ...prev, google_gsc_site: event.target.value }))
                 }
                 placeholder="https://example.com"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white text-slate-900 px-4 py-2.5 text-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none"
               />
             </label>
           </div>

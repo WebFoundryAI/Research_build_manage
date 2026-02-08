@@ -23,8 +23,7 @@ export function getTheme(): Theme {
   } catch {
     // ignore localStorage access errors
   }
-
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return "light";
 }
 
 export function setTheme(theme: Theme) {

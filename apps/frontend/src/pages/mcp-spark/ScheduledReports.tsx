@@ -13,27 +13,7 @@ interface ScheduledReport {
 }
 
 export default function ScheduledReports() {
-  const [reports, setReports] = useState<ScheduledReport[]>([
-    {
-      id: "1",
-      name: "Weekly Keyword Report",
-      type: "keyword_tracking",
-      frequency: "weekly",
-      target: "best coffee machines",
-      enabled: true,
-      lastRun: "2024-12-08",
-      nextRun: "2024-12-15",
-    },
-    {
-      id: "2",
-      name: "Monthly Domain Audit",
-      type: "domain_audit",
-      frequency: "monthly",
-      target: "example.com",
-      enabled: false,
-      nextRun: "2025-01-01",
-    },
-  ]);
+  const [reports, setReports] = useState<ScheduledReport[]>([]);
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [newReport, setNewReport] = useState({

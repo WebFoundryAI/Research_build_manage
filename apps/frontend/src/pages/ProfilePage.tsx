@@ -11,7 +11,7 @@ type ProfileForm = {
 type Status = "idle" | "loading" | "saving" | "success" | "error";
 
 export default function ProfilePage() {
-  const { user, mode } = useAuth();
+  const { user } = useAuth();
   const supabase = useMemo(() => getSupabase(), []);
 
   const [form, setForm] = useState<ProfileForm>({
@@ -81,7 +81,7 @@ export default function ProfilePage() {
     }, 2000);
   }
 
-  if (mode === "demo" || !supabase) {
+  if (!supabase) {
     return (
       <div className="max-w-2xl">
         <div className="rounded-2xl border border-slate-200 bg-white p-6">
@@ -91,7 +91,7 @@ export default function ProfilePage() {
             </div>
             <div>
               <h1 className="text-xl font-semibold">Profile</h1>
-              <p className="text-sm text-slate-400">Demo mode - Profile editing disabled</p>
+              <p className="text-sm text-slate-400">Supabase not configured</p>
             </div>
           </div>
           <p className="text-slate-500">

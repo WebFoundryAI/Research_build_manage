@@ -12,6 +12,7 @@ import {
   Filter,
   X,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type Website = {
   id: number;
@@ -50,14 +51,7 @@ export default function WebsitesPage() {
 
   async function loadWebsites() {
     setLoading(true);
-    // Demo data - replace with API call
-    const demoWebsites: Website[] = [
-      { id: 1, name: "Example Site", url: "https://example.com", category: "general", last_status: 1, seo_score: 85, last_checked: new Date().toISOString(), created_at: new Date().toISOString() },
-      { id: 2, name: "Test Blog", url: "https://blog.example.com", category: "blog", last_status: 1, seo_score: 72, last_checked: new Date().toISOString(), created_at: new Date().toISOString() },
-      { id: 3, name: "E-Commerce Store", url: "https://shop.example.com", category: "ecommerce", last_status: 0, seo_score: 45, last_checked: new Date().toISOString(), created_at: new Date().toISOString() },
-      { id: 4, name: "Client Portfolio", url: "https://portfolio.example.com", category: "client", last_status: 1, seo_score: 90, last_checked: new Date().toISOString(), created_at: new Date().toISOString() },
-    ];
-    setWebsites(demoWebsites);
+    setWebsites([]);
     setLoading(false);
   }
 
@@ -186,12 +180,8 @@ export default function WebsitesPage() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading...</div>
       ) : filteredWebsites.length === 0 ? (
-        <div className="text-center py-12">
-          <Globe size={48} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-400 mb-4">
-            {searchQuery || categoryFilter ? "No websites match your filters" : "No websites yet"}
-          </p>
-          {!searchQuery && !categoryFilter && (
+        <EmptyState
+          action={
             <button
               onClick={openAddModal}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-sm"
@@ -199,8 +189,8 @@ export default function WebsitesPage() {
               <Plus size={16} />
               Add your first website
             </button>
-          )}
-        </div>
+          }
+        />
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredWebsites.map(website => (

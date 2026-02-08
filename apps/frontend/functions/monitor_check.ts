@@ -1,14 +1,9 @@
 // apps/edge-functions/functions/monitor_check.ts
 //
 // This Cloudflare Pages Function acts as the backend endpoint for monitoring
-// websites.  It is inspired by the Daily‑website‑acesset‑checking and
-// web‑asset‑tracker repositories.  The original tools periodically fetch
-// website URLs, check for accessibility, capture screenshots and report
-// status changes.  Here we implement a minimal placeholder that accepts a
-// URL via POST and returns a fake status code.  In a full implementation
-// this function should fetch the given URL, compute a health metric (status
-// code, load time) and optionally take a screenshot using a headless
-// browser like Puppeteer running in a separate environment.
+// websites. It performs a lightweight HEAD request against a target URL and
+// returns the status plus basic timing metadata. Extend it with deeper checks,
+// screenshots, and alerting as needed.
 
 import { Context } from "https://edge.cloudflare.com/deno/client.ts";
 

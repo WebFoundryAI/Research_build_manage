@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FileEdit,
   FolderKanban,
@@ -12,14 +12,26 @@ import {
   BarChart3,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import EmptyState from "../../components/EmptyState";
+
+type Stat = {
+  label: string;
+  value: string;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  color: string;
+};
+
+type RecentArticle = {
+  title: string;
+  project: string;
+  score: number;
+  status: "published" | "in_review" | "generating";
+  date: string;
+};
 
 export default function NexusOpenCopyIndex() {
-  const stats = [
-    { label: "Total Projects", value: "8", icon: FolderKanban, color: "text-pink-600" },
-    { label: "Keywords Tracked", value: "156", icon: Search, color: "text-blue-600" },
-    { label: "Articles Generated", value: "342", icon: FileText, color: "text-emerald-600" },
-    { label: "Avg SEO Score", value: "78", icon: TrendingUp, color: "text-amber-600" },
-  ];
+  const [stats] = useState<Stat[]>([]);
+  const [recentArticles] = useState<RecentArticle[]>([]);
 
   const features = [
     {
@@ -52,30 +64,6 @@ export default function NexusOpenCopyIndex() {
     },
   ];
 
-  const recentArticles = [
-    {
-      title: "Complete Guide to React Hooks",
-      project: "Tech Blog",
-      score: 85,
-      status: "published",
-      date: "2 hours ago",
-    },
-    {
-      title: "SEO Best Practices for 2025",
-      project: "Marketing Site",
-      score: 92,
-      status: "in_review",
-      date: "5 hours ago",
-    },
-    {
-      title: "Getting Started with TypeScript",
-      project: "Tech Blog",
-      score: 78,
-      status: "generating",
-      date: "1 day ago",
-    },
-  ];
-
   function getStatusColor(status: string) {
     if (status === "published") return "bg-emerald-500/20 text-emerald-600";
     if (status === "in_review") return "bg-amber-500/20 text-amber-600";
@@ -102,24 +90,31 @@ export default function NexusOpenCopyIndex() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-xl border border-slate-200 bg-white p-4"
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-slate-100">
-                <stat.icon size={18} className={stat.color} />
-              </div>
-              <div>
-                <div className="text-2xl font-semibold">{stat.value}</div>
-                <div className="text-xs text-slate-500">{stat.label}</div>
+      {stats.length === 0 ? (
+        <EmptyState
+          title="No metrics yet"
+          description="Connect Nexus OpenCopy data sources to see project stats."
+        />
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded-xl border border-slate-200 bg-white p-4"
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-slate-100">
+                  <stat.icon size={18} className={stat.color} />
+                </div>
+                <div>
+                  <div className="text-2xl font-semibold">{stat.value}</div>
+                  <div className="text-xs text-slate-500">{stat.label}</div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Features Grid */}
       <div className="grid md:grid-cols-2 gap-4">
@@ -154,39 +149,46 @@ export default function NexusOpenCopyIndex() {
           </Link>
         </div>
 
-        <div className="space-y-3">
-          {recentArticles.map((article, i) => (
-            <div
-              key={i}
-              className="flex items-center justify-between p-3 rounded-lg bg-slate-100/30 hover:bg-slate-100 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-slate-100">
-                  <FileText size={16} className="text-pink-600" />
+        {recentArticles.length === 0 ? (
+          <EmptyState
+            title="No recent articles"
+            description="Generated articles will appear here once available."
+          />
+        ) : (
+          <div className="space-y-3">
+            {recentArticles.map((article, i) => (
+              <div
+                key={i}
+                className="flex items-center justify-between p-3 rounded-lg bg-slate-100/30 hover:bg-slate-100 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-slate-100">
+                    <FileText size={16} className="text-pink-600" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-sm">{article.title}</div>
+                    <div className="text-xs text-slate-500">{article.project}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="font-medium text-sm">{article.title}</div>
-                  <div className="text-xs text-slate-500">{article.project}</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <BarChart3 size={14} className={getScoreColor(article.score)} />
-                  <span className={`text-sm font-medium ${getScoreColor(article.score)}`}>
-                    {article.score}
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <BarChart3 size={14} className={getScoreColor(article.score)} />
+                    <span className={`text-sm font-medium ${getScoreColor(article.score)}`}>
+                      {article.score}
+                    </span>
+                  </div>
+                  <span className={`px-2 py-1 rounded text-xs capitalize ${getStatusColor(article.status)}`}>
+                    {article.status.replace("_", " ")}
+                  </span>
+                  <span className="text-xs text-slate-500 flex items-center gap-1">
+                    <Clock size={12} />
+                    {article.date}
                   </span>
                 </div>
-                <span className={`px-2 py-1 rounded text-xs capitalize ${getStatusColor(article.status)}`}>
-                  {article.status.replace("_", " ")}
-                </span>
-                <span className="text-xs text-slate-500 flex items-center gap-1">
-                  <Clock size={12} />
-                  {article.date}
-                </span>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Quick Actions */}

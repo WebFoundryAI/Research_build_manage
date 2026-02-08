@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
 import {
-  TrendingUp,
-  TrendingDown,
-  Minus,
   RefreshCw,
   ExternalLink,
   Search,
   Globe,
   AlertTriangle,
   CheckCircle,
-  Link as LinkIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import EmptyState from "../../components/EmptyState";
 
 type RankingData = {
   id: number;
@@ -45,25 +42,9 @@ export default function RankingsPage() {
 
   async function loadData() {
     setLoading(true);
-
-    // Demo data
-    const demoWebsites = [
-      { id: 1, name: "Example Site" },
-      { id: 2, name: "Test Blog" },
-    ];
-
-    const demoRankings: RankingData[] = [
-      { id: 1, website_id: 1, website_name: "Example Site", query: "web development services", clicks: 125, impressions: 3400, ctr: 3.68, position: 4.2, date: new Date().toISOString() },
-      { id: 2, website_id: 1, website_name: "Example Site", query: "react developer london", clicks: 87, impressions: 2100, ctr: 4.14, position: 6.8, date: new Date().toISOString() },
-      { id: 3, website_id: 1, website_name: "Example Site", query: "custom software development", clicks: 56, impressions: 1800, ctr: 3.11, position: 8.5, date: new Date().toISOString() },
-      { id: 4, website_id: 2, website_name: "Test Blog", query: "javascript tutorials", clicks: 234, impressions: 5600, ctr: 4.18, position: 3.1, date: new Date().toISOString() },
-      { id: 5, website_id: 2, website_name: "Test Blog", query: "react hooks guide", clicks: 189, impressions: 4200, ctr: 4.5, position: 2.8, date: new Date().toISOString() },
-      { id: 6, website_id: 2, website_name: "Test Blog", query: "typescript best practices", clicks: 145, impressions: 3800, ctr: 3.82, position: 5.4, date: new Date().toISOString() },
-    ];
-
-    setWebsites(demoWebsites);
-    setRankings(demoRankings);
-    setGscStatus({ connected: true, lastSync: new Date().toISOString() });
+    setWebsites([]);
+    setRankings([]);
+    setGscStatus({ connected: false, lastSync: null });
     setLoading(false);
   }
 
@@ -209,15 +190,7 @@ export default function RankingsPage() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading...</div>
       ) : sortedRankings.length === 0 ? (
-        <div className="text-center py-12">
-          <TrendingUp size={48} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-400 mb-2">No ranking data yet</p>
-          <p className="text-sm text-slate-500">
-            {gscStatus.connected
-              ? "Click 'Sync GSC Data' to import your Search Console data"
-              : "Connect Google Search Console to see ranking data"}
-          </p>
-        </div>
+        <EmptyState />
       ) : (
         <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
           <div className="overflow-x-auto">

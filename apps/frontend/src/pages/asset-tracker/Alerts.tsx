@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Bell,
   AlertTriangle,
   CheckCircle,
   XCircle,
@@ -10,6 +9,7 @@ import {
   Check,
   Filter,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type Alert = {
   id: string;
@@ -33,61 +33,7 @@ export default function AlertsPage() {
 
   async function loadAlerts() {
     setLoading(true);
-
-    const demoAlerts: Alert[] = [
-      {
-        id: "1",
-        project_name: "SaaS Dashboard",
-        domain: "app.example.com",
-        type: "critical",
-        title: "SSL Certificate Expiring Soon",
-        message: "SSL certificate will expire in 15 days. Renew now to avoid downtime.",
-        created_at: new Date().toISOString(),
-        read: false,
-      },
-      {
-        id: "2",
-        project_name: "E-Commerce Store",
-        domain: "shop.example.com",
-        type: "warning",
-        title: "High Response Time Detected",
-        message: "Average response time exceeded 4 seconds over the last hour.",
-        created_at: new Date(Date.now() - 3600000).toISOString(),
-        read: false,
-      },
-      {
-        id: "3",
-        project_name: "E-Commerce Store",
-        domain: "shop.example.com",
-        type: "warning",
-        title: "Backup Overdue",
-        message: "Last backup was 3 days ago. Automatic backup may have failed.",
-        created_at: new Date(Date.now() - 7200000).toISOString(),
-        read: true,
-      },
-      {
-        id: "4",
-        project_name: "Main Website",
-        domain: "example.com",
-        type: "info",
-        title: "Health Check Complete",
-        message: "All checks passed. Health score: 92/100.",
-        created_at: new Date(Date.now() - 86400000).toISOString(),
-        read: true,
-      },
-      {
-        id: "5",
-        project_name: "Main Website",
-        domain: "example.com",
-        type: "info",
-        title: "Traffic Milestone",
-        message: "Your site has reached 45,000 monthly visitors!",
-        created_at: new Date(Date.now() - 172800000).toISOString(),
-        read: true,
-      },
-    ];
-
-    setAlerts(demoAlerts);
+    setAlerts([]);
     setLoading(false);
   }
 
@@ -181,13 +127,7 @@ export default function AlertsPage() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading...</div>
       ) : filteredAlerts.length === 0 ? (
-        <div className="text-center py-12">
-          <Bell size={48} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-400 mb-2">No alerts</p>
-          <p className="text-sm text-slate-500">
-            {filter !== "all" ? "No alerts match this filter" : "You're all caught up!"}
-          </p>
-        </div>
+        <EmptyState />
       ) : (
         <div className="space-y-3">
           {filteredAlerts.map((alert) => (

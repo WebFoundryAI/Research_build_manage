@@ -9,6 +9,7 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type PlannedContent = {
   id: string;
@@ -24,49 +25,7 @@ export default function NexusOpenCopyContentPlanner() {
   const [view, setView] = useState<"month" | "week">("month");
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-
-  const plannedContent: PlannedContent[] = [
-    {
-      id: "1",
-      title: "React 19 New Features",
-      keyword: "react 19 features",
-      project: "Tech Blog",
-      date: formatDate(addDays(new Date(), 2)),
-      status: "planned",
-    },
-    {
-      id: "2",
-      title: "Next.js vs Remix Comparison",
-      keyword: "nextjs vs remix",
-      project: "Tech Blog",
-      date: formatDate(addDays(new Date(), 5)),
-      status: "planned",
-    },
-    {
-      id: "3",
-      title: "Email Marketing Strategies",
-      keyword: "email marketing tips",
-      project: "Marketing Site",
-      date: formatDate(addDays(new Date(), -1)),
-      status: "overdue",
-    },
-    {
-      id: "4",
-      title: "Product Page Optimization",
-      keyword: "ecommerce optimization",
-      project: "E-Commerce Blog",
-      date: formatDate(new Date()),
-      status: "in_progress",
-    },
-    {
-      id: "5",
-      title: "API Best Practices",
-      keyword: "api design",
-      project: "Documentation",
-      date: formatDate(addDays(new Date(), 7)),
-      status: "planned",
-    },
-  ];
+  const [plannedContent, setPlannedContent] = useState<PlannedContent[]>([]);
 
   function formatDate(date: Date): string {
     return date.toISOString().split("T")[0];
@@ -288,33 +247,40 @@ export default function NexusOpenCopyContentPlanner() {
       {/* Upcoming Content List */}
       <div className="rounded-xl border border-slate-200 bg-white p-6">
         <h3 className="font-semibold mb-4">Upcoming Content</h3>
-        <div className="space-y-3">
-          {plannedContent
-            .filter((c) => c.status !== "completed")
-            .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-            .map((content) => (
-              <div
-                key={content.id}
-                className="flex items-center justify-between p-3 rounded-lg bg-slate-100/30 hover:bg-slate-100 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${getStatusColor(content.status)}`} />
-                  <div>
-                    <div className="font-medium text-sm">{content.title}</div>
-                    <div className="text-xs text-slate-500">
-                      {content.project} • {content.keyword}
+        {plannedContent.length === 0 ? (
+          <EmptyState
+            title="No scheduled content"
+            description="Schedule content to populate the calendar."
+          />
+        ) : (
+          <div className="space-y-3">
+            {plannedContent
+              .filter((c) => c.status !== "completed")
+              .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+              .map((content) => (
+                <div
+                  key={content.id}
+                  className="flex items-center justify-between p-3 rounded-lg bg-slate-100/30 hover:bg-slate-100 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-2 h-2 rounded-full ${getStatusColor(content.status)}`} />
+                    <div>
+                      <div className="font-medium text-sm">{content.title}</div>
+                      <div className="text-xs text-slate-500">
+                        {content.project} • {content.keyword}
+                      </div>
                     </div>
                   </div>
+                  <div className="text-sm text-slate-400">
+                    {new Date(content.date).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </div>
                 </div>
-                <div className="text-sm text-slate-400">
-                  {new Date(content.date).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </div>
-              </div>
-            ))}
-        </div>
+              ))}
+          </div>
+        )}
       </div>
     </div>
   );

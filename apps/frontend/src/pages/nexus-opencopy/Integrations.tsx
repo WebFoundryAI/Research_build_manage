@@ -8,6 +8,7 @@ import {
   RefreshCw,
   Plus,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type Integration = {
   id: string;
@@ -20,59 +21,7 @@ type Integration = {
 };
 
 export default function NexusOpenCopyIntegrations() {
-  const [integrations, setIntegrations] = useState<Integration[]>([
-    {
-      id: "wordpress",
-      name: "WordPress",
-      description: "Publish articles directly to your WordPress site",
-      icon: "🔵",
-      status: "connected",
-      lastSync: new Date(Date.now() - 3600000).toISOString(),
-      config: { site_url: "blog.example.com" },
-    },
-    {
-      id: "ghost",
-      name: "Ghost",
-      description: "Publish to Ghost blogging platform",
-      icon: "👻",
-      status: "disconnected",
-      lastSync: null,
-    },
-    {
-      id: "webflow",
-      name: "Webflow",
-      description: "Push content to Webflow CMS collections",
-      icon: "🌐",
-      status: "disconnected",
-      lastSync: null,
-    },
-    {
-      id: "notion",
-      name: "Notion",
-      description: "Sync content with Notion databases",
-      icon: "📝",
-      status: "connected",
-      lastSync: new Date(Date.now() - 86400000).toISOString(),
-      config: { workspace: "Content Team" },
-    },
-    {
-      id: "airtable",
-      name: "Airtable",
-      description: "Store and manage content in Airtable bases",
-      icon: "📊",
-      status: "error",
-      lastSync: new Date(Date.now() - 172800000).toISOString(),
-    },
-    {
-      id: "github",
-      name: "GitHub",
-      description: "Commit content to GitHub repositories",
-      icon: "🐙",
-      status: "connected",
-      lastSync: new Date().toISOString(),
-      config: { repo: "your-org/content-repo" },
-    },
-  ]);
+  const [integrations, setIntegrations] = useState<Integration[]>([]);
 
   const [showConfigModal, setShowConfigModal] = useState<string | null>(null);
 
@@ -130,74 +79,81 @@ export default function NexusOpenCopyIntegrations() {
       </div>
 
       {/* Integration Cards */}
-      <div className="grid md:grid-cols-2 gap-4">
-        {integrations.map((integration) => (
-          <div
-            key={integration.id}
-            className={`rounded-xl border p-5 transition-colors ${
-              integration.status === "connected"
-                ? "border-emerald-500/30 bg-emerald-500/5"
-                : integration.status === "error"
-                ? "border-red-500/30 bg-red-500/5"
-                : "border-slate-200 bg-white"
-            }`}
-          >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center gap-3">
-                <div className="text-2xl">{integration.icon}</div>
-                <div>
-                  <h3 className="font-semibold flex items-center gap-2">
-                    {integration.name}
-                    {getStatusIcon(integration.status)}
-                  </h3>
-                  {integration.config && (
-                    <div className="text-xs text-slate-500 mt-0.5">
-                      {Object.values(integration.config)[0]}
-                    </div>
-                  )}
+      {integrations.length === 0 ? (
+        <EmptyState
+          title="No integrations connected"
+          description="Connect a publishing platform to sync content."
+        />
+      ) : (
+        <div className="grid md:grid-cols-2 gap-4">
+          {integrations.map((integration) => (
+            <div
+              key={integration.id}
+              className={`rounded-xl border p-5 transition-colors ${
+                integration.status === "connected"
+                  ? "border-emerald-500/30 bg-emerald-500/5"
+                  : integration.status === "error"
+                  ? "border-red-500/30 bg-red-500/5"
+                  : "border-slate-200 bg-white"
+              }`}
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl">{integration.icon}</div>
+                  <div>
+                    <h3 className="font-semibold flex items-center gap-2">
+                      {integration.name}
+                      {getStatusIcon(integration.status)}
+                    </h3>
+                    {integration.config && (
+                      <div className="text-xs text-slate-500 mt-0.5">
+                        {Object.values(integration.config)[0]}
+                      </div>
+                    )}
+                  </div>
                 </div>
+                {getStatusBadge(integration.status)}
               </div>
-              {getStatusBadge(integration.status)}
-            </div>
 
-            <p className="text-sm text-slate-400 mb-4">{integration.description}</p>
+              <p className="text-sm text-slate-400 mb-4">{integration.description}</p>
 
-            {integration.lastSync && (
-              <div className="text-xs text-slate-500 mb-4">
-                Last synced: {new Date(integration.lastSync).toLocaleString()}
-              </div>
-            )}
+              {integration.lastSync && (
+                <div className="text-xs text-slate-500 mb-4">
+                  Last synced: {new Date(integration.lastSync).toLocaleString()}
+                </div>
+              )}
 
-            <div className="flex gap-2">
-              {integration.status === "connected" ? (
-                <>
-                  <button
-                    onClick={() => setShowConfigModal(integration.id)}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-100 text-sm transition-colors"
-                  >
-                    <Settings size={14} />
-                    Configure
-                  </button>
+              <div className="flex gap-2">
+                {integration.status === "connected" ? (
+                  <>
+                    <button
+                      onClick={() => setShowConfigModal(integration.id)}
+                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-100 text-sm transition-colors"
+                    >
+                      <Settings size={14} />
+                      Configure
+                    </button>
+                    <button
+                      onClick={() => toggleConnection(integration.id)}
+                      className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg hover:bg-red-500/20 text-red-600 text-sm transition-colors"
+                    >
+                      Disconnect
+                    </button>
+                  </>
+                ) : (
                   <button
                     onClick={() => toggleConnection(integration.id)}
-                    className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg hover:bg-red-500/20 text-red-600 text-sm transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white text-sm transition-colors"
                   >
-                    Disconnect
+                    <Plus size={14} />
+                    Connect
                   </button>
-                </>
-              ) : (
-                <button
-                  onClick={() => toggleConnection(integration.id)}
-                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white text-sm transition-colors"
-                >
-                  <Plus size={14} />
-                  Connect
-                </button>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* API Info */}
       <div className="rounded-xl border border-slate-200 bg-white p-6">

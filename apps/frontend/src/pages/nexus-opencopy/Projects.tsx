@@ -10,6 +10,7 @@ import {
   Globe,
   Calendar,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type Project = {
   id: string;
@@ -35,53 +36,7 @@ export default function NexusOpenCopyProjects() {
 
   async function loadProjects() {
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1000));
-    setProjects([
-      {
-        id: "1",
-        name: "Tech Blog",
-        domain: "techblog.example.com",
-        description: "Technology tutorials and guides",
-        keywordsCount: 45,
-        articlesCount: 128,
-        avgSeoScore: 82,
-        createdAt: "2024-06-15T00:00:00Z",
-        status: "active",
-      },
-      {
-        id: "2",
-        name: "Marketing Site",
-        domain: "marketing.example.com",
-        description: "Digital marketing resources",
-        keywordsCount: 32,
-        articlesCount: 67,
-        avgSeoScore: 78,
-        createdAt: "2024-08-20T00:00:00Z",
-        status: "active",
-      },
-      {
-        id: "3",
-        name: "E-Commerce Blog",
-        domain: "shop.example.com/blog",
-        description: "Product guides and reviews",
-        keywordsCount: 28,
-        articlesCount: 89,
-        avgSeoScore: 75,
-        createdAt: "2024-09-10T00:00:00Z",
-        status: "active",
-      },
-      {
-        id: "4",
-        name: "Documentation",
-        domain: "docs.example.com",
-        description: "API and product documentation",
-        keywordsCount: 15,
-        articlesCount: 42,
-        avgSeoScore: 88,
-        createdAt: "2024-10-05T00:00:00Z",
-        status: "paused",
-      },
-    ]);
+    setProjects([]);
     setLoading(false);
   }
 
@@ -137,11 +92,17 @@ export default function NexusOpenCopyProjects() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading projects...</div>
       ) : projects.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-12 text-center">
-          <FolderKanban size={48} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-400">No projects yet</p>
-          <p className="text-sm text-slate-500 mt-1">Create your first project to get started</p>
-        </div>
+        <EmptyState
+          action={
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-sm"
+            >
+              <Plus size={16} />
+              Create Project
+            </button>
+          }
+        />
       ) : (
         <div className="grid md:grid-cols-2 gap-4">
           {projects.map((project) => (

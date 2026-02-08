@@ -4,7 +4,6 @@ import {
   Plus,
   Search,
   Star,
-  Globe,
   ExternalLink,
   MoreVertical,
   Edit,
@@ -14,6 +13,7 @@ import {
   Filter,
   X,
 } from "lucide-react";
+import EmptyState from "../../components/EmptyState";
 
 type Project = {
   id: string;
@@ -55,17 +55,7 @@ export default function ProjectsPage() {
 
   async function loadProjects() {
     setLoading(true);
-
-    // Demo data
-    const demoProjects: Project[] = [
-      { id: "1", name: "Main Website", domain: "example.com", status: "Live – Stable", health_score: 92, monthly_traffic: 45000, monthly_revenue: 2500, is_favourite: true, category: "business", created_at: "2024-01-15", updated_at: new Date().toISOString() },
-      { id: "2", name: "E-Commerce Store", domain: "shop.example.com", status: "Live – Needs Improving", health_score: 68, monthly_traffic: 12000, monthly_revenue: 8500, is_favourite: true, category: "ecommerce", created_at: "2024-02-20", updated_at: new Date().toISOString() },
-      { id: "3", name: "Blog Platform", domain: "blog.example.com", status: "In Build", health_score: null, monthly_traffic: 0, monthly_revenue: 0, is_favourite: false, category: "content", created_at: "2024-06-10", updated_at: new Date().toISOString() },
-      { id: "4", name: "SaaS Dashboard", domain: "app.example.com", status: "Pre-Launch QA", health_score: 85, monthly_traffic: 0, monthly_revenue: 0, is_favourite: false, category: "saas", created_at: "2024-05-01", updated_at: new Date().toISOString() },
-      { id: "5", name: "Landing Page", domain: "promo.example.com", status: "Planning", health_score: null, monthly_traffic: 0, monthly_revenue: 0, is_favourite: false, category: "marketing", created_at: "2024-07-01", updated_at: new Date().toISOString() },
-    ];
-
-    setProjects(demoProjects);
+    setProjects([]);
     setLoading(false);
   }
 
@@ -177,17 +167,17 @@ export default function ProjectsPage() {
       {loading ? (
         <div className="text-center py-12 text-slate-500">Loading...</div>
       ) : filteredProjects.length === 0 ? (
-        <div className="text-center py-12">
-          <Globe size={48} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-400 mb-4">No projects found</p>
-          <button
-            onClick={() => setShowNewModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm"
-          >
-            <Plus size={16} />
-            Create your first project
-          </button>
-        </div>
+        <EmptyState
+          action={
+            <button
+              onClick={() => setShowNewModal(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm"
+            >
+              <Plus size={16} />
+              Create your first project
+            </button>
+          }
+        />
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredProjects.map((project) => (
