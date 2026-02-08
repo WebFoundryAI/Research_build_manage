@@ -18,10 +18,10 @@ interface Stats {
 }
 
 const quickActions = [
-  { title: "Search Volume", url: "/mcp-spark/search-volume", icon: TrendingUp, description: "Get keyword metrics" },
-  { title: "Keyword Ideas", url: "/mcp-spark/ideas", icon: Search, description: "Generate keyword ideas" },
-  { title: "Difficulty Analysis", url: "/mcp-spark/difficulty", icon: Target, description: "Analyze keyword difficulty" },
-  { title: "Competitor Keywords", url: "/mcp-spark/competitor-keywords", icon: Users, description: "Find competitor keywords" },
+  { title: "Search Volume", url: "/multi-tools/search-volume", icon: TrendingUp, description: "Get keyword metrics" },
+  { title: "Keyword Ideas", url: "/multi-tools/ideas", icon: Search, description: "Generate keyword ideas" },
+  { title: "Difficulty Analysis", url: "/multi-tools/difficulty", icon: Target, description: "Analyze keyword difficulty" },
+  { title: "Competitor Keywords", url: "/multi-tools/competitor-keywords", icon: Users, description: "Find competitor keywords" },
 ];
 
 export default function KeywordDashboard() {

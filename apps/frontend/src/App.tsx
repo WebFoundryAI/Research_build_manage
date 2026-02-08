@@ -20,7 +20,7 @@ import ProfilePage from "./pages/ProfilePage";
 import BuildPage from "./pages/BuildPage";
 import MultiToolsPage from "./pages/MultiToolsPage";
 
-// MCP Spark Pages
+// Multi Tools Pages
 import McpSparkLayout from "./pages/mcp-spark/McpSparkLayout";
 import Scrape from "./pages/mcp-spark/Scrape";
 import Crawl from "./pages/mcp-spark/Crawl";
@@ -125,14 +125,14 @@ export default function App() {
               <Route path="/seo-research" element={<SeoResearchPage />} />
               <Route path="/research" element={<ResearchPage />} />
               <Route path="/build" element={<BuildPage />} />
-              <Route path="/multi-tools" element={<Navigate to="/mcp-spark" replace />} />
+              <Route path="/mcp-spark" element={<Navigate to="/multi-tools" replace />} />
               <Route path="/planner" element={<PlannerPage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/settings" element={<SettingsPage />} />
 
-              {/* MCP Spark Tools Section */}
-              <Route path="/mcp-spark" element={<McpSparkLayout />}>
+              {/* Multi Tools Section */}
+              <Route path="/multi-tools" element={<McpSparkLayout />}>
                 <Route index element={<MultiToolsPage />} />
                 {/* Web Tools */}
                 <Route path="scrape" element={<Scrape />} />
